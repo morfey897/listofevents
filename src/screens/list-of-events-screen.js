@@ -7,10 +7,6 @@ import { Container, Typography, Box } from '@material-ui/core';
 import { makeStyles, CssBaseline } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    display: "flex"
-  },
   toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
@@ -20,22 +16,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function MainScreen() {
+function ListOfEventsScreen() {
   const classes = useStyles();
 
   useEffect(() => {
-    request(filterEvents())
-      .then(result => {
-        console.log(result);
-      });
+    // request(filterEvents())
+    //   .then(result => {
+    //     console.log(result);
+    //   });
   }, []);
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <Header />
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
+      <div>
         <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
@@ -59,9 +51,8 @@ function MainScreen() {
           nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
           accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
         </Typography>
-      </main>
-    </div>
+      </div>
   );
 }
 
-export default MainScreen;
+export default ListOfEventsScreen;

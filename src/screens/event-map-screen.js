@@ -1,9 +1,9 @@
 import React from 'react';
 
-function MapScreen() {
+function EventMapScreen() {
   return <div>
     <p>Map screen provider</p>
   </div>;
 }
 
-export default MapScreen;
+export default EventMapScreen;

@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Typography, IconButton, Hidden, ListItemIcon, ListItemText, Divider } from '@material-ui/core';
+import { Link as RouterLink, Link } from 'react-router-dom';
+import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Typography, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button } from '@material-ui/core';
 
 import {
   Menu as MenuIcon,
@@ -16,6 +16,8 @@ import {
   Person as LoginIcon
 } from '@material-ui/icons';
 
+import {HOME, LIST_OF_EVENTS, EVENT_MAP, CONTACTS, ABOUT} from "../providers/screen-names";
+
 import { HEADER } from "../langs";
 
 const ACCOUNT_MENU_ID = 'primary-account-menu';
@@ -30,9 +32,6 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-  },
-  title: {
-    display: 'block'
   },
   menuItemIcon: {
     minWidth: '32px'
@@ -82,7 +81,6 @@ function Header() {
     handleAccountMenuClose();
   });
 
-
   const handleCreateEvent = useCallback(() => {
     // setMobileMoreAnchorEl(null);
   });
@@ -91,27 +89,28 @@ function Header() {
     <>
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar>
-          <IconButton 
+          <IconButton
             edge="start"
-             color="inherit" 
-             className={classes.menuButton} 
-             aria-label={i18n.mainMenu}
-             aria-controls={MAIN_MENU_ID}
+            color="inherit"
+            className={classes.menuButton}
+            aria-label={i18n.mainMenu}
+            aria-controls={MAIN_MENU_ID}
             aria-haspopup="true"
             onClick={handleMainMenuOpen}>
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Button variant="text" color="inherit" component={RouterLink} to={HOME}>
             {/* eslint-disable-next-line no-undef */}
             {process.env.APP_NAME}
-          </Typography>
+          </Button>
           <div className={classes.grow} />
+          
           {/* Main menu buttons */}
           <Hidden smDown implementation="css">
-            <IconButton aria-label={i18n.listOfEvents} color="inherit" component={RouterLink} to={"/list-of-event"}>
+            <IconButton aria-label={i18n.listOfEvents} color="inherit" component={RouterLink} to={LIST_OF_EVENTS}>
               <TableIcon />
             </IconButton>
-            <IconButton aria-label={i18n.eventMap} color="inherit" component={RouterLink} to={"/event-map"}>
+            <IconButton aria-label={i18n.eventMap} color="inherit" component={RouterLink} to={EVENT_MAP}>
               <MapIcon />
             </IconButton>
             <IconButton aria-label={i18n.createEvent} color="inherit" onClick={handleCreateEvent}>
@@ -177,20 +176,20 @@ function Header() {
         open={isMobileMenuOpen}
         onClose={handleMainMenuClose}
       >
-        <MenuItem component={RouterLink} to={"/about"} dense>
+        <MenuItem component={RouterLink} to={ABOUT} dense onClick={handleMainMenuClose}>
           <ListItemIcon className={classes.menuItemIcon}>
-            <AboutIcon/>
+            <AboutIcon />
           </ListItemIcon>
           <ListItemText primary={i18n.about} />
         </MenuItem>
         <Divider />
-        <MenuItem component={RouterLink} to={"/list-of-event"} dense>
+        <MenuItem component={RouterLink} to={LIST_OF_EVENTS} dense onClick={handleMainMenuClose}>
           <ListItemIcon className={classes.menuItemIcon}>
             <TableIcon />
           </ListItemIcon>
           <ListItemText primary={i18n.listOfEvents} />
         </MenuItem>
-        <MenuItem component={RouterLink} to={"/event-map"} dense>
+        <MenuItem component={RouterLink} to={EVENT_MAP} dense onClick={handleMainMenuClose}>
           <ListItemIcon className={classes.menuItemIcon}>
             <MapIcon />
           </ListItemIcon>
@@ -198,14 +197,14 @@ function Header() {
         </MenuItem>
         <MenuItem onClick={handleCreateEvent} dense>
           <ListItemIcon className={classes.menuItemIcon}>
-            <AddEventIcon/>
+            <AddEventIcon />
           </ListItemIcon>
           <ListItemText primary={i18n.createEvent} />
         </MenuItem>
         <Divider />
-        <MenuItem component={RouterLink} to={"/contacts"} dense>
+        <MenuItem component={RouterLink} to={CONTACTS} dense onClick={handleMainMenuClose}>
           <ListItemIcon className={classes.menuItemIcon}>
-            <ContactsIcon/>
+            <ContactsIcon />
           </ListItemIcon>
           <ListItemText primary={i18n.contacts} />
         </MenuItem>
