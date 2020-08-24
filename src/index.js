@@ -1,14 +1,15 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-// import App from './app';
+import { BrowserRouter, Router } from 'react-router-dom';
 import { appRoot } from './helpers/utils';
+import { createBrowserHistory } from 'history';
+import { ScreenProvider } from './providers';
 
 ReactDOM.render(
   <BrowserRouter>
-    <div>
-      <p>Some Text this</p>
-    </div>
+    <Router history={createBrowserHistory()}>
+      <ScreenProvider />
+    </Router>
   </BrowserRouter>,
   appRoot());
