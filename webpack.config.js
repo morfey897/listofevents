@@ -37,7 +37,7 @@ module.exports = (env, argv) => {
         filename: argv.mode === 'none' ? '[name].bandle.css' : '[name].[hash].css'
       }),
       new HtmlWebpackPlugin({
-        title: 'List of events in the World',
+        title: 'Pole of events in the World',
         template: "./public/index.html",
         filename: "./index.html",
         favicon: "./public/favicon/favicon.ico"

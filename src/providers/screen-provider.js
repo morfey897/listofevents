@@ -8,13 +8,13 @@ import { HOME, ABOUT, CONTACTS, EVENT_MAP, LIST_OF_EVENTS } from './screen-names
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    display: "flex"
+    // display: "flex"
   },
   toolbar: theme.mixins.toolbar,
   content: {
-    flexGrow: 1,
+    // flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(3),
+    padding: theme.spacing(3, 0),
   },
 }));
 

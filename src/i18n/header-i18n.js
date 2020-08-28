@@ -1,4 +1,4 @@
-export const HEADER = {
+export default {
   en: {
     mainMenu: "Main menu",
     about: "About",

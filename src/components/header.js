@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Link as RouterLink, Link } from 'react-router-dom';
-import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Typography, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button } from '@material-ui/core';
+import { Link as RouterLink } from 'react-router-dom';
+import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Container, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button } from '@material-ui/core';
 
 import {
   Menu as MenuIcon,
@@ -18,7 +18,7 @@ import {
 
 import {HOME, LIST_OF_EVENTS, EVENT_MAP, CONTACTS, ABOUT} from "../providers/screen-names";
 
-import { HEADER } from "../langs";
+import { HEADER } from "../i18n";
 
 const ACCOUNT_MENU_ID = 'primary-account-menu';
 const MAIN_MENU_ID = 'primary-main-menu';
@@ -34,8 +34,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   menuItemIcon: {
-    minWidth: '32px'
+    minWidth: theme.spacing(4)
   }
+  
 }));
 
 function Header() {
@@ -88,7 +89,8 @@ function Header() {
   return (
     <>
       <AppBar position="fixed" color="primary" className={classes.appBar}>
-        <Toolbar>
+        <Container>
+        <Toolbar disableGutters>
           <IconButton
             edge="start"
             color="inherit"
@@ -129,6 +131,7 @@ function Header() {
             <AccountIcon />
           </IconButton>
         </Toolbar>
+        </Container>
       </AppBar>
       {/* Profile menu */}
       <Menu
