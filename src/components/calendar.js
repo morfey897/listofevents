@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { makeStyles, TableContainer, Typography, Paper, Card, CardContent, Table, TableBody, TableHead, TableRow, TableCell, ButtonBase } from "@material-ui/core";
+import { makeStyles, TableContainer, Typography, Card, CardContent, Table, TableBody, TableHead, TableRow, TableCell, ButtonBase } from "@material-ui/core";
 import { CALENDAR } from "../i18n";
 import { addDays, compareAsc, format, startOfWeek, isSameDay, getMinutes, getHours } from 'date-fns';
 
@@ -144,7 +144,7 @@ function Calendar({ date, events, categories, cities }) {
   }, []);
 // style={{minWidth: minWidth || "auto"}} 
   return (
-    <TableContainer component={Paper} className={classes.tableContainer}>
+    <TableContainer className={classes.tableContainer}>
       <Table aria-label="a dense table" className={classes.table}>
         <TableHead>
           <TableRow>
