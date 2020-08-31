@@ -9,45 +9,15 @@ import {
         Flare as CategoryIcon,
         DateRange as DateIcon,
         } from '@material-ui/icons';
-import { Calendar, Filter, SelectDate, DropList } from '../components';
+import { Calendar, Filters, SelectDate, CategoryDropList, CityDropList } from '../components';
 
 const useStyles = makeStyles((theme) => ({
-  tableTitle: {
-    flex: '1 1 100%',
-  }
+  
 }));
 
 
 function ListOfEventsScreen() {
   const classes = useStyles();
-
-  const [dateOpen, setDateOpen] = useState(null);
-  const [categoryOpen, setCategoryOpen] = useState(null);
-  const [locationOpen, setLocationOpen] = useState(null);
-
-  const handleOpenDate = useCallback((event) => {
-    setDateOpen(event.currentTarget);
-  }, []);
-
-  const handleOpenCategory = useCallback((event) => {
-    setCategoryOpen(event.currentTarget);
-  }, []);
-
-  const handleOpenLocation = useCallback((event) => {
-    setLocationOpen(locationOpen ? null : event.currentTarget);
-  }, []);
-
-  const handleCloseDate = useCallback(() => {
-    setDateOpen(null);
-  }, []);
-  
-  const handleCloseCategory = useCallback(() => {
-    setCategoryOpen(null);
-  }, []);
-  
-  const handleCloseLocation = useCallback(() => {
-    setLocationOpen(null);
-  }, []);
 
   const cities = ["Kyiv", "Lviv", "Viniza", "Odessa", "Kharkiv"];
   const categories = ["MasterClass", "Concert", "Event"];
@@ -94,26 +64,15 @@ function ListOfEventsScreen() {
           <Grid item xs={12} md={3}>
             <Hidden smDown>
               <Paper>
-                <Filter />
+                <Filters variant={'primary'}/>
               </Paper>
             </Hidden>
           </Grid>
           <Grid item xs={12} md={9}>
             <Paper>
               <Hidden mdUp>
-                <Toolbar>
-                  <Typography className={classes.tableTitle} variant="h6" component="div">
-                    List of events
-                  </Typography>
-                  <IconButton aria-label="select date range" onClick={handleOpenDate}>
-                    <DateIcon />
-                  </IconButton>
-                  <IconButton aria-label="categories list" onClick={handleOpenCategory}>
-                    <CategoryIcon />
-                  </IconButton> 
-                  <IconButton aria-label="locations list" onClick={handleOpenLocation}>
-                    <LocationIcon />
-                  </IconButton>
+                <Toolbar variant={"dense"}>
+                  <Filters variant={'secondary'}/>
                 </Toolbar>
               </Hidden>
               <Calendar date={new Date()} events={events} categories={categories} cities={cities} />
@@ -121,56 +80,6 @@ function ListOfEventsScreen() {
           </Grid>
         </Grid>
       </Container>
-
-      {/* Date popover */}
-      <Popover
-        open={Boolean(dateOpen)}
-        anchorEl={dateOpen}
-        onClose={handleCloseDate}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}>
-        <List>
-          <ListItem>
-            <ListItemIcon>
-              <DateIcon />
-            </ListItemIcon>
-            <ListItemText primary="Date range" />
-          </ListItem>
-          <Divider />
-          <SelectDate />
-        </List> 
-      </Popover>
-
-      {/* Category popover */}
-      <Popover
-        open={Boolean(categoryOpen)}
-        anchorEl={categoryOpen}
-        onClose={handleCloseCategory}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}>
-        <List>
-          <ListItem>
-            <ListItemIcon>
-              <DateIcon />
-            </ListItemIcon>
-            <ListItemText primary="Date range" />
-          </ListItem>
-          <Divider />
-          <SelectDate />
-        </List> 
-      </Popover>
     </>
   );
 }

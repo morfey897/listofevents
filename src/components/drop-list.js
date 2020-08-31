@@ -1,46 +1,68 @@
-import React, { useState } from 'react';
-import { ListItemText, ListItem, ListItemIcon, Checkbox, Collapse } from '@material-ui/core';
+import React, { useState, useCallback } from 'react';
+import { ListItemText, ListItem, ListItemIcon, Checkbox, Collapse, Badge } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
-function DropList({ uniqId, list, isOpen, header, generator }) {
+function DropList({ list, showItems = Number.MAX_SAFE_INTEGER, generator, onChange }) {
 
-  const [open, setOpen] = useState(!!isOpen);
-  const [checked, setChecked] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [checked, setChecked] = useState(list.filter(({ checked }) => checked).map(({ _id }) => _id));
 
-  const handleToggle = (id) => () => {
+  const handleOpen = useCallback(() => {
+    showItems < list.length && setOpen(!open);
+  }, [open]);
+
+  const handleToggle = useCallback((id) => {
+    let newChecked;
     if (checked.indexOf(id) === -1) {
-      setChecked(checked.concat(id));
+      newChecked = checked.concat(id);
     } else {
-      setChecked(checked.filter((a => a !== id)));
+      newChecked = checked.filter((a => a !== id));
     }
+    setChecked(newChecked);
+    if (typeof onChange === "function") {
+      onChange(list.map((data) => ({
+        ...data,
+        checked: newChecked.indexOf(data._id) !== -1
+      })));
+    }
+  }, [checked]);
+
+  const contentGenerator = (start, end) => {
+    return list.slice(start, end).map((data) => {
+      const { _id } = data;
+      const labelId = `list-label-${_id}`;
+      return (
+        <ListItem key={_id} dense button onClick={() => handleToggle(_id)}>
+          <ListItemIcon>
+            <Checkbox
+              color="primary"
+              edge="start"
+              checked={checked.indexOf(_id) !== -1}
+              tabIndex={-1}
+              disableRipple
+              inputProps={{ 'aria-labelledby': labelId }}
+            />
+          </ListItemIcon>
+          <ListItemText id={labelId} {...generator(data)} />
+        </ListItem>
+      );
+    });
   };
 
   return <>
-      <ListItem button onClick={() => setOpen(!open)}>
-        {header}
-        {open ? <ExpandLess /> : <ExpandMore />}
+    {contentGenerator(0, showItems)}
+    {showItems < list.length && <>
+      <ListItem button onClick={handleOpen} dense>
+        <ListItemText primary={open ? `Hide` : `Show`} />
+        {open ? <ExpandLess /> : <Badge color="primary" badgeContent={list.length - showItems}>
+          <ExpandMore />
+        </Badge>}
       </ListItem>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        {list.map((data) => {
-          const { _id } = data;
-          const labelId = `${uniqId}-list-label-${_id}`;
-          return (
-            <ListItem key={_id} dense button onClick={handleToggle(_id)}>
-              <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={checked.indexOf(_id) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} {...generator(data)} />
-            </ListItem>
-          );
-        })}
+        {contentGenerator(showItems)}
       </Collapse>
-    </>;
+    </>}
+  </>;
 }
 
 export default DropList;
