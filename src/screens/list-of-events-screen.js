@@ -1,18 +1,15 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { request } from '../api/graphQL';
 import { filterEvents } from '../api/queries/event-query';
-import { Container, Typography, Grid, Paper, Hidden, Toolbar, IconButton, Popover, List, ListItem, ListItemIcon, ListItemText, Divider } from '@material-ui/core';
+import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
-import { 
-        FilterList as FilterListIcon,
-        LocationCity as LocationIcon, 
-        Flare as CategoryIcon,
-        DateRange as DateIcon,
-        } from '@material-ui/icons';
-import { Calendar, Filters, SelectDate, CategoryDropList, CityDropList } from '../components';
+
+import {addMonths} from "date-fns";
+
+import { Calendar, Filters, Toolbar } from '../components';
 
 const useStyles = makeStyles((theme) => ({
-  
+
 }));
 
 
@@ -27,18 +24,22 @@ function ListOfEventsScreen() {
     const result = [];
     const len = 30;
 
-    for (let n = 0; n < len; n++) {
-      let date = parseInt(Math.random() * 30 + 1);
-      let hh = parseInt(Math.random() * 10 + 12);
-      let mm = parseInt(Math.random() * 11) * 5;
-      result.push({
-        date: new Date(2020, 7, date, hh, mm/*   `2020-08-${date}T${hh}:${mm}:00Z`*/),
-        country: "Ukraine",
-        city: cities[parseInt(Math.random() * cities.length)],
-        category: categories[parseInt(Math.random() * categories.length)],
-      });
+    for (let j = 0; j < 3; j++) {
+      for (let n = 0; n < len; n++) {
+        let date = parseInt(Math.random() * 30 + 1);
+        let hh = parseInt(Math.random() * 10 + 12);
+        let mm = parseInt(Math.random() * 11) * 5;
+        result.push({
+          _id: n,
+          date: new Date(2020, 7 + j, date, hh, mm/*   `2020-08-${date}T${hh}:${mm}:00Z`*/),
+          country: "Ukraine",
+          city: cities[parseInt(Math.random() * cities.length)],
+          category: categories[parseInt(Math.random() * categories.length)],
+          past: j == 0
+        });
+      }
     }
-
+    
     console.log(result);
     return result;
   }, []);
@@ -47,7 +48,7 @@ function ListOfEventsScreen() {
     <>
       <Container>
         <Grid container spacing={1}>
-          <Grid item>
+          <Grid item xs={12}>
             <Typography paragraph>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
               ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
@@ -59,23 +60,28 @@ function ListOfEventsScreen() {
               imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
               arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
               donec massa sapien faucibus et molestie ac.
-        </Typography>
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Paper>
+              <Toolbar date={addMonths(new Date(), -1)} />
+            </Paper>
           </Grid>
           <Grid item xs={12} md={3}>
             <Hidden smDown>
               <Paper>
-                <Filters variant={'primary'}/>
+                <Filters variant={'primary'} />
               </Paper>
             </Hidden>
           </Grid>
           <Grid item xs={12} md={9}>
             <Paper>
               <Hidden mdUp>
-                <Toolbar variant={"dense"}>
-                  <Filters variant={'secondary'}/>
-                </Toolbar>
+                <MuiToolbar variant={"dense"}>
+                  <Filters variant={'secondary'} />
+                </MuiToolbar>
               </Hidden>
-              <Calendar date={new Date()} events={events} categories={categories} cities={cities} />
+              <Calendar date={addMonths(new Date(), -1)} events={events} categories={categories} cities={cities} />
             </Paper>
           </Grid>
         </Grid>

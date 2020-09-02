@@ -1,7 +1,9 @@
 import React, { useMemo } from "react";
 import { makeStyles, TableContainer, Typography, Card, CardContent, Table, TableBody, TableHead, TableRow, TableCell, ButtonBase } from "@material-ui/core";
-import { CALENDAR } from "../i18n";
-import { addDays, compareAsc, format, startOfWeek, isSameDay, getMinutes, getHours } from 'date-fns';
+import { addDays, compareAsc, format, startOfWeek, isSameDay, getMinutes, getHours, getMonth, getYear } from 'date-fns';
+import {indigo} from '@material-ui/core/colors';
+
+import ruLocale from 'date-fns/locale/ru';
 
 const useTableStyles = makeStyles((theme) => ({
   cellBody: {
@@ -16,78 +18,73 @@ const useTableStyles = makeStyles((theme) => ({
   }
 }));
 
-const useCardStyles = makeStyles((theme) => ({
-  card: {
-    // width: theme.spacing(10),
-    // height: theme.spacing(10),
-    // minHeight: "100%"
-  },
-  cardContent: {
-    "&:last-child": {
-      paddingBottom: theme.spacing(0)
+const useCardStyles = makeStyles((theme) => {
+  const colors = {};
+  ["set", "disable"].map(sub => {
+    let i = 0;
+    do {
+      let name = `color_${sub}_${i}`;
+      let p = theme.palette[name];
+      if (!p) break;
+      colors[name] = {
+        backgroundColor: p.main,
+        color: p.contrastText
+      };
+      i++;
+      // eslint-disable-next-line no-constant-condition
+    } while(true);
+  });
+  
+  return  {
+    cardContent: {
+      "&:last-child": {
+        paddingBottom: theme.spacing(0)
+      },
+      padding: theme.spacing(0),
     },
-    padding: theme.spacing(0),
-  },
-  date: {
-    margin: theme.spacing(1)
-  },
-  node: {
-    display: "flex",
-    justifyContent: "flex-start",
-    width: "100%",
-    overflow: "hidden",
-    padding: theme.spacing("5px", "5px"),
-    marginTop: theme.spacing(1)
-  },
-  time: {
-    fontWeight: 700,
-  },
-  label: {
-    marginLeft: "auto",
-    paddingLeft: theme.spacing(1),
-  },
-  place_0: {
-    backgroundColor: theme.palette.place_0.main,
-    color: theme.palette.place_0.contrastText
-  },
-  place_1: {
-    backgroundColor: theme.palette.place_1.main,
-    color: theme.palette.place_1.contrastText
-  },
-  place_2: {
-    backgroundColor: theme.palette.place_2.main,
-    color: theme.palette.place_2.contrastText
-  },
-  place_3: {
-    backgroundColor: theme.palette.place_3.main,
-    color: theme.palette.place_3.contrastText
-  },
-  place_4: {
-    backgroundColor: theme.palette.place_4.main,
-    color: theme.palette.place_4.contrastText
-  },
-  place_5: {
-    backgroundColor: theme.palette.place_5.main,
-    color: theme.palette.place_5.contrastText
-  }
-}));
+    date: {
+      margin: theme.spacing(1),
+    },
+    nowCard: {
+      backgroundColor: indigo[50],
+    },
+    node: {
+      display: "flex",
+      justifyContent: "flex-start",
+      width: "100%",
+      overflow: "hidden",
+      padding: theme.spacing("5px", "5px"),
+      marginTop: theme.spacing(1)
+    },
+    time: {
+      fontWeight: 700,
+    },
+    label: {
+      marginLeft: "auto",
+      paddingLeft: theme.spacing(1),
+    },
+    ...colors
+  };
+});
 
-function CardOfDay({ date, enabled, events, colorsPalete }) {
+const NOW = new Date();
+
+function CardOfDay({ date, enabled, events, cities, categories }) {
   const classes = useCardStyles();
 
   return (
-    <Card className={classes.card} elevation={events.length ? 1 : 0} square>
+    <Card className={`${classes.card} ${isSameDay(date, NOW) && classes.nowCard}`} elevation={events.length ? 1 : 0} square>
       <CardContent className={classes.cardContent}>
-        <Typography align="right" color={enabled ? "textPrimary" : "textSecondary"} className={classes.date}>
+        <Typography align="right" color={enabled ? "textPrimary" : "textSecondary"}>
           {format(date, 'dd')}
         </Typography>
-        {events.map(({date, city, category}) => (
-          <ButtonBase key={date.toISOString()} className={`${classes.node} ${classes[colorsPalete[city]]}`}>
+        {events.map(({_id, date, city, category, past}) => (
+          <ButtonBase key={_id} className={`${classes.node} ${classes[`color_${past ? "disable" : "set"}_${Math.min(categories.indexOf(category) + 1, 9)}`]}`}>
             <div className={classes.time}>
               {`${("0" + getHours(date)).slice(-2)}:${("0" + getMinutes(date)).slice(-2)}`}
             </div>
             <div className={classes.label}>
-              {category}
+              {city}
             </div>
           </ButtonBase>
         ))}
@@ -98,17 +95,15 @@ function CardOfDay({ date, enabled, events, colorsPalete }) {
 
 function Calendar({ date, events, categories, cities }) {
 
-  const i18n = CALENDAR["ru"];
-
   const classes = useTableStyles();
 
   const calendarHeaderData = useMemo(() => {
-    return [i18n.monShort, i18n.tueShort, i18n.wedShort, i18n.thuShort, i18n.friShort, i18n.satShort, i18n.sunShort];
+    return [1,2,3,4,5,6,0].map(day => ruLocale.localize.day(day, {width: 'short'}));
   }, []);
 
   const calendarBodyData = useMemo(() => {
     const grid = [];
-    let y = date.getFullYear(), m = date.getMonth();
+    let y = getYear(date), m = getMonth(date);
     const firstDate = new Date(y, m, 1);
     const lastDate = new Date(y, m + 1, 0);
     let firstWeek = startOfWeek(firstDate, { weekStartsOn: 1 });
@@ -120,29 +115,14 @@ function Calendar({ date, events, categories, cities }) {
         line[j] = {
           date: curDate,
           enabled: compareAsc(curDate, firstDate) != -1 && compareAsc(lastDate, curDate) != -1,
-          events: events.filter(({date}) => isSameDay(date, curDate)).sort((a, b) => compareAsc(a.date, b.date))
+          events: events.filter(({date}) => isSameDay(date, curDate) && compareAsc(date, firstDate) != -1 && compareAsc(lastDate, date) != -1)
+                        .sort((a, b) => compareAsc(a.date, b.date))
         };
       }
     }
     return grid;
   }, []);
 
-  const colorsPalete = useMemo(() => {
-    const palete = {};
-    var last = 0;
-    for (var i = 0; i < cities.length; i++) {
-      var name = cities[i];
-      if (!(name in palete)) {
-        palete[name] = `place_${last}`;
-        last++;
-        if (last > 5) {
-          last = 0;
-        }
-      }
-    }
-    return palete;
-  }, []);
-// style={{minWidth: minWidth || "auto"}} 
   return (
     <TableContainer className={classes.tableContainer}>
       <Table aria-label="a dense table" className={classes.table}>
@@ -160,7 +140,7 @@ function Calendar({ date, events, categories, cities }) {
             <TableRow key={`row-${index}`}>
               {line.map((data, indexDay) => (
                 <TableCell key={`body-${index * 6 + indexDay}`} variant="body" className={classes.cellBody}>
-                  <CardOfDay {...data} colorsPalete={colorsPalete} />
+                  <CardOfDay {...data} categories={categories} cities={cities}/>
                 </TableCell>
               ))}
             </TableRow>
