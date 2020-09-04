@@ -1,28 +1,46 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
-import { request } from '../api/graphQL';
-import { filterEvents } from '../api/queries/event-query';
 import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
-import {addMonths} from "date-fns";
+import { MontlyCalendar, WeeklyCalendar, DailyCalendar, Filters, Toolbar } from '../components';
+import { MONTH, WEEK, DAY } from '../static/views';
 
-import { Calendar, Filters, Toolbar } from '../components';
+const useStyles = makeStyles(() => ({
 
-const useStyles = makeStyles((theme) => ({
+  showCalendar: {
+    display: "block",
+  },
+
+  hideCalendar: {
+    display: "none",
+  }
 
 }));
-
 
 function ListOfEventsScreen() {
   const classes = useStyles();
 
+  const memoDate = useMemo(() => new Date(), []);
+  const memoView = useMemo(() => MONTH, []);
+
   const cities = ["Kyiv", "Lviv", "Viniza", "Odessa", "Kharkiv"];
   const categories = ["MasterClass", "Concert", "Event"];
+
+  const [stateView, setView] = useState(memoView);
+  const [stateDate, setDate] = useState(memoDate);
+
+  const handleChangeView = useCallback((view) => {
+    setView(view);
+  }, []);
+
+  const handleChangeDate = useCallback((date) => {
+    setDate(date);
+  }, []);
 
   const events = useMemo(() => {
 
     const result = [];
-    const len = 30;
+    const len = 20;
 
     for (let j = 0; j < 3; j++) {
       for (let n = 0; n < len; n++) {
@@ -31,16 +49,14 @@ function ListOfEventsScreen() {
         let mm = parseInt(Math.random() * 11) * 5;
         result.push({
           _id: n,
-          date: new Date(2020, 7 + j, date, hh, mm/*   `2020-08-${date}T${hh}:${mm}:00Z`*/),
+          date: new Date(2020, 7 + j, date, hh, mm),
           country: "Ukraine",
           city: cities[parseInt(Math.random() * cities.length)],
           category: categories[parseInt(Math.random() * categories.length)],
-          past: j == 0
         });
       }
     }
     
-    console.log(result);
     return result;
   }, []);
 
@@ -63,9 +79,7 @@ function ListOfEventsScreen() {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Paper>
-              <Toolbar date={addMonths(new Date(), -1)} />
-            </Paper>
+            
           </Grid>
           <Grid item xs={12} md={3}>
             <Hidden smDown>
@@ -74,15 +88,24 @@ function ListOfEventsScreen() {
               </Paper>
             </Hidden>
           </Grid>
-          <Grid item xs={12} md={9}>
-            <Paper>
-              <Hidden mdUp>
-                <MuiToolbar variant={"dense"}>
-                  <Filters variant={'secondary'} />
-                </MuiToolbar>
-              </Hidden>
-              <Calendar date={addMonths(new Date(), -1)} events={events} categories={categories} cities={cities} />
-            </Paper>
+          <Grid item container xs={12} md={9} spacing={1}>
+            <Grid item xs={12}>
+              <Paper>
+                <Toolbar date={memoDate} view={memoView} onChangeDate={handleChangeDate} onChangeView={handleChangeView} />
+              </Paper>
+            </Grid>
+            <Grid item xs={12}>
+              <Paper>
+                <Hidden mdUp>
+                  <MuiToolbar variant={"dense"}>
+                    <Filters variant={'secondary'} />
+                  </MuiToolbar>
+                </Hidden>
+                {stateView === MONTH && <MontlyCalendar date={stateDate} events={events} categories={categories} cities={cities} />}
+                {stateView === WEEK && <WeeklyCalendar date={stateDate} events={events} categories={categories} cities={cities} />}
+                {stateView === DAY && <DailyCalendar date={stateDate} events={events} categories={categories} cities={cities} />}
+              </Paper>
+            </Grid>
           </Grid>
         </Grid>
       </Container>

@@ -6,12 +6,12 @@ import { createBrowserHistory } from 'history';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ScreenProvider } from './providers';
-import ListEventsTheme from "./app-theme";
+import ProjectTheme from "./app-theme";
 
 function App() {
 
   return (
-      <MuiThemeProvider theme={ListEventsTheme}>
+      <MuiThemeProvider theme={ProjectTheme}>
         <CssBaseline />
         <BrowserRouter>
           <Router history={createBrowserHistory()}>

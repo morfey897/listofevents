@@ -17,7 +17,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
 } from '@material-ui/icons';
 
-import { HOME, LIST_OF_EVENTS, EVENT_MAP, CONTACTS, ABOUT } from "../providers/screen-names";
+import { HOME, LIST_OF_EVENTS, EVENT_MAP, CONTACTS, ABOUT } from "../static/screens";
 
 import { HEADER } from "../i18n";
 

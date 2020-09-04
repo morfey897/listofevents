@@ -94,5 +94,4 @@ const mainTheme = createMuiTheme({
   }
 });
 
-console.log(mainTheme);
 export default mainTheme;

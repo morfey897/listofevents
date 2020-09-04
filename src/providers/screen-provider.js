@@ -3,7 +3,7 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import { AboutScreen, ContactsScreen, ListOfEventsScreen, EventMapScreen } from '../screens';
 import { makeStyles } from '@material-ui/core';
 import { Header } from '../components';
-import { HOME, ABOUT, CONTACTS, EVENT_MAP, LIST_OF_EVENTS } from './screen-names';
+import { HOME, ABOUT, CONTACTS, EVENT_MAP, LIST_OF_EVENTS } from '../static/screens';
 
 const useStyles = makeStyles((theme) => ({
   root: {
