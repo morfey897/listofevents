@@ -5,6 +5,21 @@ import { makeStyles } from '@material-ui/core';
 import { MontlyCalendar, WeeklyCalendar, DailyCalendar, Filters, Toolbar } from '../components';
 import { MONTH, WEEK, DAY } from '../static/views';
 
+const BASE_CITIES = ["Kyiv", "Lviv", "Viniza", "Odessa", "Kharkiv"];
+const BASE_CATEGORIES = ["MasterClass", "Concert", "Event"];
+
+const cities = [
+  { _id: "1", name: "Kyiv", country: "Ukraine" },
+  { _id: "2", name: "Lviv", country: "Ukraine" },
+  { _id: "3", name: "Berlin", country: "Germany" },
+  { _id: "4", name: "Leipzig", country: "Germany" }
+];
+
+const categories = [
+  { _id: "1", name: "Master Class" },
+  { _id: "2", name: "Concert" }
+];
+
 const useStyles = makeStyles(() => ({
 
   showCalendar: {
@@ -22,9 +37,6 @@ function ListOfEventsScreen() {
 
   const memoDate = useMemo(() => new Date(), []);
   const memoView = useMemo(() => MONTH, []);
-
-  const cities = ["Kyiv", "Lviv", "Viniza", "Odessa", "Kharkiv"];
-  const categories = ["MasterClass", "Concert", "Event"];
 
   const [stateView, setView] = useState(memoView);
   const [stateDate, setDate] = useState(memoDate);
@@ -51,8 +63,8 @@ function ListOfEventsScreen() {
           _id: n,
           date: new Date(2020, 7 + j, date, hh, mm),
           country: "Ukraine",
-          city: cities[parseInt(Math.random() * cities.length)],
-          category: categories[parseInt(Math.random() * categories.length)],
+          city: BASE_CITIES[parseInt(Math.random() * BASE_CITIES.length)],
+          category: BASE_CATEGORIES[parseInt(Math.random() * BASE_CATEGORIES.length)],
         });
       }
     }
@@ -84,7 +96,7 @@ function ListOfEventsScreen() {
           <Grid item xs={12} md={3}>
             <Hidden smDown>
               <Paper>
-                <Filters variant={'primary'} />
+                <Filters variant={'primary'} cities={cities} categories={categories} />
               </Paper>
             </Hidden>
           </Grid>
@@ -98,7 +110,7 @@ function ListOfEventsScreen() {
               <Paper>
                 <Hidden mdUp>
                   <MuiToolbar variant={"dense"}>
-                    <Filters variant={'secondary'} />
+                    <Filters variant={'secondary'} cities={cities} categories={categories} />
                   </MuiToolbar>
                 </Hidden>
                 {stateView === MONTH && <MontlyCalendar date={stateDate} events={events} categories={categories} cities={cities} />}

@@ -1,26 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import DropList from './drop-list';
-import SelectDate from './select-date';
 
 import { List, ListItemText, ListItem, ListItemIcon, Divider, IconButton, Popover, Typography, makeStyles, Badge } from '@material-ui/core';
 import {
   FilterList as FilterListIcon,
   LocationCity as LocationIcon,
   Flare as CategoryIcon,
-  DateRange as DateIcon,
 } from '@material-ui/icons';
-
-const cities = [
-  { _id: "1", name: "Kyiv", country: "Ukraine" },
-  { _id: "2", name: "Lviv", country: "Ukraine" },
-  { _id: "3", name: "Berlin", country: "Germany" },
-  { _id: "4", name: "Leipzig", country: "Germany" }
-];
-
-const categories = [
-  { _id: "1", name: "Master Class" },
-  { _id: "2", name: "Concert" }
-];
 
 const POPOSER_POS = {
   anchorOrigin: {
@@ -50,17 +36,12 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Filters({ variant }) {
+function Filters({ variant, categories, cities }) {
 
   const classes = useStyles();
 
-  const [dateOpen, setDateOpen] = useState(null);
   const [categoryOpen, setCategoryOpen] = useState(null);
   const [locationOpen, setLocationOpen] = useState(null);
-
-  const handleOpenDate = useCallback((event) => {
-    setDateOpen(event.currentTarget);
-  }, []);
 
   const handleOpenCategory = useCallback((event) => {
     setCategoryOpen(event.currentTarget);
@@ -70,9 +51,6 @@ function Filters({ variant }) {
     setLocationOpen(locationOpen ? null : event.currentTarget);
   }, []);
 
-  const handleCloseDate = useCallback(() => {
-    setDateOpen(null);
-  }, []);
 
   const handleCloseCategory = useCallback(() => {
     setCategoryOpen(null);
@@ -80,10 +58,6 @@ function Filters({ variant }) {
 
   const handleCloseLocation = useCallback(() => {
     setLocationOpen(null);
-  }, []);
-
-  const onChangeDate = useCallback(({ from, to }) => {
-    console.log(from, to);
   }, []);
 
   const onChangeCategory = useCallback((list) => {
@@ -103,8 +77,6 @@ function Filters({ variant }) {
           </ListItemIcon>
           <ListItemText primary="Filter" />
         </ListItem>
-        <Divider />
-        <SelectDate onChange={onChangeDate} />
         <Divider />
         <ListItem>
           <ListItemIcon>
@@ -138,15 +110,9 @@ function Filters({ variant }) {
           List of events
         </Typography>
 
-        <IconButton aria-label="select date range" onClick={handleOpenDate}>
-          <Badge color="secondary" badgeContent={5}>
-            <DateIcon />
-          </Badge>
-        </IconButton>
-
         <IconButton aria-label="categories list" onClick={handleOpenCategory}>
-        <Badge color="secondary" badgeContent={5}>
-          <CategoryIcon />
+          <Badge color="secondary" badgeContent={5}>
+            <CategoryIcon />
           </Badge>
         </IconButton>
         <IconButton aria-label="locations list" onClick={handleOpenLocation}>
@@ -154,25 +120,6 @@ function Filters({ variant }) {
           <LocationIcon />
           </Badge>
         </IconButton>
-
-        {/* Date popover */}
-        <Popover
-          open={Boolean(dateOpen)}
-          anchorEl={dateOpen}
-          onClose={handleCloseDate}
-          {...POPOSER_POS}
-        >
-          <List className={classes.popoverDate}>
-            <ListItem>
-              <ListItemIcon>
-                <DateIcon />
-              </ListItemIcon>
-              <ListItemText primary="Date range" />
-            </ListItem>
-            <Divider />
-            <SelectDate onChange={onChangeDate} />
-          </List>
-        </Popover>
 
         {/* Category popover */}
         <Popover

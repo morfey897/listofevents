@@ -25,8 +25,8 @@ export const filterEvents = (args) => {
   checkFilter(args && args.country, "country", filter);
   checkFilter(args && args.city, "city", filter);
   checkFilter(args && args.category, "category", filter);
-  filter.push(`dateFrom: ${args && args.from instanceof Date ? args.from.toISOString() : null}`);
-  filter.push(`dateTo: ${args && args.to instanceof Date ? args.to.toISOString() : null}`);
+  filter.push(`dateFrom: ${args && args.dateFrom instanceof Date ? args.dateFrom.toISOString() : null}`);
+  filter.push(`dateTo: ${args && args.dateTo instanceof Date ? args.dateTo.toISOString() : null}`);
 
   return `{
     events: filterEvents(sortBy: 1, filter:{${filter.join(',')}}) {
