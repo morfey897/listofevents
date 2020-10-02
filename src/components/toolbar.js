@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import {Box, Typography, ButtonGroup, Button, makeStyles, useMediaQuery, Hidden} from "@material-ui/core";
+import { Box, Typography, ButtonGroup, Button, makeStyles, useMediaQuery, Hidden } from "@material-ui/core";
 
 import {
   NavigateNext as NextIcon,
@@ -15,7 +15,7 @@ import ruLocale from 'date-fns/locale/ru';
 
 import { MONTH, DAY, WEEK } from "../static/views";
 
-const useStyles = makeStyles(({palette}) => ({
+const useStyles = makeStyles(({ palette }) => ({
   selectedButton: {
     '&:disabled': {
       backgroundColor: palette.primary.light,
@@ -30,16 +30,16 @@ const useStyles = makeStyles(({palette}) => ({
 
 function createLabel(date, type) {
   if (type === MONTH) {
-    return format(startOfMonth(date), 'MMM yyyy', {weekStartsOn: 1, locale: ruLocale});
+    return format(startOfMonth(date), 'MMM yyyy', { weekStartsOn: 1, locale: ruLocale });
   } else if (type === WEEK) {
-    const startWeek = startOfWeek(date, {weekStartsOn: 1});
+    const startWeek = startOfWeek(date, { weekStartsOn: 1 });
     const endWeek = addDays(startWeek, 6);
-    return format(startWeek, 'dd MMM', {weekStartsOn: 1, locale: ruLocale}) + ' - ' + format(endWeek, 'dd MMM, yyyy', {weekStartsOn: 1, locale: ruLocale});  
+    return format(startWeek, 'dd MMM', { weekStartsOn: 1, locale: ruLocale }) + ' - ' + format(endWeek, 'dd MMM, yyyy', { weekStartsOn: 1, locale: ruLocale });
   }
-  return format(date, 'dd MMM yyyy', {weekStartsOn: 1, locale: ruLocale});
+  return format(date, 'dd MMM yyyy', { weekStartsOn: 1, locale: ruLocale });
 }
 
-function Toolbar({view, date, onChangeView, onChangeDate}) {
+function Toolbar({ view, date, onChangeView, onChangeDate }) {
 
   const classes = useStyles();
 
@@ -76,61 +76,61 @@ function Toolbar({view, date, onChangeView, onChangeDate}) {
   }, [stateView, stateDate]);
 
   const mobileSize = useMediaQuery(theme => theme.breakpoints.down('xs'));
-  
+
   return (
     <>
       <Hidden smUp>
-        <Typography variant={"h6"} align="center" gutterBottom>
+        <Typography variant={"h5"} align="center" >
           {stateLabel}
         </Typography>
       </Hidden>
-    
-      <Box display="flex" justifyContent="space-between" flexWrap={"wrap"} p={1}>
-      <ButtonGroup color="primary" size={mobileSize ? "small" : "medium"}>
-        <Button onClick={() => handleChangeDate(-1)}>
-          <PrevIcon />
-        </Button>
-        <Button onClick={() => handleChangeDate(0)}>
-          <NowadayIcon />
-        </Button>
-        <Button onClick={() => handleChangeDate(1)}>
-          <NextIcon />
-        </Button>
-      </ButtonGroup>
+
+      <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap={"wrap"} p={1}>
+        <ButtonGroup color="primary" size={mobileSize ? "small" : "medium"}>
+          <Button onClick={() => handleChangeDate(-1)}>
+            <PrevIcon />
+          </Button>
+          <Button onClick={() => handleChangeDate(0)}>
+            <NowadayIcon />
+          </Button>
+          <Button onClick={() => handleChangeDate(1)}>
+            <NextIcon />
+          </Button>
+        </ButtonGroup>
         <Hidden xsDown>
           <Typography variant={"body1"} align="center">
             {stateLabel}
           </Typography>
         </Hidden>
-      <ButtonGroup color="primary"  size={mobileSize ? "small" : "medium"}>
-        <Button
-          disabled={stateView === MONTH}
-          disableTouchRipple
-          className={classes.selectedButton}
-          onClick={() => handleChangeView(MONTH)}
+        <ButtonGroup color="primary" size={mobileSize ? "small" : "medium"}>
+          <Button
+            disabled={stateView === MONTH}
+            disableTouchRipple
+            className={classes.selectedButton}
+            onClick={() => handleChangeView(MONTH)}
           >
             <MonthIcon />
-        </Button>
-        <Button
-          disabled={stateView === WEEK}
-          disableTouchRipple
-          className={classes.selectedButton}
-          onClick={() => handleChangeView(WEEK)}
+          </Button>
+          <Button
+            disabled={stateView === WEEK}
+            disableTouchRipple
+            className={classes.selectedButton}
+            onClick={() => handleChangeView(WEEK)}
           >
             <WeekIcon />
-        </Button>
-        <Button
-          disabled={stateView === DAY}
-          disableTouchRipple
-          className={classes.selectedButton}
-          onClick={() => handleChangeView(DAY)}
+          </Button>
+          <Button
+            disabled={stateView === DAY}
+            disableTouchRipple
+            className={classes.selectedButton}
+            onClick={() => handleChangeView(DAY)}
           >
             <DayIcon />
-        </Button>
-      </ButtonGroup>
-    </Box>
+          </Button>
+        </ButtonGroup>
+      </Box>
     </>
-    );
+  );
 }
 
 export default Toolbar;

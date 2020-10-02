@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => {
 
 function CalendarItem({ date, city, category, description, placeName, placeLat, placeLon, disable, colorIndex}) {
   const classes = useStyles();
-
+  
   return (
     <ButtonBase className={`${classes.node} ${classes[`color_${disable ? "disable" : "set"}_${colorIndex}`]}`}>
       <div className={classes.time}>

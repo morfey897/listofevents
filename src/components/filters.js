@@ -7,6 +7,7 @@ import {
   LocationCity as LocationIcon,
   Flare as CategoryIcon,
 } from '@material-ui/icons';
+import { capitalCaseTransform as capitalCase } from 'change-case';
 
 const POPOSER_POS = {
   anchorOrigin: {
@@ -19,8 +20,8 @@ const POPOSER_POS = {
   }
 };
 
-const categoryGenerator = ({ name }) => ({ primary: name });
-const locationGenerator = ({ name, country }) => ({ primary: name, secondary: country });
+const categoryGenerator = ({ name }) => ({ primary: capitalCase(name) });
+const locationGenerator = ({ name, country }) => ({ primary: capitalCase(name), secondary: capitalCase(country) });
 
 const useStyles = makeStyles(() => ({
   popoverDate: {

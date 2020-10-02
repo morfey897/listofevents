@@ -2,16 +2,21 @@
 import React from 'react';
 import { BrowserRouter, Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
+import { Provider } from 'react-redux';
 
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ScreenProvider } from './providers';
-import ProjectTheme from "./app-theme";
+import MainTheme from "./thems/app-theme";
+import configureStore from "./model/configure-store";
+
+const store = configureStore();
 
 function App() {
 
   return (
-      <MuiThemeProvider theme={ProjectTheme}>
+    <Provider store={store}>
+      <MuiThemeProvider theme={MainTheme}>
         <CssBaseline />
         <BrowserRouter>
           <Router history={createBrowserHistory()}>
@@ -19,6 +24,7 @@ function App() {
           </Router>
         </BrowserRouter>
       </MuiThemeProvider>
+    </Provider>
   );
 }
 

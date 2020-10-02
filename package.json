@@ -52,7 +52,8 @@
     "react-helmet": "^6.1.0",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",

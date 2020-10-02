@@ -1,26 +1,25 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 
 import { MontlyCalendar, WeeklyCalendar, DailyCalendar, Filters, Toolbar } from '../components';
 import { MONTH, WEEK, DAY } from '../static/views';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
-const BASE_CITIES = ["Kyiv", "Lviv", "Viniza", "Odessa", "Kharkiv"];
-const BASE_CATEGORIES = ["MasterClass", "Concert", "Event"];
+// const cities = [
+//   { _id: "1", name: "Kyiv", country: "Ukraine" },
+//   { _id: "2", name: "Lviv", country: "Ukraine" },
+//   { _id: "3", name: "Berlin", country: "Germany" },
+//   { _id: "4", name: "Leipzig", country: "Germany" }
+// ];
 
-const cities = [
-  { _id: "1", name: "Kyiv", country: "Ukraine" },
-  { _id: "2", name: "Lviv", country: "Ukraine" },
-  { _id: "3", name: "Berlin", country: "Germany" },
-  { _id: "4", name: "Leipzig", country: "Germany" }
-];
+// const categories = [
+//   { _id: "1", name: "Master Class" },
+//   { _id: "2", name: "Concert" }
+// ];
 
-const categories = [
-  { _id: "1", name: "Master Class" },
-  { _id: "2", name: "Concert" }
-];
-
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 
   showCalendar: {
     display: "block",
@@ -28,11 +27,16 @@ const useStyles = makeStyles(() => ({
 
   hideCalendar: {
     display: "none",
+  },
+
+  calendar: {
+    margin: theme.spacing(1, 0)
   }
 
 }));
 
-function ListOfEventsScreen() {
+function ListOfEventsScreen({cities, categories}) {
+
   const classes = useStyles();
 
   const memoDate = useMemo(() => new Date(), []);
@@ -63,8 +67,8 @@ function ListOfEventsScreen() {
           _id: n,
           date: new Date(2020, 7 + j, date, hh, mm),
           country: "Ukraine",
-          city: BASE_CITIES[parseInt(Math.random() * BASE_CITIES.length)],
-          category: BASE_CATEGORIES[parseInt(Math.random() * BASE_CATEGORIES.length)],
+          city: cities[parseInt(Math.random() * cities.length)].name,
+          category: categories[parseInt(Math.random() * categories.length)].name,
         });
       }
     }
@@ -100,13 +104,13 @@ function ListOfEventsScreen() {
               </Paper>
             </Hidden>
           </Grid>
-          <Grid item container xs={12} md={9} spacing={1}>
-            <Grid item xs={12}>
+          <Grid item xs={12} md={9}>
+            <Grid item xs={12} >
               <Paper>
                 <Toolbar date={memoDate} view={memoView} onChangeDate={handleChangeDate} onChangeView={handleChangeView} />
               </Paper>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} className={classes.calendar}>
               <Paper>
                 <Hidden mdUp>
                   <MuiToolbar variant={"dense"}>
@@ -125,4 +129,14 @@ function ListOfEventsScreen() {
   );
 }
 
-export default ListOfEventsScreen;
+const mapStateToProps = (state) => ({
+  cities: state.cities.list.map(({_id, name, country}) => ({_id, name: name.ru, country: country.name.ru})),
+  categories: state.categories.list.map(({_id, name}) => ({_id, name: name.ru,})),
+});
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  // fetchCities: fetchCitiesActionCreator,
+  // fetchCategories: fetchCategoriesActionCreator,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ListOfEventsScreen);
