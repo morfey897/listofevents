@@ -1,8 +1,8 @@
 import Header from './header';
 import Filters from './filters';
-import MontlyCalendar from './monthly-calendar';
-import WeeklyCalendar from './weekly-calendar';
-import DailyCalendar from './daily-calendar';
+import CalendarMontly from './calendar-monthly';
+import CalendarWeekly from './calendar-weekly';
+import CalendarDaily from './calendar-daily';
 import SelectDate from './select-date';
 import DropList from './drop-list';
 import Toolbar from './toolbar';
@@ -10,9 +10,9 @@ import Toolbar from './toolbar';
 export {
   Header,
   Filters,
-  MontlyCalendar,
-  WeeklyCalendar,
-  DailyCalendar,
+  CalendarMontly as MontlyCalendar,
+  CalendarWeekly as WeeklyCalendar,
+  CalendarDaily as DailyCalendar,
   SelectDate,
   DropList,
   Toolbar,

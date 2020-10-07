@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
-import { makeStyles, TableContainer, Typography, Card, CardContent, Table, TableBody, TableHead, TableRow, TableCell } from "@material-ui/core";
+import { makeStyles, TableContainer, Table, TableBody, TableHead, TableRow, TableCell } from "@material-ui/core";
 import { addDays, compareAsc, format, startOfWeek, isSameDay, getMonth, getYear } from 'date-fns';
 import {indigo} from '@material-ui/core/colors';
 
 import ruLocale from 'date-fns/locale/ru';
 import { capitalCaseTransform } from "capital-case";
-
-import CalendarItem from "./calendar-item";
+import CardOfDay from "./card-of-day";
+import { PRESENT, PAST, FUTURE } from "../static/tense";
 
 const useTableStyles = makeStyles((theme) => ({
   cellBody: {
@@ -22,53 +22,11 @@ const useTableStyles = makeStyles((theme) => ({
   nowaday: {
     borderStyle: "solid",
     borderColor: indigo[500],
-    borderWidth: 2,
-
-    // borderLeftStyle: "solid",
-    // borderLeftWidth: 1,
-    // borderLeftColor: indigo[200],
-
-    // borderRightStyle: "solid",
-    // borderRightWidth: 1,
-    // borderRightColor: indigo[200],
+    borderWidth: 1,
   },
 }));
 
-const useCardStyles = makeStyles((theme) => ({
-    cardContent: {
-      "&:last-child": {
-        paddingBottom: theme.spacing(0)
-      },
-      padding: theme.spacing(0),
-    },
-    date: {
-      margin: theme.spacing(1),
-    },
-    nowCard: {
-      backgroundColor: indigo[100],
-    },
-}));
-
-const NOW = new Date();
-
-function CardOfDay({ date, disabled, events, cities, categories }) {
-  const classes = useCardStyles();
-
-  return (
-    <Card elevation={events.length ? 1 : 0} square>
-      <CardContent className={classes.cardContent}>
-        <Typography align="right" color={disabled ? "textSecondary" : "textPrimary"}>
-          {format(date, 'dd')}
-        </Typography>
-        {events.map(({_id, date, city, category}) => (
-          <CalendarItem key={_id} date={date} city={city} disable={compareAsc(date, NOW) == -1} colorIndex={Math.min(categories.indexOf(category) + 1, 9)} />
-        ))}
-      </CardContent>
-    </Card>
-  );
-}
-
-function MontlyCalendar({ date, events, categories, cities }) {
+function CalendarMontly({ date, events, now }) {
 
   const classes = useTableStyles();
 
@@ -93,13 +51,14 @@ function MontlyCalendar({ date, events, categories, cities }) {
         let curDate = addDays(firstWeek, i * 7 + j);
         line[j] = {
           date: curDate,
-          nowaday: isSameDay(curDate, NOW),
+          nowaday: isSameDay(curDate, now),
           disabled: compareAsc(firstDate, curDate) == 1 || compareAsc(curDate, lastDate) == 1,
           events: events.filter(({date}) => isSameDay(date, curDate) && compareAsc(firstDate, curDate) != 1 && compareAsc(curDate, lastDate) != 1)
                         .sort((a, b) => compareAsc(a.date, b.date))
         };
       }
     }
+
     return grid;
   }, [date, events]);
 
@@ -120,7 +79,7 @@ function MontlyCalendar({ date, events, categories, cities }) {
             <TableRow key={`row-${index}`}>
               {line.map((data, indexDay) => (
                 <TableCell key={`body-${index * 6 + indexDay}`} variant="body" className={`${classes.cellBody} ${data.nowaday ? classes.nowaday : ""}`}>
-                  <CardOfDay {...data} categories={categories} cities={cities}/>
+                  <CardOfDay {...data}/>
                 </TableCell>
               ))}
             </TableRow>
@@ -131,4 +90,4 @@ function MontlyCalendar({ date, events, categories, cities }) {
   );
 }
 
-export default MontlyCalendar;
+export default CalendarMontly;

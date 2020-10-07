@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react';
-import { ListItemText, ListItem, ListItemIcon, Checkbox, Collapse, Badge } from '@material-ui/core';
+import { ListItemText, ListItem, ListItemIcon, Checkbox, Collapse, Badge, withTheme } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { FUTURE } from '../static/tense';
 
-function DropList({ list, showItems = Number.MAX_SAFE_INTEGER, generator, onChange }) {
+function DropList({ list, showItems = Number.MAX_SAFE_INTEGER, generator, theme, onChange, getColorIndex }) {
 
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(list.filter(({ checked }) => checked).map(({ _id }) => _id));
@@ -27,27 +28,25 @@ function DropList({ list, showItems = Number.MAX_SAFE_INTEGER, generator, onChan
     }
   }, [checked]);
 
-  const contentGenerator = (start, end) => {
-    return list.slice(start, end).map((data) => {
-      const { _id } = data;
-      const labelId = `list-label-${_id}`;
-      return (
-        <ListItem key={_id} dense button onClick={() => handleToggle(_id)}>
-          <ListItemIcon>
-            <Checkbox
-              color="primary"
-              edge="start"
-              checked={checked.indexOf(_id) !== -1}
-              tabIndex={-1}
-              disableRipple
-              inputProps={{ 'aria-labelledby': labelId }}
-            />
-          </ListItemIcon>
-          <ListItemText id={labelId} {...generator(data)} />
-        </ListItem>
-      );
-    });
-  };
+  const contentGenerator = (start, end) => list.slice(start, end).map((data) => {
+    const { _id, colorClass } = data;
+    const labelId = `list-label-${_id}`;
+    return (
+      <ListItem key={_id} dense button className={`${colorClass || ""}`} onClick={() => handleToggle(_id)}>
+        <ListItemIcon>
+          <Checkbox
+            color="default"
+            edge="start"
+            checked={checked.indexOf(_id) !== -1}
+            tabIndex={-1}
+            disableRipple
+            inputProps={{ 'aria-labelledby': labelId }}
+          />
+        </ListItemIcon>
+        <ListItemText id={labelId} {...generator(data)} />
+      </ListItem>
+    );
+  });
 
   return <>
     {contentGenerator(0, showItems)}

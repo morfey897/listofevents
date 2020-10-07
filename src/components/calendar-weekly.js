@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import { addDays, startOfWeek } from 'date-fns';
 
-import TimeCalendar from "./time-calendar";
+import TimeCalendar from "./calendar-time";
 
-function WeeklyCalendar({ date, ...rest }) {
+function CalendarWeekly({ date, ...rest }) {
 
   const dates = useMemo(() => {
     const startWeek = startOfWeek(date, {weekStartsOn: 1});
@@ -13,4 +13,4 @@ function WeeklyCalendar({ date, ...rest }) {
   return <TimeCalendar {...rest} dates={dates} />;
 }
 
-export default WeeklyCalendar;
+export default CalendarWeekly;

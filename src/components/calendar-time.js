@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
-import { makeStyles, TableContainer, Typography, Table, TableBody, TableHead, TableRow, TableCell, Box } from "@material-ui/core";
+import { makeStyles, TableContainer, Typography, Table, TableBody, TableHead, TableRow, TableCell } from "@material-ui/core";
 import { compareAsc, format, isSameDay } from 'date-fns';
 import {indigo} from '@material-ui/core/colors';
 
 import ruLocale from 'date-fns/locale/ru';
 import { capitalCaseTransform } from "capital-case";
-
-import CalendarItem from "./calendar-item";
+import CardOfTime from "./card-of-time";
+import { FUTURE, PAST, PRESENT } from "../static/tense";
 
 const useTableStyles = makeStyles((theme) => ({
   cellBody: {
@@ -33,56 +33,15 @@ const useTableStyles = makeStyles((theme) => ({
   },
 }));
 
-const useCardStyles = makeStyles((theme) => (
-  {
-    cardContent: {
-      "&:last-child": {
-        paddingBottom: theme.spacing(0)
-      },
-      padding: theme.spacing(0),
-    },
-    date: {
-      margin: theme.spacing(1),
-    },
-    node: {
-      display: "flex",
-      justifyContent: "flex-start",
-      width: "100%",
-      overflow: "hidden",
-      padding: theme.spacing("5px", "5px"),
-      marginTop: theme.spacing(1)
-    },
-    time: {
-      fontWeight: 700,
-    },
-    label: {
-      marginLeft: "auto",
-      paddingLeft: theme.spacing(1),
-    }
-  }
-));
-
-const NOW = new Date();
-
-function CardOfTime({ disabled, events, cities, categories }) {
-  const classes = useCardStyles();
-  return (
-    <Box className={classes.cardContent}>
-      {events.map(({_id, date, city, category}) => (
-        <CalendarItem key={_id} date={date} city={city} disable={disabled} colorIndex={Math.min(categories.indexOf(category) + 1, 9)} />
-      ))}
-    </Box>
-  );
-}
-
-function TimeCalendar({ dates, events, categories, cities }) {
+function TimeCalendar({ dates, events, now }) {
 
   const classes = useTableStyles();
 
   const calendarHeaderData = useMemo(() => {
     const list = dates.map((d) => ({
       label: format(d, 'eee dd.MM', {weekStartsOn: 1, locale: ruLocale}),
-      disabled: compareAsc(NOW, d) === 1 && !isSameDay(d, NOW), nowaday: isSameDay(d, NOW)
+      disabled: compareAsc(now, d) === 1 && !isSameDay(d, now), 
+      nowaday: isSameDay(d, now)
     }));
     return [{label: ""}].concat(list).map((data) => ({...data, label: capitalCaseTransform(data.label)}));
   }, [dates]);
@@ -103,7 +62,11 @@ function TimeCalendar({ dates, events, categories, cities }) {
           let week = [];
           for (let d = 0; d < len; d++) {
             let weekDate = dates[d];
-            week.push({events: [], disabled: compareAsc(NOW, weekDate) === 1 && !isSameDay(weekDate, NOW), nowaday: isSameDay(weekDate, NOW)});
+            week.push({
+              events: [], 
+              disabled: compareAsc(now, weekDate) === 1 && !isSameDay(weekDate, now),
+              nowaday: isSameDay(weekDate, now)
+            });
           }
           timeIndex = grid.push({time, week}) - 1;
         }
@@ -120,7 +83,7 @@ function TimeCalendar({ dates, events, categories, cities }) {
         <TableHead>
           <TableRow>
             {calendarHeaderData.map((data, index) => (
-              <TableCell key={`header-${index}`} variant="head" className={`${data.nowaday && classes.nowaday}`}>                
+              <TableCell key={`header-${index}`} variant="head" className={`${data.nowaday ? classes.nowaday : ""}`}>                
                 <Typography variant="body1" align="center" color={data.disabled ? "textSecondary" : "textPrimary"}>
                   {data.label}
                 </Typography>
@@ -138,7 +101,7 @@ function TimeCalendar({ dates, events, categories, cities }) {
               </TableCell>
               {week.map((data, index) => (
                 <TableCell key={`body-${index}`} variant="body" className={`${classes.cellBody} ${data.nowaday ? classes.nowaday : ""}`}>
-                  <CardOfTime {...data} categories={categories} cities={cities}/>
+                  <CardOfTime {...data}/>
                 </TableCell>
               ))}
             </TableRow>
