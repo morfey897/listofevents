@@ -1,5 +1,5 @@
-import {LOADED_CATEGORIES, SAVE_CATEGORY, UPDATE_CATEGORIES_STATE} from "../actions/category-action";
-import { STATE_NONE } from "../enums";
+import {CATEGORY_LOADED, CATEGORY_UPDATE_STATE} from "../actions/category-action";
+import { STATE_NONE } from "../../static/states";
 
 const initState = {
   list: [],
@@ -7,24 +7,19 @@ const initState = {
 };
 
 export function categories(state = initState, action) {
-  switch (action.type) {
-    case SAVE_CATEGORY:
+  const {type, payload} = action;
+
+  switch (type) {
+    case CATEGORY_LOADED:
       return {
         ...state,
-        list: state.list.find(({_id}) => _id === action.payload._id) ? 
-                state.list.map((v) => v._id === action.payload._id ? action.payload : v) : 
-                state.list.concat(action.payload)
+        state: payload.state,
+        list: payload.list
       };
-    case LOADED_CATEGORIES:
+    case CATEGORY_UPDATE_STATE:
       return {
         ...state,
-        state: action.state,
-        list: action.payload
-      };
-    case UPDATE_CATEGORIES_STATE:
-      return {
-        ...state,
-        state: action.state
+        state: payload.state
       };
     default:
       return state;

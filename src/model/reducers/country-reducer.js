@@ -1,5 +1,5 @@
-import {LOADED_COUNTRIES, SAVE_COUNTRY, UPDATE_COUNTRIES_STATE} from "../actions/country-action";
-import { STATE_NONE } from "../enums";
+import {COUNTRY_LOADED, COUNTRY_UPDATE_STATE} from "../actions/country-action";
+import { STATE_NONE } from "../../static/states";
 
 const initState = {
   list: [],
@@ -7,24 +7,19 @@ const initState = {
 };
 
 export function countries(state = initState, action) {
-  switch (action.type) {
-    case SAVE_COUNTRY:
+  const {type, payload} = action;
+
+  switch (type) {
+    case COUNTRY_LOADED:
       return {
         ...state,
-        list: state.list.find(({_id}) => _id === action.payload._id) ? 
-                state.list.map((v) => v._id === action.payload._id ? action.payload : v) : 
-                state.list.concat(action.payload)
+        state: payload.state,
+        list: payload.list
       };
-    case LOADED_COUNTRIES:
+    case COUNTRY_UPDATE_STATE:
       return {
         ...state,
-        state: action.state,
-        list: action.payload
-      };
-    case UPDATE_COUNTRIES_STATE:
-      return {
-        ...state,
-        state: action.state,
+        state: payload.state,
       };
     default:
       return state;

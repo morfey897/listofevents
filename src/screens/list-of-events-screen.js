@@ -1,13 +1,15 @@
-import React, { useMemo, useState, useCallback } from 'react';
-import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
-
-import { MontlyCalendar as CalendarMontly, WeeklyCalendar as CalendarWeekly, DailyCalendar as CalendarDaily, Filters, Toolbar } from '../components';
+import { CalendarMontly, CalendarDaily, Filters, Toolbar } from '../components';
 import { MONTH, WEEK, DAY } from '../static/views';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { compareAsc, isSameDay } from 'date-fns';
 import { FUTURE, PAST, PRESENT } from '../static/tense';
+import {getColorIndex} from '../themes/colors';
+import { bindActionCreators } from 'redux';
+import { fetchEventsActionCreator } from "../model/actions";
+import { STATE_READY, STATE_LOADING } from '../static/states';
 
 const generateColorClass = ({disabled, tense, colorIndex}) => {
   if (disabled) {
@@ -28,28 +30,21 @@ const useStyles = makeStyles((theme) => ({
 
   calendar: {
     margin: theme.spacing(1, 0)
-  }
+  },
+
+  line: {
+    height: 4
+  },
 
 }));
 
-const NOW = new Date();
-
-function ListOfEventsScreen({cities, categories, events}) {
+function ListOfEventsScreen({cities, categories, events, view, dateFrom, dateTo, cities_id, categories_id, fetchEvents, loading}) {
 
   const classes = useStyles();
 
-  const memoView = useMemo(() => MONTH, []);
-
-  const [stateView, setView] = useState(memoView);
-  const [stateDate, setDate] = useState(NOW);
-
-  const handleChangeView = useCallback((view) => {
-    setView(view);
-  }, []);
-
-  const handleChangeDate = useCallback((date) => {
-    setDate(date);
-  }, []);
+  useEffect(() => {
+    fetchEvents();
+  }, [view, dateFrom, dateTo, categories_id, cities_id]);
 
   return (
     <>
@@ -82,19 +77,19 @@ function ListOfEventsScreen({cities, categories, events}) {
           <Grid item xs={12} md={9}>
             <Grid item xs={12} >
               <Paper>
-                <Toolbar date={NOW} view={memoView} onChangeDate={handleChangeDate} onChangeView={handleChangeView} />
+                <Toolbar />
               </Paper>
             </Grid>
-            <Grid item xs={12} className={classes.calendar}>
-              <Paper>
+            <Grid item xs={12}>
+              {loading ? <LinearProgress /> : <div className={classes.line} />}
+              <Paper className={classes.calendar}>
                 <Hidden mdUp>
                   <MuiToolbar variant={"dense"}>
                     <Filters variant={'secondary'} cities={cities} categories={categories} />
                   </MuiToolbar>
                 </Hidden>
-                {stateView === MONTH && <CalendarMontly date={stateDate} events={events} now={NOW}/>}
-                {stateView === WEEK && <CalendarWeekly date={stateDate} events={events} now={NOW}/>}
-                {stateView === DAY && <CalendarDaily date={stateDate} events={events} now={NOW}/>}
+                {view === MONTH && <CalendarMontly events={events}/>}
+                {(view === WEEK || view === DAY) && <CalendarDaily events={events}/>}
               </Paper>
             </Grid>
           </Grid>
@@ -105,42 +100,32 @@ function ListOfEventsScreen({cities, categories, events}) {
 }
 
 const mapStateToProps = (state) => {
-  const cities = state.cities.list.map(({_id, name, country}) => ({_id, name: name.ru, country: country.name.ru}));
-  const categories = state.categories.list.map(({_id, name}, index) => ({_id, name: name.ru, colorClass: generateColorClass({tense: FUTURE, colorIndex: Math.min(index + 1, 9)})}));
+  const {cities: s_cities, categories: s_categories, events: s_events, filter} = state;
+  const {now} = filter;
 
-  const events = [];
-  const len = 20;
-
-  for (let j = 0; j < 3; j++) {
-    for (let n = 0; n < len; n++) {
-      let date = parseInt(Math.random() * 30 + 1);
-      let hh = parseInt(Math.random() * 10 + 12);
-      let mm = parseInt(Math.random() * 11) * 5;
-      let city = cities[parseInt(Math.random() * cities.length)];
-      let category = categories[parseInt(Math.random() * categories.length)];
-
-      let newEvent = {
-        _id: n,
-        date: new Date(2020, 7 + j, date, hh, mm),
-        label: city.name
-      };
-
-      newEvent.tense = isSameDay(newEvent.date, NOW) ? PRESENT : (compareAsc(NOW, newEvent.date) == 1 ? PAST : FUTURE);
-      newEvent.colorClass = generateColorClass({tense: newEvent.tense, colorIndex: Math.min(categories.findIndex(({_id}) => _id == category._id) + 1, 9)});
-      events.push(newEvent);
-    }
-  }
+  const cities = s_cities.list.map(({_id, name, country}) => {
+    return {_id, name, country: country.name, checked: state.filter.cities_id.indexOf(_id) != -1};
+  });
+  const categories = s_categories.list.map(({_id, name}, index) => {
+    return {_id, name, checked: state.filter.categories_id.indexOf(_id) != -1, colorClass: generateColorClass({tense: FUTURE, colorIndex: getColorIndex(index)})}
+  });
+  const events = s_events.state === STATE_READY ? s_events.list.map(({_id, date, city, category}) => {
+    const tense = isSameDay(date, now) ? PRESENT : (compareAsc(now, date) == 1 ? PAST : FUTURE);
+    const colorClass = generateColorClass({tense, colorIndex: getColorIndex(categories.findIndex(({_id}) => _id == category._id))});
+    return {_id, date, label: city.name, tense, colorClass};
+  }) : [];
 
   return {
+    loading: s_events.state === STATE_LOADING, 
     events,
     cities,
-    categories
+    categories,
+    ...filter
   };
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  // fetchCities: fetchCitiesActionCreator,
-  // fetchCategories: fetchCategoriesActionCreator,
+  fetchEvents: fetchEventsActionCreator,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListOfEventsScreen);

@@ -8,6 +8,10 @@ import {
   Flare as CategoryIcon,
 } from '@material-ui/icons';
 import { capitalCaseTransform as capitalCase } from 'change-case';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { filterToggleCityIdActionCreator, filterToggleCategoryIdActionCreator } from "../model/actions";
 
 const POPOSER_POS = {
   anchorOrigin: {
@@ -37,7 +41,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Filters({ variant, categories, cities }) {
+function Filters({ variant, categories, cities, toggleCityId, toggleCategoryId }) {
 
   const classes = useStyles();
 
@@ -52,21 +56,12 @@ function Filters({ variant, categories, cities }) {
     setLocationOpen(locationOpen ? null : event.currentTarget);
   }, []);
 
-
   const handleCloseCategory = useCallback(() => {
     setCategoryOpen(null);
   }, []);
 
   const handleCloseLocation = useCallback(() => {
     setLocationOpen(null);
-  }, []);
-
-  const onChangeCategory = useCallback((list) => {
-    console.log("Category", list);
-  }, []);
-
-  const onChangeLocation = useCallback((list) => {
-    console.log("Location", list);
   }, []);
 
   return (
@@ -89,7 +84,7 @@ function Filters({ variant, categories, cities }) {
           showItems={4}
           list={categories}
           generator={categoryGenerator}
-          onChange={onChangeCategory}
+          onToggle={toggleCategoryId}
         />
         <Divider />
         <ListItem>
@@ -102,7 +97,7 @@ function Filters({ variant, categories, cities }) {
           showItems={2}
           list={cities}
           generator={locationGenerator}
-          onChange={onChangeLocation}
+          onToggle={toggleCityId}
         />
         <Divider />
       </List> :
@@ -132,7 +127,7 @@ function Filters({ variant, categories, cities }) {
             <DropList
               list={categories}
               generator={categoryGenerator}
-              onChange={onChangeCategory}
+              onToggle={toggleCategoryId}
             />
           </List>
         </Popover>
@@ -147,11 +142,20 @@ function Filters({ variant, categories, cities }) {
             <DropList
               list={cities}
               generator={locationGenerator}
-              onChange={onChangeLocation}
+              onToggle={toggleCityId}
             />
           </List>
         </Popover>
       </>);
 }
 
-export default Filters;
+const mapStateToProps = (state) => {
+  return {};
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  toggleCityId: filterToggleCityIdActionCreator,
+  toggleCategoryId: filterToggleCategoryIdActionCreator,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Filters);

@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ScreenProvider } from './providers';
-import MainTheme from "./thems/app-theme";
+import MainTheme from "./themes/app-theme";
 import configureStore from "./model/configure-store";
 
 const store = configureStore();

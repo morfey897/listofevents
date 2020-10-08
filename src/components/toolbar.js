@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useMemo } from "react";
 import { Box, Typography, ButtonGroup, Button, makeStyles, useMediaQuery, Hidden } from "@material-ui/core";
 
 import {
@@ -10,10 +10,13 @@ import {
   Adjust as NowadayIcon,
 } from '@material-ui/icons';
 
-import { addDays, addMonths, addWeeks, format, startOfWeek, startOfMonth } from 'date-fns';
+import { addDays, format, startOfWeek, startOfMonth } from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
 
 import { MONTH, DAY, WEEK } from "../static/views";
+import { bindActionCreators } from "redux";
+import { filterDatesActionCreator, filterViewActionCreator } from "../model/actions/filter-action";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles(({ palette }) => ({
   selectedButton: {
@@ -28,54 +31,21 @@ const useStyles = makeStyles(({ palette }) => ({
   }
 }));
 
-function createLabel(date, type) {
-  if (type === MONTH) {
-    return format(startOfMonth(date), 'MMM yyyy', { weekStartsOn: 1, locale: ruLocale });
-  } else if (type === WEEK) {
-    const startWeek = startOfWeek(date, { weekStartsOn: 1 });
-    const endWeek = addDays(startWeek, 6);
-    return format(startWeek, 'dd MMM', { weekStartsOn: 1, locale: ruLocale }) + ' - ' + format(endWeek, 'dd MMM, yyyy', { weekStartsOn: 1, locale: ruLocale });
-  }
-  return format(date, 'dd MMM yyyy', { weekStartsOn: 1, locale: ruLocale });
-}
-
-function Toolbar({ view, date, onChangeView, onChangeDate }) {
+function Toolbar({ view, date, filterView, filterDates }) {
 
   const classes = useStyles();
-
-  const [stateDate, setDate] = useState(date);
-  const [stateView, setView] = useState(view);
-  const [stateLabel, setLabel] = useState(createLabel(date, view));
-
-  const handleChangeView = useCallback((view) => {
-    setView(view);
-    setLabel(createLabel(stateDate, view));
-    if (typeof onChangeView === "function") {
-      onChangeView(view);
-    }
-  }, [stateDate]);
-
-  const handleChangeDate = useCallback((num) => {
-    let newDate = stateDate;
-    if (num === 0) {
-      newDate = new Date();
-    } else if (stateView === MONTH) {
-      newDate = addMonths(stateDate, num);
-    } else if (stateView === WEEK) {
-      newDate = addWeeks(stateDate, num);
-    } else if (stateView === DAY) {
-      newDate = addDays(stateDate, num);
-    }
-
-    setDate(newDate);
-    setLabel(createLabel(newDate, stateView));
-
-    if (typeof onChangeDate === "function") {
-      onChangeDate(newDate);
-    }
-  }, [stateView, stateDate]);
-
   const mobileSize = useMediaQuery(theme => theme.breakpoints.down('xs'));
+
+  const stateLabel = useMemo(() => {
+    if (view === MONTH) {
+      return format(startOfMonth(date), 'MMM yyyy', { weekStartsOn: 1, locale: ruLocale });
+    } else if (view === WEEK) {
+      const startWeek = startOfWeek(date, { weekStartsOn: 1 });
+      const endWeek = addDays(startWeek, 6);
+      return format(startWeek, 'dd MMM', { weekStartsOn: 1, locale: ruLocale }) + ' - ' + format(endWeek, 'dd MMM, yyyy', { weekStartsOn: 1, locale: ruLocale });
+    }
+    return format(date, 'dd MMM yyyy', { weekStartsOn: 1, locale: ruLocale });
+  }, [view, date]);
 
   return (
     <>
@@ -87,13 +57,13 @@ function Toolbar({ view, date, onChangeView, onChangeDate }) {
 
       <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap={"wrap"} p={1}>
         <ButtonGroup color="primary" size={mobileSize ? "small" : "medium"}>
-          <Button onClick={() => handleChangeDate(-1)}>
+          <Button onClick={() => filterDates(-1)}>
             <PrevIcon />
           </Button>
-          <Button onClick={() => handleChangeDate(0)}>
+          <Button onClick={() => filterDates(0)}>
             <NowadayIcon />
           </Button>
-          <Button onClick={() => handleChangeDate(1)}>
+          <Button onClick={() => filterDates(1)}>
             <NextIcon />
           </Button>
         </ButtonGroup>
@@ -104,26 +74,26 @@ function Toolbar({ view, date, onChangeView, onChangeDate }) {
         </Hidden>
         <ButtonGroup color="primary" size={mobileSize ? "small" : "medium"}>
           <Button
-            disabled={stateView === MONTH}
+            disabled={view === MONTH}
             disableTouchRipple
             className={classes.selectedButton}
-            onClick={() => handleChangeView(MONTH)}
+            onClick={() => filterView(MONTH)}
           >
             <MonthIcon />
           </Button>
           <Button
-            disabled={stateView === WEEK}
+            disabled={view === WEEK}
             disableTouchRipple
             className={classes.selectedButton}
-            onClick={() => handleChangeView(WEEK)}
+            onClick={() => filterView(WEEK)}
           >
             <WeekIcon />
           </Button>
           <Button
-            disabled={stateView === DAY}
+            disabled={view === DAY}
             disableTouchRipple
             className={classes.selectedButton}
-            onClick={() => handleChangeView(DAY)}
+            onClick={() => filterView(DAY)}
           >
             <DayIcon />
           </Button>
@@ -133,4 +103,17 @@ function Toolbar({ view, date, onChangeView, onChangeDate }) {
   );
 }
 
-export default Toolbar;
+
+const mapStateToProps = (state) => {
+  return {
+    view: state.filter.view,
+    date: state.filter.date,
+  };
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  filterView: filterViewActionCreator,
+  filterDates: filterDatesActionCreator,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);

@@ -5,7 +5,7 @@ import { LinearProgress, makeStyles } from '@material-ui/core';
 import { Header } from '../components';
 import { HOME, ABOUT, CONTACTS, EVENT_MAP, LIST_OF_EVENTS } from '../static/screens';
 import { bindActionCreators } from 'redux';
-import { STATE_READY } from '../model/enums';
+import { STATE_READY } from '../static/states';
 import { fetchCategoriesActionCreator, fetchCitiesActionCreator } from '../model/actions';
 import { connect } from 'react-redux';
 

@@ -1,29 +1,11 @@
 import { request } from "../../api/graphQL";
-import { STATE_ERROR, STATE_LOADING, STATE_NONE, STATE_READY } from "../enums";
+import { STATE_ERROR, STATE_LOADING, STATE_NONE, STATE_READY } from "../../static/states";
 
-export const SAVE_CATEGORY = "save_category";
-export const LOADED_CATEGORIES = "save_categories";
-export const UPDATE_CATEGORIES_STATE = "update_categories_state";
-
-const categoryQuery = (_id) => `query {
-  category: getCategory(id:'${_id}') {
-    _id,
-    url,
-    name{ru, en}
-    tags{
-      _id,
-      label
-    },
-    description{ru, en}
-    images {
-      _id,
-      url
-    }
-  }
-}`;
+export const CATEGORY_LOADED = "category_loaded";
+export const CATEGORY_UPDATE_STATE = "category_update_state";
 
 const categoriesQuery = () => `query {
-  categories: getCategories{
+  list: getCategories{
     _id,
     url,
     name{ru, en}
@@ -39,9 +21,11 @@ const categoriesQuery = () => `query {
   } 
 }`;
 
-export function fetchCategoryActionCreator(_id) {
-  return (dispatch) => {
-    return request(categoryQuery(_id)).then(({ success, data }) => success && dispatch({ type: SAVE_CATEGORY, payload: data.category }));
+function processing(data) {
+  return {
+    ...data,
+    name: data.name.ru,
+    description: data.description.ru,
   };
 }
 
@@ -49,8 +33,17 @@ export function fetchCategoriesActionCreator() {
   return (dispatch, getState) => {
     const { state } = getState().categories;
     if (state === STATE_NONE) {
-      dispatch({ type: UPDATE_CATEGORIES_STATE, state: STATE_LOADING });
-      return request(categoriesQuery()).then(({ success, data }) => success ? dispatch({ type: LOADED_CATEGORIES, state: STATE_READY, payload: data.categories }) : dispatch({ type: UPDATE_CATEGORIES_STATE, state: STATE_ERROR }));
+      dispatch({ type: CATEGORY_UPDATE_STATE, payload: {state: STATE_LOADING} });
+      return request(categoriesQuery())
+              .then(({ success, data }) => {
+                if (success) return data;
+                throw new Error("Can't load");
+              })
+              .then(({list}) => list.map(processing))
+              .then((list) => dispatch({ type: CATEGORY_LOADED, payload: {list, state: STATE_READY} }))
+              .catch(e => {
+                dispatch({ type: CATEGORY_UPDATE_STATE, payload: {state: STATE_ERROR} });
+              });
     }
     return Promise.resolve();
   };

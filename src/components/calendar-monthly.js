@@ -6,7 +6,7 @@ import {indigo} from '@material-ui/core/colors';
 import ruLocale from 'date-fns/locale/ru';
 import { capitalCaseTransform } from "capital-case";
 import CardOfDay from "./card-of-day";
-import { PRESENT, PAST, FUTURE } from "../static/tense";
+import { connect } from "react-redux";
 
 const useTableStyles = makeStyles((theme) => ({
   cellBody: {
@@ -90,4 +90,12 @@ function CalendarMontly({ date, events, now }) {
   );
 }
 
-export default CalendarMontly;
+const mapStateToProps = (state) => {
+  const {date, now} = state.filter;
+  return {
+    now,
+    date
+  };
+};
+
+export default connect(mapStateToProps)(CalendarMontly);

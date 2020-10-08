@@ -1,38 +1,39 @@
 import { request } from "../../api/graphQL";
-import { STATE_ERROR, STATE_LOADING, STATE_NONE, STATE_READY } from "../enums";
+import { STATE_ERROR, STATE_LOADING, STATE_NONE, STATE_READY } from "../../static/states";
 
-export const SAVE_COUNTRY = "save_country";
-export const LOADED_COUNTRIES = "loaded_countries";
-export const UPDATE_COUNTRIES_STATE = "update_countries_state";
-
-const countryQuery = (_id) => `{
-  country: getCountry(id:'${_id}') {
-    _id,
-    iso_code,
-    name{ru, en}
-  }
-}`;
+export const COUNTRY_LOADED = "country_loaded";
+export const COUNTRY_UPDATE_STATE = "country_update_state";
 
 const countriesQuery = () => `{
-  countries: getCountries {
+  list: getCountries {
     _id,
     iso_code,
     name{ru,en}
   }
 }`;
 
-export function fetchCountryActionCreator(_id) {
-  return (dispatch) => {
-    return request(countryQuery(_id)).then(({success, data}) => success && dispatch({ type: SAVE_COUNTRY, payload: data.country }));
+function processing(data) {
+  return {
+    ...data,
+    name: data.name.ru,
   };
 }
 
 export function fetchCountriesActionCreator() {
   return (dispatch, getState) => {
-    const { state } = getState().cities;
+    const { state } = getState().countries;
     if (state === STATE_NONE) {
-      dispatch({type: UPDATE_COUNTRIES_STATE, state: STATE_LOADING});
-      return request(countriesQuery()).then(({success, data}) => success ? dispatch({ type: LOADED_COUNTRIES, payload: data.countries, state: STATE_READY }) : dispatch({ type: UPDATE_COUNTRIES_STATE, state: STATE_ERROR }));
+      dispatch({type: COUNTRY_UPDATE_STATE, payload: {state: STATE_LOADING}});
+      return request(countriesQuery())
+              .then(({success, data}) => {
+                if (success) return data;
+                throw new Error("Can't loaded");
+              })
+              .then(({list}) => list.map(processing))
+              .then((list) => dispatch({ type: COUNTRY_LOADED, payload: {list, state: STATE_READY} }))
+              .catch(e => {
+                dispatch({ type: COUNTRY_UPDATE_STATE, payload: {state: STATE_ERROR} });
+              });
     }
     return Promise.resolve();
   };
