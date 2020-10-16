@@ -20,6 +20,8 @@ import {
 import { HOME, LIST_OF_EVENTS, EVENT_MAP, CONTACTS, ABOUT } from "../static/screens";
 
 import { HEADER } from "../i18n";
+import { DialogEmitter } from '../services';
+import { ADD_EVENT } from '../static/dialogs';
 
 const ACCOUNT_MENU_ID = 'primary-account-menu';
 const MAIN_MENU_ID = 'primary-main-menu';
@@ -102,7 +104,7 @@ function Header() {
   }, []);
 
   const handleCreateEvent = useCallback(() => {
-    // setMobileMoreAnchorEl(null);
+    DialogEmitter.emit(ADD_EVENT);
   }, []);
 
   return (
@@ -121,7 +123,6 @@ function Header() {
               <MenuIcon />
             </IconButton>
             <Button variant="text" color="inherit" component={RouterLink} to={HOME}>
-              {/* eslint-disable-next-line no-undef */}
               {process.env.APP_NAME}
             </Button>
             <div className={classes.grow} />

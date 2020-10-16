@@ -9,6 +9,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { ScreenProvider } from './providers';
 import MainTheme from "./themes/app-theme";
 import configureStore from "./model/configure-store";
+import DialogProvider from './providers/dialog-provider';
 
 const store = configureStore();
 
@@ -21,6 +22,7 @@ function App() {
         <BrowserRouter>
           <Router history={createBrowserHistory()}>
             <ScreenProvider />
+            <DialogProvider />
           </Router>
         </BrowserRouter>
       </MuiThemeProvider>
