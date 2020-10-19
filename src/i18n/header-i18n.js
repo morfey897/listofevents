@@ -10,7 +10,8 @@ export default {
     login: "Login",
     logout: "Logout",
     createAccount: "Create",
-    profile: "Profile"
+    profile: "Profile",
+    toggleTheme: "Toggle dark/light theme",
   },
   ru: {
     mainMenu: "Главное меню",
@@ -23,6 +24,7 @@ export default {
     login: "Вход",
     logout: "Выход",
     createAccount: "Создать",
-    profile: "Личный кабинет"
+    profile: "Личный кабинет",
+    toggleTheme: "Темная/светлая тема",
   },
 };

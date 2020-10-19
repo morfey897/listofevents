@@ -1,5 +1,5 @@
 import {CATEGORY_LOADED, CATEGORY_UPDATE_STATE} from "../actions/category-action";
-import { STATE_NONE } from "../../static/states";
+import { STATE_NONE } from "../../enums/states";
 
 const initState = {
   list: [],

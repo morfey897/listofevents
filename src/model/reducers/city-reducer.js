@@ -1,5 +1,5 @@
 import {CITY_LOADED, CITY_UPDATE_STATE} from "../actions/city-action";
-import { STATE_NONE } from "../../static/states";
+import { STATE_NONE } from "../../enums/states";
 
 const initState = {
   list: [],

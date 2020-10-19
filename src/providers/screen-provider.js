@@ -3,9 +3,9 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import { AboutScreen, ContactsScreen, ListOfEventsScreen, EventMapScreen } from '../screens';
 import { LinearProgress, makeStyles } from '@material-ui/core';
 import { Header } from '../components';
-import { HOME, ABOUT, CONTACTS, EVENT_MAP, LIST_OF_EVENTS } from '../static/screens';
+import { HOME, ABOUT, CONTACTS, EVENT_MAP, LIST_OF_EVENTS } from '../enums/screens';
 import { bindActionCreators } from 'redux';
-import { STATE_READY } from '../static/states';
+import { STATE_READY } from '../enums/states';
 import { fetchCategoriesActionCreator, fetchCitiesActionCreator } from '../model/actions';
 import { connect } from 'react-redux';
 

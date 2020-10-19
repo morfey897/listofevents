@@ -1,5 +1,5 @@
 import { request } from "../../api/graphQL";
-import { STATE_ERROR, STATE_LOADING, STATE_NONE, STATE_READY } from "../../static/states";
+import { STATE_ERROR, STATE_LOADING, STATE_NONE, STATE_READY } from "../../enums/states";
 
 export const COUNTRY_LOADED = "country_loaded";
 export const COUNTRY_UPDATE_STATE = "country_update_state";

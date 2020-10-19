@@ -1,5 +1,5 @@
 import {EVENT_LOADED, EVENT_UPDATE_STATE} from "../actions/event-action";
-import { STATE_NONE } from "../../static/states";
+import { STATE_NONE } from "../../enums/states";
 
 const initState = {
   list: [],

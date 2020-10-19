@@ -1,5 +1,5 @@
 import { request } from "../../api/graphQL";
-import { STATE_ERROR, STATE_LOADING, STATE_NONE, STATE_READY } from "../../static/states";
+import { STATE_ERROR, STATE_LOADING, STATE_NONE, STATE_READY } from "../../enums/states";
 
 export const CATEGORY_LOADED = "category_loaded";
 export const CATEGORY_UPDATE_STATE = "category_update_state";

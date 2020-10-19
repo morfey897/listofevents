@@ -1,5 +1,5 @@
 import { addDays, addMonths, addWeeks, getMonth, getYear, startOfWeek } from "date-fns";
-import { DAY, MONTH, WEEK } from "../../static/views";
+import { DAY, MONTH, WEEK } from "../../enums/views";
 import { CHANGE_VIEW, CHANGE_DATE, TOGGLE_CITY_ID, TOGGLE_CATEGORY_ID, TOGGLE_TAG_ID } from "../actions/filter-action";
 
 const initState = {

@@ -1,5 +1,5 @@
 import { request } from "../../api/graphQL";
-import { STATE_ERROR, STATE_LOADING, STATE_READY } from "../../static/states";
+import { STATE_ERROR, STATE_LOADING, STATE_READY } from "../../enums/states";
 
 export const EVENT_LOADED = "event_loaded";
 export const EVENT_UPDATE_STATE = "event_update_state";

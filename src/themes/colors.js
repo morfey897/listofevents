@@ -1,5 +1,5 @@
 import { teal, green, lightGreen, lime, yellow, amber, orange, deepOrange, brown, blueGrey } from '@material-ui/core/colors';
-import { FUTURE, PAST, PRESENT } from '../static/tense';
+import { FUTURE, PAST, PRESENT } from '../enums/tense';
 
 const colors = [
 

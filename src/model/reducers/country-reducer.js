@@ -1,5 +1,5 @@
 import {COUNTRY_LOADED, COUNTRY_UPDATE_STATE} from "../actions/country-action";
-import { STATE_NONE } from "../../static/states";
+import { STATE_NONE } from "../../enums/states";
 
 const initState = {
   list: [],

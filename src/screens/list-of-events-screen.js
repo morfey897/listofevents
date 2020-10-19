@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { CalendarMontly, CalendarDaily, Filters, Toolbar } from '../components';
-import { MONTH, WEEK, DAY } from '../static/views';
+import { MONTH, WEEK, DAY } from '../enums/views';
 import { connect } from 'react-redux';
 import { compareAsc, isSameDay } from 'date-fns';
-import { FUTURE, PAST, PRESENT } from '../static/tense';
+import { FUTURE, PAST, PRESENT } from '../enums/tense';
 import {getColorIndex} from '../themes/colors';
 import { bindActionCreators } from 'redux';
 import { fetchEventsActionCreator } from "../model/actions";
-import { STATE_READY, STATE_LOADING } from '../static/states';
+import { STATE_READY, STATE_LOADING } from '../enums/states';
 
 const generateColorClass = ({disabled, tense, colorIndex}) => {
   if (disabled) {

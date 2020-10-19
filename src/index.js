@@ -2,6 +2,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { appRoot } from './helpers/utils';
-import App from "./app";
+import Root from "./app/root";
 
-ReactDOM.render(<App/>, appRoot());
+ReactDOM.render(<Root/>, appRoot());

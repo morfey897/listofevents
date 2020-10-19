@@ -15,13 +15,18 @@ import {
   ExitToApp as LogoutIcon,
   Person as LoginIcon,
   ChevronLeft as ChevronLeftIcon,
+  Brightness7 as DarkThemeIcon,
+  Brightness4 as LightThemeIcon,
 } from '@material-ui/icons';
 
-import { HOME, LIST_OF_EVENTS, EVENT_MAP, CONTACTS, ABOUT } from "../static/screens";
+import { HOME, LIST_OF_EVENTS, EVENT_MAP, CONTACTS, ABOUT } from "../enums/screens";
 
 import { HEADER } from "../i18n";
 import { DialogEmitter } from '../services';
-import { ADD_EVENT } from '../static/dialogs';
+import { ADD_EVENT } from '../enums/dialogs';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { appToggleThemeActionCreator } from '../model/actions';
 
 const ACCOUNT_MENU_ID = 'primary-account-menu';
 const MAIN_MENU_ID = 'primary-main-menu';
@@ -60,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Header() {
+function Header({darkMode, toggleTheme}) {
   const classes = useStyles();
 
   const i18n = HEADER["ru"];
@@ -107,6 +112,10 @@ function Header() {
     DialogEmitter.emit(ADD_EVENT);
   }, []);
 
+  const handleChangeTheme = useCallback(() => {
+    toggleTheme();
+  }, []);
+
   return (
     <>
       <AppBar position="fixed" color="primary" className={classes.appBar}>
@@ -127,6 +136,10 @@ function Header() {
             </Button>
             <div className={classes.grow} />
 
+            <IconButton aria-label={i18n.toggleTheme} color="inherit" onClick={handleChangeTheme}>
+                {(darkMode) ? <DarkThemeIcon /> : <LightThemeIcon />}
+              </IconButton>
+              
             {/* Main menu buttons */}
             <Hidden xsDown implementation="css">
               <IconButton aria-label={i18n.listOfEvents} color="inherit" component={RouterLink} to={LIST_OF_EVENTS}>
@@ -245,4 +258,16 @@ function Header() {
   );
 }
 
-export default Header;
+
+const mapStateToProps = (state) => {
+  const {apps} = state;
+  return {
+    darkMode: apps.darkMode,
+  };
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  toggleTheme: appToggleThemeActionCreator,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

@@ -13,7 +13,7 @@ import {
 import { addDays, format, startOfWeek, startOfMonth } from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
 
-import { MONTH, DAY, WEEK } from "../static/views";
+import { MONTH, DAY, WEEK } from "../enums/views";
 import { bindActionCreators } from "redux";
 import { filterDatesActionCreator, filterViewActionCreator } from "../model/actions/filter-action";
 import { connect } from "react-redux";
@@ -57,13 +57,13 @@ function Toolbar({ view, date, filterView, filterDates }) {
 
       <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap={"wrap"} p={1}>
         <ButtonGroup color="primary" size={mobileSize ? "small" : "medium"}>
-          <Button onClick={() => filterDates(-1)}>
+          <Button onClick={() => filterDates(-1)} variant="contained">
             <PrevIcon />
           </Button>
-          <Button onClick={() => filterDates(0)}>
+          <Button onClick={() => filterDates(0)} variant="contained">
             <NowadayIcon />
           </Button>
-          <Button onClick={() => filterDates(1)}>
+          <Button onClick={() => filterDates(1)} variant="contained">
             <NextIcon />
           </Button>
         </ButtonGroup>
@@ -78,6 +78,7 @@ function Toolbar({ view, date, filterView, filterDates }) {
             disableTouchRipple
             className={classes.selectedButton}
             onClick={() => filterView(MONTH)}
+            variant="contained"
           >
             <MonthIcon />
           </Button>
@@ -86,6 +87,7 @@ function Toolbar({ view, date, filterView, filterDates }) {
             disableTouchRipple
             className={classes.selectedButton}
             onClick={() => filterView(WEEK)}
+            variant="contained"
           >
             <WeekIcon />
           </Button>
@@ -94,6 +96,7 @@ function Toolbar({ view, date, filterView, filterDates }) {
             disableTouchRipple
             className={classes.selectedButton}
             onClick={() => filterView(DAY)}
+            variant="contained"
           >
             <DayIcon />
           </Button>

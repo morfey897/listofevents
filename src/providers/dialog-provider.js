@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {DialogEmitter} from "../services";
 
 import {AddEventDialog} from "../dialogs";
-import { ADD_EVENT } from "../static/dialogs";
+import { ADD_EVENT } from "../enums/dialogs";
 
 function DialogProvider() {
 
