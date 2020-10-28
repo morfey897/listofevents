@@ -1,5 +1,4 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { blue } from '@material-ui/core/colors';
 import { FUTURE, PAST, PRESENT } from '../enums/tense';
 import colors from './colors';
 
@@ -15,7 +14,7 @@ function createAppTheme(darkMode) {
   return createMuiTheme({
     palette: {
       type: darkMode ? 'dark' : "light",
-      ...globalColors,
+      // ...globalColors,
       // primary: {
         // contrastText: "#fff",
         // dark: "#000",

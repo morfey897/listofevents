@@ -1,5 +1,5 @@
-import { teal, green, lightGreen, lime, yellow, amber, orange, deepOrange, brown, blueGrey } from '@material-ui/core/colors';
-import { FUTURE, PAST, PRESENT } from '../enums/tense';
+import { teal, green, lightGreen, yellow, orange, deepOrange, brown, blueGrey } from '@material-ui/core/colors';
+import { FUTURE, PAST } from '../enums/tense';
 
 const colors = [
 
@@ -87,6 +87,6 @@ const colors = [
 export function getColorIndex(index) {
   if (index < 0 || isNaN(parseInt(index))) return colors.length - 1;
   return Math.min(index, colors.length - 2);
-};
+}
 
 export default colors;
