@@ -1,12 +1,12 @@
 import { teal, green, lightGreen, yellow, orange, deepOrange, brown, blueGrey } from '@material-ui/core/colors';
-import { FUTURE, PAST } from '../enums/tense';
+import { TENSE } from '../enums';
 
 const colors = [
 
-  {[FUTURE]: {
+  {[TENSE.FUTURE]: {
     main: lightGreen[900],
     contrastText: "#fff",
-  }, [PAST]: {
+  }, [TENSE.PAST]: {
     main: lightGreen[100],
     contrastText: "#000000DE",
   }},
@@ -19,10 +19,10 @@ const colors = [
   //   contrastText: "#000000DE",
   // }},
 
-  {[FUTURE]: {
+  {[TENSE.FUTURE]: {
     main: yellow[900],
     contrastText: "#000000DE",
-  }, [PAST]: {
+  }, [TENSE.PAST]: {
     main: yellow[100],
     contrastText: "#000000DE",
   }},
@@ -35,50 +35,50 @@ const colors = [
   //   contrastText: "#000000DE",
   // }},
 
-  {[FUTURE]: {
+  {[TENSE.FUTURE]: {
     main: orange[900],
     contrastText: "#fff",
-  }, [PAST]: {
+  }, [TENSE.PAST]: {
     main: orange[100],
     contrastText: "#000000DE",
   }},
 
-  {[FUTURE]: {
+  {[TENSE.FUTURE]: {
     main: deepOrange[900],
     contrastText: "#fff",
-  }, [PAST]: {
+  }, [TENSE.PAST]: {
     main: deepOrange[100],
     contrastText: "#000000DE",
   }},
 
-  {[FUTURE]: {
+  {[TENSE.FUTURE]: {
     main: teal[900],
     contrastText: "#fff",
-  }, [PAST]: {
+  }, [TENSE.PAST]: {
     main: teal[100],
     contrastText: "#000000DE",
   }},
 
-  {[FUTURE]: {
+  {[TENSE.FUTURE]: {
     main: green[900],
     contrastText: "#fff",
-  }, [PAST]: {
+  }, [TENSE.PAST]: {
     main: green[100],
     contrastText: "#000000DE",
   }},
 
-  {[FUTURE]: {
+  {[TENSE.FUTURE]: {
     main: brown[900],
     contrastText: "#fff",
-  }, [PAST]: {
+  }, [TENSE.PAST]: {
     main: brown[100],
     contrastText: "#000000DE",
   }},
 
-  {[FUTURE]: {
+  {[TENSE.FUTURE]: {
     main: blueGrey[900],
     contrastText: "#fff",
-  }, [PAST]: {
+  }, [TENSE.PAST]: {
     main: blueGrey[100],
     contrastText: "#000000DE",
   }},

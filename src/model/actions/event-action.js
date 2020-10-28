@@ -1,5 +1,5 @@
 import { request } from "../../api/graphQL";
-import { STATE_ERROR, STATE_LOADING, STATE_READY } from "../../enums/states";
+import { STATES } from "../../enums";
 
 export const EVENT_LOADED = "event_loaded";
 export const EVENT_UPDATE_STATE = "event_update_state";
@@ -46,7 +46,7 @@ function processing(data) {
 export function fetchEventsActionCreator() {
   return (dispatch, getState) => {
     const { dateTo, dateFrom, categories_id, cities_id } = getState().filter;
-    dispatch({type: EVENT_UPDATE_STATE, payload: {state: STATE_LOADING}});
+    dispatch({type: EVENT_UPDATE_STATE, payload: {state: STATES.STATE_LOADING}});
     const req = eventsQuery({categories_id, cities_id, dateTo, dateFrom});
     return request(req)
             .then(({success, data}) => {
@@ -54,9 +54,9 @@ export function fetchEventsActionCreator() {
               throw new Error("Can't loaded");
             })
             .then(({list}) => list.map(processing))
-            .then((list) => dispatch({ type: EVENT_LOADED, payload: {list, state: STATE_READY} }))
-            .catch(e => {
-              dispatch({ type: EVENT_UPDATE_STATE, payload: {state: STATE_ERROR} });
+            .then((list) => dispatch({ type: EVENT_LOADED, payload: {list, state: STATES.STATE_READY} }))
+            .catch(() => {
+              dispatch({ type: EVENT_UPDATE_STATE, payload: {state: STATES.STATE_ERROR} });
             });
   };
 }

@@ -1,32 +1,71 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {DialogEmitter} from "../services";
+import React, { useCallback, useEffect, useReducer } from "react";
+import { DialogEmitter } from "../services";
 
-import {AddEventDialog} from "../dialogs";
-import { ADD_EVENT } from "../enums/dialogs";
+import { AddEventDialog } from "../dialogs";
+import { DIALOGS, EVENTS } from "../enums";
+
+const initialState = {
+  wnds: [], //Object.values(WN).map(wnd => ({ wnd, isOpen: 0, data: {}, order: 0 }))
+  opening: 0
+};
+
+function reducer(state, action) {
+  const { type, payload: { data, wnd } } = action;
+  switch (type) {
+    case 'open': {
+      const isInit = !!state.wnds.find((f) => f.wnd === wnd);
+      const wnds = isInit ? state.wnds.map((f) => wnd === f.wnd && f.isOpen === 0 ? { ...f, isOpen: 1, data, order: state.opening + 1 } : f) : state.wnds.concat({ wnd, isOpen: 1, data, order: state.opening + 1 });
+      return {
+        wnds,
+        opening: wnds.reduce((accumulator, { isOpen }) => accumulator + isOpen, 0)
+      };
+    }
+    case 'close': {
+      const isInit = !!state.wnds.find((f) => f.wnd === wnd);
+      if (!isInit) return state;
+      const wnds = state.wnds.map((f) => wnd === f.wnd && f.isOpen === 1 ? { ...f, isOpen: 0, data } : f);
+      return {
+        wnds,
+        opening: wnds.reduce((accumulator, { isOpen }) => accumulator + isOpen, 0)
+      };
+    }
+    default:
+      throw new Error();
+  }
+}
 
 function DialogProvider() {
 
-  const [addEvent, setAddEvent] = useState({open: false, payload: {}});
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const onAddEvent = useCallback((payload) => {
-    if (payload === false) {
-      setAddEvent({open: false, payload: {}});
-    } else {
-      setAddEvent({open: true, payload: payload || {}});
-    }
+  const onOpen = useCallback(({ wnd, ...data }) => {
+    dispatch({ type: 'open', payload: { wnd, data } });
+  }, []);
+
+  const onClose = useCallback(({ wnd, ...data }) => {
+    dispatch({ type: 'close', payload: { wnd, data } });
   }, []);
 
   useEffect(() => {
-
-    DialogEmitter.on(ADD_EVENT, onAddEvent);
-
+    DialogEmitter.on(EVENTS.WND_OPEN, onOpen);
+    DialogEmitter.on(EVENTS.WND_CLOSE, onClose);
     return () => {
-      DialogEmitter.clear(ADD_EVENT);
+      DialogEmitter.off(EVENTS.WND_OPEN, onOpen);
+      DialogEmitter.off(EVENTS.WND_CLOSE, onClose);
     };
   }, []);
 
   return <>
-    <AddEventDialog open={addEvent.open} handleClose={() => onAddEvent(false)} {...addEvent.payload}/>
+    {
+      state.wnds.map(({ wnd, isOpen, data }) => {
+        switch (wnd) {
+          case DIALOGS.ADD_EVENT: return <AddEventDialog key={wnd} {...data} open={isOpen === 1} handleClose={(state) => DialogEmitter.close(wnd, state)} />;
+
+          default: return null;
+        }
+      })
+    }
+
   </>;
 }
 

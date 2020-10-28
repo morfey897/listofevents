@@ -2,18 +2,16 @@ import React, { useEffect } from 'react';
 import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { CalendarMontly, CalendarDaily, Filters, Toolbar } from '../components';
-import { MONTH, WEEK, DAY } from '../enums/views';
+import { VIEWS, TENSE, STATES } from '../enums';
 import { connect } from 'react-redux';
 import { compareAsc, isSameDay } from 'date-fns';
-import { FUTURE, PAST, PRESENT } from '../enums/tense';
 import {getColorIndex} from '../themes/colors';
 import { bindActionCreators } from 'redux';
 import { fetchEventsActionCreator } from "../model/actions";
-import { STATE_READY, STATE_LOADING } from '../enums/states';
 
 const generateColorClass = ({disabled, tense, colorIndex}) => {
   if (disabled) {
-    tense = PAST;
+    tense = TENSE.PAST;
   }
   return `color_${tense}_${colorIndex}`;
 };
@@ -88,8 +86,8 @@ function ListOfEventsScreen({cities, categories, events, view, dateFrom, dateTo,
                     <Filters variant={'secondary'} cities={cities} categories={categories} />
                   </MuiToolbar>
                 </Hidden>
-                {view === MONTH && <CalendarMontly events={events}/>}
-                {(view === WEEK || view === DAY) && <CalendarDaily events={events}/>}
+                {view === VIEWS.MONTH && <CalendarMontly events={events}/>}
+                {(view === VIEWS.WEEK || view === VIEWS.DAY) && <CalendarDaily events={events}/>}
               </Paper>
             </Grid>
           </Grid>
@@ -107,16 +105,16 @@ const mapStateToProps = (state) => {
     return {_id, name, country: country.name, checked: state.filter.cities_id.indexOf(_id) != -1};
   });
   const categories = s_categories.list.map(({_id, name}, index) => {
-    return {_id, name, checked: state.filter.categories_id.indexOf(_id) != -1, colorClass: generateColorClass({tense: FUTURE, colorIndex: getColorIndex(index)})}
+    return {_id, name, checked: state.filter.categories_id.indexOf(_id) != -1, colorClass: generateColorClass({tense: TENSE.FUTURE, colorIndex: getColorIndex(index)})};
   });
-  const events = s_events.state === STATE_READY ? s_events.list.map(({_id, date, city, category}) => {
-    const tense = isSameDay(date, now) ? PRESENT : (compareAsc(now, date) == 1 ? PAST : FUTURE);
+  const events = s_events.state === STATES.STATE_READY ? s_events.list.map(({_id, date, city, category}) => {
+    const tense = isSameDay(date, now) ? TENSE.PRESENT : (compareAsc(now, date) == 1 ? TENSE.PAST : TENSE.FUTURE);
     const colorClass = generateColorClass({tense, colorIndex: getColorIndex(categories.findIndex(({_id}) => _id == category._id))});
     return {_id, date, label: city.name, tense, colorClass};
   }) : [];
 
   return {
-    loading: s_events.state === STATE_LOADING, 
+    loading: s_events.state === STATES.STATE_LOADING, 
     events,
     cities,
     categories,

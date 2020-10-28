@@ -1,9 +1,9 @@
 import {CITY_LOADED, CITY_UPDATE_STATE} from "../actions/city-action";
-import { STATE_NONE } from "../../enums/states";
+import { STATES } from "../../enums";
 
 const initState = {
   list: [],
-  state: STATE_NONE
+  state: STATES.STATE_NONE
 };
 
 export function cities(state = initState, action) {

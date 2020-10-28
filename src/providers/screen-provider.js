@@ -3,9 +3,8 @@ import { Switch, Route, withRouter } from 'react-router-dom';
 import { AboutScreen, ContactsScreen, ListOfEventsScreen, EventMapScreen } from '../screens';
 import { LinearProgress, makeStyles } from '@material-ui/core';
 import { Header } from '../components';
-import { HOME, ABOUT, CONTACTS, EVENT_MAP, LIST_OF_EVENTS } from '../enums/screens';
+import { STATES, SCREENS } from '../enums';
 import { bindActionCreators } from 'redux';
-import { STATE_READY } from '../enums/states';
 import { fetchCategoriesActionCreator, fetchCitiesActionCreator } from '../model/actions';
 import { connect } from 'react-redux';
 
@@ -46,11 +45,11 @@ function ScreenProvider({ location, citiesReady, categoriesReady, fetchCities, f
         {(!citiesReady || !categoriesReady) ? <LinearProgress /> :
           <div className={classes.content}>
             <Switch location={location}>
-              <Route exact path={HOME} component={ListOfEventsScreen} />
-              <Route exact path={ABOUT} component={AboutScreen} />
-              <Route exact path={CONTACTS} component={ContactsScreen} />
-              <Route exact path={EVENT_MAP} component={EventMapScreen} />
-              <Route exact path={LIST_OF_EVENTS} component={ListOfEventsScreen} />
+              <Route exact path={SCREENS.HOME} component={ListOfEventsScreen} />
+              <Route exact path={SCREENS.ABOUT} component={AboutScreen} />
+              <Route exact path={SCREENS.CONTACTS} component={ContactsScreen} />
+              <Route exact path={SCREENS.EVENT_MAP} component={EventMapScreen} />
+              <Route exact path={SCREENS.LIST_OF_EVENTS} component={ListOfEventsScreen} />
               <Route path="*">
                 <div>{`NotFound: ${location.pathname}`}</div>
               </Route>
@@ -64,8 +63,8 @@ function ScreenProvider({ location, citiesReady, categoriesReady, fetchCities, f
 
 
 const mapStateToProps = (state) => ({
-  citiesReady: state.cities.state === STATE_READY,
-  categoriesReady: state.categories.state === STATE_READY,
+  citiesReady: state.cities.state === STATES.STATE_READY,
+  categoriesReady: state.categories.state === STATES.STATE_READY,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators({

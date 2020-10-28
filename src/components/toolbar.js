@@ -13,7 +13,7 @@ import {
 import { addDays, format, startOfWeek, startOfMonth } from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
 
-import { MONTH, DAY, WEEK } from "../enums/views";
+import { VIEWS } from "../enums";
 import { bindActionCreators } from "redux";
 import { filterDatesActionCreator, filterViewActionCreator } from "../model/actions/filter-action";
 import { connect } from "react-redux";
@@ -37,9 +37,9 @@ function Toolbar({ view, date, filterView, filterDates }) {
   const mobileSize = useMediaQuery(theme => theme.breakpoints.down('xs'));
 
   const stateLabel = useMemo(() => {
-    if (view === MONTH) {
+    if (view === VIEWS.MONTH) {
       return format(startOfMonth(date), 'MMM yyyy', { weekStartsOn: 1, locale: ruLocale });
-    } else if (view === WEEK) {
+    } else if (view === VIEWS.WEEK) {
       const startWeek = startOfWeek(date, { weekStartsOn: 1 });
       const endWeek = addDays(startWeek, 6);
       return format(startWeek, 'dd MMM', { weekStartsOn: 1, locale: ruLocale }) + ' - ' + format(endWeek, 'dd MMM, yyyy', { weekStartsOn: 1, locale: ruLocale });
@@ -74,28 +74,28 @@ function Toolbar({ view, date, filterView, filterDates }) {
         </Hidden>
         <ButtonGroup color="primary" size={mobileSize ? "small" : "medium"}>
           <Button
-            disabled={view === MONTH}
+            disabled={view === VIEWS.MONTH}
             disableTouchRipple
             className={classes.selectedButton}
-            onClick={() => filterView(MONTH)}
+            onClick={() => filterView(VIEWS.MONTH)}
             variant="contained"
           >
             <MonthIcon />
           </Button>
           <Button
-            disabled={view === WEEK}
+            disabled={view === VIEWS.WEEK}
             disableTouchRipple
             className={classes.selectedButton}
-            onClick={() => filterView(WEEK)}
+            onClick={() => filterView(VIEWS.WEEK)}
             variant="contained"
           >
             <WeekIcon />
           </Button>
           <Button
-            disabled={view === DAY}
+            disabled={view === VIEWS.DAY}
             disableTouchRipple
             className={classes.selectedButton}
-            onClick={() => filterView(DAY)}
+            onClick={() => filterView(VIEWS.DAY)}
             variant="contained"
           >
             <DayIcon />

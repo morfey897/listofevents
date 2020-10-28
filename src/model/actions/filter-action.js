@@ -1,6 +1,3 @@
-import { request } from "../../api/graphQL";
-import { STATE_ERROR, STATE_LOADING, STATE_NONE, STATE_READY } from "../../enums/states";
-
 export const CHANGE_VIEW = "filter_view";
 export const CHANGE_DATE = "filter_date";
 export const TOGGLE_CATEGORY_ID = "filter_togle_category_id";

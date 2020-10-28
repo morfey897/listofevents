@@ -1,9 +1,9 @@
 import {CATEGORY_LOADED, CATEGORY_UPDATE_STATE} from "../actions/category-action";
-import { STATE_NONE } from "../../enums/states";
+import { STATES } from "../../enums";
 
 const initState = {
   list: [],
-  state: STATE_NONE
+  state: STATES.STATE_NONE
 };
 
 export function categories(state = initState, action) {

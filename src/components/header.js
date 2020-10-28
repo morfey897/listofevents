@@ -19,11 +19,10 @@ import {
   Brightness4 as LightThemeIcon,
 } from '@material-ui/icons';
 
-import { HOME, LIST_OF_EVENTS, EVENT_MAP, CONTACTS, ABOUT } from "../enums/screens";
+import { SCREENS, DIALOGS } from "../enums";
 
 import { HEADER } from "../i18n";
 import { DialogEmitter } from '../services';
-import { ADD_EVENT } from '../enums/dialogs';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { appToggleThemeActionCreator } from '../model/actions';
@@ -109,7 +108,7 @@ function Header({darkMode, toggleTheme}) {
   }, []);
 
   const handleCreateEvent = useCallback(() => {
-    DialogEmitter.emit(ADD_EVENT);
+    DialogEmitter.open(DIALOGS.ADD_EVENT);
   }, []);
 
   const handleChangeTheme = useCallback(() => {
@@ -131,7 +130,7 @@ function Header({darkMode, toggleTheme}) {
               onClick={handleMainMenuOpen}>
               <MenuIcon />
             </IconButton>
-            <Button variant="text" color="inherit" component={RouterLink} to={HOME}>
+            <Button variant="text" color="inherit" component={RouterLink} to={SCREENS.HOME}>
               {process.env.APP_NAME}
             </Button>
             <div className={classes.grow} />
@@ -142,10 +141,10 @@ function Header({darkMode, toggleTheme}) {
               
             {/* Main menu buttons */}
             <Hidden xsDown implementation="css">
-              <IconButton aria-label={i18n.listOfEvents} color="inherit" component={RouterLink} to={LIST_OF_EVENTS}>
+              <IconButton aria-label={i18n.listOfEvents} color="inherit" component={RouterLink} to={SCREENS.LIST_OF_EVENTS}>
                 <TableIcon />
               </IconButton>
-              <IconButton aria-label={i18n.eventMap} color="inherit" component={RouterLink} to={EVENT_MAP}>
+              <IconButton aria-label={i18n.eventMap} color="inherit" component={RouterLink} to={SCREENS.EVENT_MAP}>
                 <MapIcon />
               </IconButton>
               <IconButton aria-label={i18n.createEvent} color="inherit" onClick={handleCreateEvent}>
@@ -219,33 +218,33 @@ function Header({darkMode, toggleTheme}) {
           </div>
           <Divider />
           <List>
-            <ListItem button component={RouterLink} to={ABOUT} dense onClick={handleMainMenuClose}>
+            <ListItem button component={RouterLink} to={SCREENS.ABOUT} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
                 <AboutIcon />
               </ListItemIcon>
               <ListItemText primary={i18n.about} />
             </ListItem>
             <Divider />
-            <ListItem button component={RouterLink} to={LIST_OF_EVENTS} dense onClick={handleMainMenuClose}>
+            <ListItem button component={RouterLink} to={SCREENS.LIST_OF_EVENTS} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
                 <TableIcon />
               </ListItemIcon>
               <ListItemText primary={i18n.listOfEvents} />
             </ListItem>
-            <ListItem button component={RouterLink} to={EVENT_MAP} dense onClick={handleMainMenuClose}>
+            <ListItem button component={RouterLink} to={SCREENS.EVENT_MAP} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
                 <MapIcon />
               </ListItemIcon>
               <ListItemText primary={i18n.eventMap} />
             </ListItem>
-            <ListItem button onClick={handleCreateEvent} dense>
+            <ListItem button onClick={() => {handleMainMenuClose(); handleCreateEvent();}} dense>
               <ListItemIcon className={classes.menuItemIcon}>
                 <AddEventIcon />
               </ListItemIcon>
               <ListItemText primary={i18n.createEvent} />
             </ListItem>
             <Divider />
-            <ListItem button component={RouterLink} to={CONTACTS} dense onClick={handleMainMenuClose}>
+            <ListItem button component={RouterLink} to={SCREENS.CONTACTS} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
                 <ContactsIcon />
               </ListItemIcon>

@@ -1,13 +1,13 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { FUTURE, PAST, PRESENT } from '../enums/tense';
+import { TENSE } from '../enums';
 import colors from './colors';
 
 const join = (list, data) => list.map(name => data.reduce((prev, cur, index) => Object.assign({}, prev, {[`color_${name}_${index}`]: cur[name] || cur[Object.keys(cur).find(locName => list.indexOf(locName) !== -1)]}), {}))
                                   .reduce((prev, cur) => Object.assign({}, prev, {...cur}), {});
 
 const globalColors = {
-  ...join([FUTURE, PRESENT], colors),
-  ...join([PAST], colors),
+  ...join([TENSE.FUTURE, TENSE.PRESENT], colors),
+  ...join([TENSE.PAST], colors),
 };
 
 function createAppTheme(darkMode) {

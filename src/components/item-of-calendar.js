@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react';
-import { makeStyles, ButtonBase, withTheme } from "@material-ui/core";
+import React from 'react';
+import { makeStyles, ButtonBase } from "@material-ui/core";
 import { format } from 'date-fns';
-import { PAST } from '../enums/tense';
 import { capitalCaseTransform as capitalCase } from 'change-case';
 
 
