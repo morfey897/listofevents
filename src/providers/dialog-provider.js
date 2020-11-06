@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useReducer } from "react";
-import { DialogEmitter } from "../services";
+import { DialogEmitter } from "../emitters";
 
 import { AddEventDialog } from "../dialogs";
 import { DIALOGS, EVENTS } from "../enums";

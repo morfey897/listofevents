@@ -12,11 +12,13 @@ import {
 
 import { addDays, format, startOfWeek, startOfMonth } from 'date-fns';
 import ruLocale from 'date-fns/locale/ru';
+import enLocale from 'date-fns/locale/en-US';
 
-import { VIEWS } from "../enums";
+import { VIEWS, LANGS } from "../enums";
 import { bindActionCreators } from "redux";
 import { filterDatesActionCreator, filterViewActionCreator } from "../model/actions/filter-action";
 import { connect } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(({ palette }) => ({
   selectedButton: {
@@ -34,18 +36,25 @@ const useStyles = makeStyles(({ palette }) => ({
 function Toolbar({ view, date, filterView, filterDates }) {
 
   const classes = useStyles();
+  const {i18n} = useTranslation();
+
   const mobileSize = useMediaQuery(theme => theme.breakpoints.down('xs'));
 
   const stateLabel = useMemo(() => {
+    let locale = enLocale;
+    if (i18n.language === LANGS.RU) {
+      locale = ruLocale;
+    }
+
     if (view === VIEWS.MONTH) {
-      return format(startOfMonth(date), 'MMM yyyy', { weekStartsOn: 1, locale: ruLocale });
+      return format(startOfMonth(date), 'MMM yyyy', { weekStartsOn: 1, locale });
     } else if (view === VIEWS.WEEK) {
       const startWeek = startOfWeek(date, { weekStartsOn: 1 });
       const endWeek = addDays(startWeek, 6);
-      return format(startWeek, 'dd MMM', { weekStartsOn: 1, locale: ruLocale }) + ' - ' + format(endWeek, 'dd MMM, yyyy', { weekStartsOn: 1, locale: ruLocale });
+      return format(startWeek, 'dd MMM', { weekStartsOn: 1, locale }) + ' - ' + format(endWeek, 'dd MMM, yyyy', { weekStartsOn: 1, locale });
     }
-    return format(date, 'dd MMM yyyy', { weekStartsOn: 1, locale: ruLocale });
-  }, [view, date]);
+    return format(date, 'dd MMM yyyy', { weekStartsOn: 1, locale });
+  }, [view, date, i18n.language]);
 
   return (
     <>

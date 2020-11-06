@@ -5,14 +5,29 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Autoprefixer = require('autoprefixer');
-const Dotenv = require('dotenv-webpack');
+const DotenvWebpack = require('dotenv-webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const RobotstxtPlugin = require("robotstxt-webpack-plugin");
+const Dotenv = require('dotenv');
 
 module.exports = (env, argv) => {
 
+  const { parsed: DOTENV } = Dotenv.config();
   const IS_DEV_SERVER = (argv.mode === 'none');
   const MODE = IS_DEV_SERVER ? "development" : argv.mode;
   const CSS_TO_JS = false;
+
+  const robotstxt = DOTENV.ROBOTS === "true" ? {
+    policy: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: DISALOW_LINKS.map((link) => PREFIX.map(pref => `${pref}${link}$`)),
+      }
+    ],
+    sitemap: DOTENV.SITEMAP,
+    host: DOTENV.HOST,
+  } : {};
 
   let config = {
     mode: MODE,
@@ -25,7 +40,7 @@ module.exports = (env, argv) => {
       publicPath: '/'
     },
     plugins: [
-      new Dotenv({
+      new DotenvWebpack({
       //   path: `./.env.${MODE}`, // load this now instead of the ones in '.env'
       //   // safe: true, // load '.env.example' to verify the '.env' variables are all set. Can also be a string to a different file.
       //   // systemvars: true, // load all the predefined 'process.env' variables which will trump anything local per dotenv specs.
@@ -37,8 +52,8 @@ module.exports = (env, argv) => {
         filename: argv.mode === 'none' ? '[name].bandle.css' : '[name].[hash].css'
       }),
       new HtmlWebpackPlugin({
-        title: 'Pole of events in the World',
-        template: "./public/index.html",
+        title: DOTENV.APP_TITLE,
+        template: "./public/index.ejs",
         filename: "./index.html",
         favicon: "./public/favicon/favicon.ico"
       }),
@@ -47,7 +62,8 @@ module.exports = (env, argv) => {
           {from: "./public/static", to: "./"},
           {from: "./public/favicon", to: "favicon"}
         ],
-      })
+      }),
+      new RobotstxtPlugin(robotstxt)
     ],
     optimization: {
       minimize: !IS_DEV_SERVER
@@ -60,8 +76,13 @@ module.exports = (env, argv) => {
           use: {loader: 'babel-loader'}
         },
         {
-          test: /\.html$/,
-          use: {loader: "html-loader"}
+          test: /\.ejs$/,
+          use: {
+            loader: 'ejs-loader',
+            options: {
+              esModule: false
+            }
+          }
         },
         {
           test: /\.(png|jpg|jpeg)$/,

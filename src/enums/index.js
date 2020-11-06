@@ -4,6 +4,7 @@ import * as STATES from "./states";
 import * as TENSE from "./tense";
 import * as VIEWS from "./views";
 import * as EVENTS from "./events";
+import * as LANGS from "./langs";
 
 export {
   DIALOGS,
@@ -12,4 +13,5 @@ export {
   TENSE,
   VIEWS,
   EVENTS,
+  LANGS,
 };

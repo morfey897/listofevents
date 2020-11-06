@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-function AddEventDialog({open, handleClose}) {
+function AddEventDialog({ open, handleClose }) {
 
   return <Dialog open={open} onClose={handleClose}>
     <DialogTitle>Subscribe</DialogTitle>
@@ -15,7 +15,7 @@ function AddEventDialog({open, handleClose}) {
       <DialogContentText>
         To subscribe to this website, please enter your email address here. We will send updates
         occasionally.
-    </DialogContentText>
+      </DialogContentText>
       <TextField
         autoFocus
         margin="dense"

@@ -4,11 +4,18 @@ import { addDays, compareAsc, format, startOfWeek, isSameDay, getMonth, getYear 
 import {indigo} from '@material-ui/core/colors';
 
 import ruLocale from 'date-fns/locale/ru';
+import enLocale from 'date-fns/locale/en-US';
+
 import { capitalCaseTransform } from "capital-case";
 import CardOfDay from "./card-of-day";
 import { connect } from "react-redux";
+import { LANGS } from "../enums";
+import { useTranslation } from "react-i18next";
 
 const useTableStyles = makeStyles((theme) => ({
+  tableContainer: {
+    padding: theme.spacing(1)
+  },
   cellBody: {
     padding: theme.spacing("4px", "2px"),
     borderBottom: "none",
@@ -29,14 +36,20 @@ const useTableStyles = makeStyles((theme) => ({
 function CalendarMontly({ date, events, now }) {
 
   const classes = useTableStyles();
+  const {i18n} = useTranslation();
 
   const calendarHeaderData = useMemo(() => {
+    let locale = enLocale;
+    if (i18n.language === LANGS.RU) {
+      locale = ruLocale;
+    }
+
     const startWeek = startOfWeek(date, {weekStartsOn: 1});
     return [0,1,2,3,4,5,6].map((day) => {
       let curDate = addDays(startWeek, day);
-      return capitalCaseTransform(format(curDate, 'eee', {weekStartsOn: 1, locale: ruLocale}));
+      return capitalCaseTransform(format(curDate, 'eee', {weekStartsOn: 1, locale}));
     });
-  }, [date]);
+  }, [date, i18n.language]);
 
   const calendarBodyData = useMemo(() => {
     const grid = [];

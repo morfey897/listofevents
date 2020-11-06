@@ -1,9 +1,11 @@
 import React, { useState, useCallback } from 'react';
 import { ListItemText, ListItem, ListItemIcon, Checkbox, Collapse, Badge } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import { useTranslation } from 'react-i18next';
 
 function DropList({ list, showItems = Number.MAX_SAFE_INTEGER, generator, onToggle }) {
 
+  const {t} = useTranslation("labels");
   const [open, setOpen] = useState(false);
 
   const handleOpen = useCallback(() => {
@@ -34,7 +36,7 @@ function DropList({ list, showItems = Number.MAX_SAFE_INTEGER, generator, onTogg
     {contentGenerator(0, showItems)}
     {showItems < list.length && <>
       <ListItem button onClick={handleOpen} dense>
-        <ListItemText primary={open ? `Hide` : `Show`} />
+        <ListItemText primary={open ? t("hide") : t("hide")} />
         {open ? <ExpandLess /> : <Badge color="primary" badgeContent={list.length - showItems}>
           <ExpandMore />
         </Badge>}

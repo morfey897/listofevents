@@ -8,6 +8,7 @@ import { compareAsc, isSameDay } from 'date-fns';
 import {getColorIndex} from '../themes/colors';
 import { bindActionCreators } from 'redux';
 import { fetchEventsActionCreator } from "../model/actions";
+import { useTranslation } from 'react-i18next';
 
 const generateColorClass = ({disabled, tense, colorIndex}) => {
   if (disabled) {
@@ -40,6 +41,8 @@ function ListOfEventsScreen({cities, categories, events, view, dateFrom, dateTo,
 
   const classes = useStyles();
 
+  const {t} = useTranslation("list-of-events-screen");
+
   useEffect(() => {
     fetchEvents();
   }, [view, dateFrom, dateTo, categories_id, cities_id]);
@@ -50,16 +53,7 @@ function ListOfEventsScreen({cities, categories, events, view, dateFrom, dateTo,
         <Grid container spacing={1}>
           <Grid item xs={12}>
             <Typography paragraph>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-              ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-              facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-              gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-              donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-              adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-              Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-              imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-              arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-              donec massa sapien faucibus et molestie ac.
+              {t("description")}
             </Typography>
           </Grid>
           <Grid item xs={12}>
