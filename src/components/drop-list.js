@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 function DropList({ list, showItems = Number.MAX_SAFE_INTEGER, generator, onToggle }) {
 
-  const {t} = useTranslation("labels");
+  const {t} = useTranslation("general");
   const [open, setOpen] = useState(false);
 
   const handleOpen = useCallback(() => {

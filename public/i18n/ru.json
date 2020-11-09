@@ -1,27 +1,41 @@
 {
-  "labels": {
-    "show": "Показать",
-    "hide": "Спрятать"
+  "general": {
+    "label-show": "Показать",
+    "label-hide": "Спрятать"
   },
-  "buttons": {
-
-  },
+  
   "header": {
-    "mainMenu": "Главное меню",
+    "main-menu": "Главное меню",
     "about": "О нас",
     "contacts": "Контакты",
-    "listOfEvents": "Список событий",
-    "eventMap": "Карта событий",
-    "createEvent": "Создать событие",
+    "list-of-events": "Список событий",
+    "event-map": "Карта событий",
+    "create-event": "Создать событие",
     "account": "Учетная запись",
     "login": "Вход",
     "logout": "Выход",
-    "createAccount": "Создать",
+    "create-account": "Создать",
     "profile": "Личный кабинет",
-    "toggleTheme": "Темная/светлая тема"
+    "toggle-theme": "Темная/светлая тема"
   },
 
   "list-of-events-screen": {
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien faucibus et molestie ac."
+  },
+
+  "add-event-dialog": {
+    "title": "Добавить новое событие",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+    "name-label": "Название",
+    "name-helper": "Название не моюет быть пустым",
+    "description-label": "Описание",
+    "name-description": "Описание слишком короткое",
+    "location-label": "Место проведения",
+    "url-label": "Ссылка",
+    "date-label": "Дата",
+    "time-label": "Время",
+    "category-label": "Категория",
+    "city-label": "Город",
+    "tags-label": "Теги"
   }
 }

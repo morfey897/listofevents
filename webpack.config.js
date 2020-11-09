@@ -15,7 +15,7 @@ module.exports = (env, argv) => {
   const { parsed: DOTENV } = Dotenv.config();
   const IS_DEV_SERVER = (argv.mode === 'none');
   const MODE = IS_DEV_SERVER ? "development" : argv.mode;
-  const CSS_TO_JS = false;
+  const CSS_TO_JS = true;
 
   const robotstxt = DOTENV.ROBOTS === "true" ? {
     policy: [
@@ -52,7 +52,7 @@ module.exports = (env, argv) => {
         filename: argv.mode === 'none' ? '[name].bandle.css' : '[name].[hash].css'
       }),
       new HtmlWebpackPlugin({
-        title: DOTENV.APP_TITLE,
+        title: DOTENV.TITLE,
         template: "./public/index.ejs",
         filename: "./index.html",
         favicon: "./public/favicon/favicon.ico"

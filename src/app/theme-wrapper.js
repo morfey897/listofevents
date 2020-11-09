@@ -22,7 +22,7 @@ function ThemeWrapper({darkMode, detectDarkMode, darkTheme}) {
   }, [prefersDarkMode]);
 
   return (
-    <MuiThemeProvider theme={createAppTheme(darkMode)}>
+    <MuiThemeProvider theme={createAppTheme(false)}>
       <CssBaseline />
       <ScreenProvider />
       <DialogProvider />

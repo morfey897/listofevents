@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
-import { CalendarMontly, CalendarDaily, Filters, Toolbar } from '../components';
+import { CalendarMontly, CalendarDaily, Filters, Toolbar, RichEditor } from '../components';
 import { VIEWS, TENSE, STATES } from '../enums';
 import { connect } from 'react-redux';
 import { compareAsc, isSameDay } from 'date-fns';
@@ -52,6 +52,7 @@ function ListOfEventsScreen({cities, categories, events, view, dateFrom, dateTo,
       <Container>
         <Grid container spacing={1}>
           <Grid item xs={12}>
+            <RichEditor />
             <Typography paragraph>
               {t("description")}
             </Typography>

@@ -1,27 +1,40 @@
 {
-  "labels": {
-    "show": "Show",
-    "hide": "Hide"
-  },
-  "buttons": {
-
+  "general": {
+    "label-show": "Show",
+    "label-hide": "Hide"
   },
   "header": {
-    "mainMenu": "Main menu",
+    "main-menu": "Main menu",
     "about": "About",
     "contacts": "Contacts",
-    "listOfEvents": "List of event",
-    "eventMap": "Event map",
-    "createEvent": "Create event",
+    "list-of-events": "List of event",
+    "event-map": "Event map",
+    "create-event": "Create event",
     "account": "Account",
     "login": "Login",
     "logout": "Logout",
-    "createAccount": "Create",
+    "create-account": "Create",
     "profile": "Profile",
-    "toggleTheme": "Toggle dark/light theme"
+    "toggle-theme": "Toggle dark/light theme"
   },
 
   "list-of-events-screen": {
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien faucibus et molestie ac."
+  },
+
+  "add-event-dialog": {
+    "title": "Add new event",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+    "name-label": "Name",
+    "name-helper": "Название не моюет быть пустым",
+    "description-label": "Description",
+    "name-description": "Описание слишком короткое",
+    "location-label": "Location",
+    "url-label": "Link",
+    "date-label": "Date",
+    "time-label": "Time",
+    "category-label": "Category",
+    "city-label": "City",
+    "tags-label": "Tags"
   }
 }

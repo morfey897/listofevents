@@ -124,7 +124,7 @@ function Header({darkMode, toggleTheme}) {
               edge="start"
               color="inherit"
               className={classes.menuButton}
-              aria-label={t("mainMenu")}
+              aria-label={t("main-menu")}
               aria-controls={MAIN_MENU_ID}
               aria-haspopup="true"
               onClick={handleMainMenuOpen}>
@@ -135,19 +135,19 @@ function Header({darkMode, toggleTheme}) {
             </Button>
             <div className={classes.grow} />
 
-            <IconButton aria-label={t("toggleTheme")} color="inherit" onClick={handleChangeTheme}>
+            <IconButton aria-label={t("toggle-theme")} color="inherit" onClick={handleChangeTheme}>
                 {(darkMode) ? <DarkThemeIcon /> : <LightThemeIcon />}
               </IconButton>
               
             {/* Main menu buttons */}
             <Hidden xsDown implementation="css">
-              <IconButton aria-label={t("listOfEvents")} color="inherit" component={RouterLink} to={SCREENS.LIST_OF_EVENTS}>
+              <IconButton aria-label={t("list-of-events")} color="inherit" component={RouterLink} to={SCREENS.LIST_OF_EVENTS}>
                 <TableIcon />
               </IconButton>
-              <IconButton aria-label={t("eventMap")} color="inherit" component={RouterLink} to={SCREENS.EVENT_MAP}>
+              <IconButton aria-label={t("event-map")} color="inherit" component={RouterLink} to={SCREENS.EVENT_MAP}>
                 <MapIcon />
               </IconButton>
-              <IconButton aria-label={t("createEvent")} color="inherit" onClick={handleCreateEvent}>
+              <IconButton aria-label={t("create-event")} color="inherit" onClick={handleCreateEvent}>
                 <AddEventIcon />
               </IconButton>
             </Hidden>
@@ -185,7 +185,7 @@ function Header({darkMode, toggleTheme}) {
           <ListItemIcon className={classes.menuItemIcon}>
             <CreateUserIcon />
           </ListItemIcon>
-          <ListItemText primary={t("createAccount")} />
+          <ListItemText primary={t("create-account")} />
         </MenuItem>
         <MenuItem onClick={handleProfile} dense>
           <ListItemIcon className={classes.menuItemIcon}>
@@ -229,19 +229,19 @@ function Header({darkMode, toggleTheme}) {
               <ListItemIcon className={classes.menuItemIcon}>
                 <TableIcon />
               </ListItemIcon>
-              <ListItemText primary={t("listOfEvents")} />
+              <ListItemText primary={t("list-of-events")} />
             </ListItem>
             <ListItem button component={RouterLink} to={SCREENS.EVENT_MAP} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
                 <MapIcon />
               </ListItemIcon>
-              <ListItemText primary={t("eventMap")} />
+              <ListItemText primary={t("event-map")} />
             </ListItem>
             <ListItem button onClick={() => {handleMainMenuClose(); handleCreateEvent();}} dense>
               <ListItemIcon className={classes.menuItemIcon}>
                 <AddEventIcon />
               </ListItemIcon>
-              <ListItemText primary={t("createEvent")} />
+              <ListItemText primary={t("create-event")} />
             </ListItem>
             <Divider />
             <ListItem button component={RouterLink} to={SCREENS.CONTACTS} dense onClick={handleMainMenuClose}>
