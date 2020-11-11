@@ -58,5 +58,12 @@
     "contact_us": "Contact Us",
     "send_message": "Send message",
     "no_robot": "I'm not a robot"
+  },
+
+  "about": {
+    "title": "We are nerd rockstars",
+    "description": "This is the paragraph where you can write more details about your team. Keep you user engaged by providing meaningful information.",
+    "title_2": "We build awesome products",
+    "description_2": "This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information."
   }
 }

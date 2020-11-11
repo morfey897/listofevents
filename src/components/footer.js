@@ -40,7 +40,9 @@ const Footer = () => {
           </Grid>
           <Grid item xs={6} md={3}>
             <Typography>{t("company")}</Typography>
-            <Typography className={classes.linksStyle}>{t("about")}</Typography>
+            <RouterLink to={SCREENS.ABOUT}>
+              <Typography className={classes.linksStyle}>{t("about")}</Typography>
+            </RouterLink>
             <RouterLink to={SCREENS.CONTACTS}>
               <Typography className={classes.linksStyle}>{t("contact_us")}</Typography>
             </RouterLink>
