@@ -7,6 +7,7 @@ import { STATES, SCREENS } from '../enums';
 import { bindActionCreators } from 'redux';
 import { fetchCategoriesActionCreator, fetchCitiesActionCreator } from '../model/actions';
 import { connect } from 'react-redux';
+import Footer from '../components/footer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,12 +17,13 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
   content: {
     // flexGrow: 1,
-    padding: theme.spacing(3, 0),
+    // padding: theme.spacing(3, 0),
+    padding: 0
   },
   main: {
     // flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-  },
+  }
 }));
 
 function ScreenProvider({ location, citiesReady, categoriesReady, fetchCities, fetchCategories }) {
@@ -42,7 +44,7 @@ function ScreenProvider({ location, citiesReady, categoriesReady, fetchCities, f
       <Header />
       <main className={classes.main}>
         <div className={classes.toolbar} />
-        {(!citiesReady || !categoriesReady) ? <LinearProgress /> :
+        {!citiesReady || !categoriesReady ? <LinearProgress /> :
           <div className={classes.content}>
             <Switch location={location}>
               <Route exact path={SCREENS.HOME} component={ListOfEventsScreen} />
@@ -57,6 +59,7 @@ function ScreenProvider({ location, citiesReady, categoriesReady, fetchCities, f
           </div>
         }
       </main>
+      <Footer />
     </div>
   );
 }

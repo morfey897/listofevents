@@ -17,6 +17,16 @@
     "profile": "Profile",
     "toggle-theme": "Toggle dark/light theme"
   },
+  
+  "footer": {
+    "community": "Community",
+    "resources": "Resources",
+    "company": "Company",
+    "about": "About",
+    "contact_us": "Contact Us",
+    "support": "Support",
+    "blog": "Blog"
+  },
 
   "list-of-events-screen": {
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien faucibus et molestie ac."
@@ -36,5 +46,17 @@
     "category-label": "Category",
     "city-label": "City",
     "tags-label": "Tags"
+  },
+
+  "contacts": {
+    "title": "Get in touch",
+    "description": "You need more information? Check what other persons are saying about progect. They are very happy with thier purchace",
+    "find_us_in_office": "Find us in office",
+    "address": "128 rue de la boetie 75008 Paris France",
+    "give_us_ring": "Give as a ring",
+    "telephone": "+3807845264235 Mon-Fri 8.00-22.00",
+    "contact_us": "Contact Us",
+    "send_message": "Send message",
+    "no_robot": "I'm not a robot"
   }
 }
