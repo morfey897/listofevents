@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress } from '@material-ui/core';
+import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { CalendarMontly, CalendarDaily, Filters, Toolbar, RichEditor } from '../components';
 import { VIEWS, TENSE, STATES } from '../enums';
@@ -9,6 +9,8 @@ import {getColorIndex} from '../themes/colors';
 import { bindActionCreators } from 'redux';
 import { fetchEventsActionCreator } from "../model/actions";
 import { useTranslation } from 'react-i18next';
+import Footer from '../components/footer';
+import LineSeparator from '../components/separators';
 
 const generateColorClass = ({disabled, tense, colorIndex}) => {
   if (disabled) {
@@ -88,6 +90,10 @@ function ListOfEventsScreen({cities, categories, events, view, dateFrom, dateTo,
           </Grid>
         </Grid>
       </Container>
+      <Box mt={5}>
+        <LineSeparator/>
+      </Box>
+      <Footer/>
     </>
   );
 }

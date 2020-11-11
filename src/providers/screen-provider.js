@@ -7,7 +7,7 @@ import { STATES, SCREENS } from '../enums';
 import { bindActionCreators } from 'redux';
 import { fetchCategoriesActionCreator, fetchCitiesActionCreator } from '../model/actions';
 import { connect } from 'react-redux';
-import Footer from '../components/footer';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +59,6 @@ function ScreenProvider({ location, citiesReady, categoriesReady, fetchCities, f
           </div>
         }
       </main>
-      <Footer />
     </div>
   );
 }
