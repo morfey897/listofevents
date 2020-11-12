@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Container, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button, Drawer, List, ListItem } from '@material-ui/core';
+import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Container, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button, Drawer, List, ListItem, useTheme } from '@material-ui/core';
 
 import {
   Menu as MenuIcon,
@@ -19,12 +19,9 @@ import {
   Brightness4 as LightThemeIcon,
 } from '@material-ui/icons';
 
-import { SCREENS, DIALOGS } from "../enums";
+import { SCREENS, DIALOGS, EVENTS } from "../enums";
 
-import { DialogEmitter } from '../emitters';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { appToggleThemeActionCreator } from '../model/actions';
+import { DialogEmitter, ThemeEmitter } from '../emitters';
 import { useTranslation } from 'react-i18next';
 
 const ACCOUNT_MENU_ID = 'primary-account-menu';
@@ -64,7 +61,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Header({darkMode, toggleTheme}) {
+function Header() {
+  const theme = useTheme();
   const classes = useStyles();
 
   const {t} = useTranslation("header");
@@ -112,12 +110,12 @@ function Header({darkMode, toggleTheme}) {
   }, []);
 
   const handleChangeTheme = useCallback(() => {
-    toggleTheme();
+    ThemeEmitter.emit(EVENTS.UI_DARK_MODE);
   }, []);
 
   return (
     <>
-      <AppBar position="fixed" color="primary" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar}>
         <Container>
           <Toolbar disableGutters>
             <IconButton
@@ -136,7 +134,7 @@ function Header({darkMode, toggleTheme}) {
             <div className={classes.grow} />
 
             <IconButton aria-label={t("toggle-theme")} color="inherit" onClick={handleChangeTheme}>
-                {(darkMode) ? <DarkThemeIcon /> : <LightThemeIcon />}
+                {(theme.palette.type === "dark") ? <DarkThemeIcon /> : <LightThemeIcon />}
               </IconButton>
               
             {/* Main menu buttons */}
@@ -257,16 +255,4 @@ function Header({darkMode, toggleTheme}) {
   );
 }
 
-
-const mapStateToProps = (state) => {
-  const {apps} = state;
-  return {
-    darkMode: apps.darkMode,
-  };
-};
-
-const mapDispatchToProps = dispatch => bindActionCreators({
-  toggleTheme: appToggleThemeActionCreator,
-}, dispatch);
-
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default Header;
