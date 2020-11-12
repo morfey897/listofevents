@@ -64,6 +64,12 @@
     "title": "We are nerd rockstars",
     "description": "This is the paragraph where you can write more details about your team. Keep you user engaged by providing meaningful information.",
     "title_2": "We build awesome products",
-    "description_2": "This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information."
+    "description_2": "This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information.",
+    "design": "Design",
+    "designDescription": "The moment you use Material Kit, you know you’ve never felt anything like it. With a single use, this powerfull UI Kit lets you do more than ever before.",
+    "develop": "Develop",
+    "developDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
+    "makeEdits": "Make Edits",
+    "makeEditsDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough."
   }
 }

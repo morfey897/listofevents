@@ -1,5 +1,5 @@
 import { Box, Card, CardActions, CardContent, CardMedia, Container, Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
-import { Facebook, LocalSee, Telegram } from '@material-ui/icons';
+import { Build, Create, Facebook, Gesture, LocalSee, Telegram } from '@material-ui/icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/footer';
@@ -50,6 +50,11 @@ const useStyles = makeStyles(() => ({
     width: '130px',
     height: '130px',
     borderRadius: '50%'
+  },
+  cardDescription: {
+    margin: '20px',
+    width: '400px',
+    display: 'flex'
   }
 }));
 
@@ -64,7 +69,7 @@ function AboutScreen() {
           <Typography variant="h2" align="center">{t("title")}</Typography>
         </Box>
         <Box mt={5}>
-          <Typography fontWeight="fontWeightBold" align="center">{t("description")}</Typography>
+          <Typography align="center">{t("description")}</Typography>
         </Box>
         <Box mt={5}>
           <Grid container spacing={4}>
@@ -99,7 +104,44 @@ function AboutScreen() {
           <Typography variant="h2" align="center">{t("title_2")}</Typography>
         </Box>
         <Box mt={5}>
-          <Typography fontWeight="fontWeightBold" align="center">{t("description_2")}</Typography>
+          <Typography align="center">{t("description_2")}</Typography>
+        </Box>
+        <Box mt={12}>
+          <Grid container>
+            <Grid item xs={12} md={6} lg={4}>
+              <Box className={classes.cardDescription}>
+                <Box mx={2}>
+                  <Gesture color='secondary'/>
+                </Box>
+                <Box>
+                  <Typography variant="h6">{`1. ${t("design")}`}</Typography>
+                  <Typography>{t("designDescription")}</Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <Box className={classes.cardDescription}>
+                <Box mx={2}>
+                  <Build color='secondary'/>
+                </Box>
+                <Box>
+                  <Typography variant="h6">{`2. ${t("develop")}`}</Typography>
+                  <Typography>{t("developDescription")}</Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4}>
+              <Box className={classes.cardDescription}>
+                <Box mx={2}>
+                  <Create color='secondary'/>
+                </Box>
+                <Box>
+                  <Typography variant="h6">{`3. ${t("makeEdits")}`}</Typography>
+                  <Typography>{t("makeEditsDescription")}</Typography>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
       </Container>
       <Box mt={5}>
