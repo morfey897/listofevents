@@ -7,6 +7,7 @@ import { STATES, SCREENS } from '../enums';
 import { bindActionCreators } from 'redux';
 import { fetchCategoriesActionCreator, fetchCitiesActionCreator } from '../model/actions';
 import { connect } from 'react-redux';
+import JobsScreen from '../screens/jobs-screen';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +51,7 @@ function ScreenProvider({ location, citiesReady, categoriesReady, fetchCities, f
               <Route exact path={SCREENS.HOME} component={ListOfEventsScreen} />
               <Route exact path={SCREENS.ABOUT} component={AboutScreen} />
               <Route exact path={SCREENS.CONTACTS} component={ContactsScreen} />
+              <Route exact path={SCREENS.JOBS} component={JobsScreen} />
               <Route exact path={SCREENS.EVENT_MAP} component={EventMapScreen} />
               <Route exact path={SCREENS.LIST_OF_EVENTS} component={ListOfEventsScreen} />
               <Route path="*">

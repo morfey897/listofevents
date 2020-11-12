@@ -24,6 +24,7 @@
     "company": "Company",
     "about": "About",
     "contact_us": "Contact Us",
+    "jobs": "Jobs",
     "support": "Support",
     "blog": "Blog"
   },
@@ -71,5 +72,11 @@
     "developDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
     "makeEdits": "Make Edits",
     "makeEditsDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough."
+  },
+
+  "jobs": {
+    "title": "Want to work with us?",
+    "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
+    "letsTalk": "LET'S TALK"
   }
 }

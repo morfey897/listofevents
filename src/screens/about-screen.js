@@ -1,4 +1,4 @@
-import { Box, Card, CardActions, CardContent, CardMedia, Container, Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
+import { Box, Card, CardContent, CardMedia, Container, Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
 import { Build, Create, Facebook, Gesture, LocalSee, Telegram } from '@material-ui/icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
