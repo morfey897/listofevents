@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Container, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button, Drawer, List, ListItem, useTheme } from '@material-ui/core';
+import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Container, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button, Drawer, List, ListItem, useTheme, Tooltip } from '@material-ui/core';
 
 import {
   Menu as MenuIcon,
@@ -15,8 +15,8 @@ import {
   ExitToApp as LogoutIcon,
   Person as LoginIcon,
   ChevronLeft as ChevronLeftIcon,
-  Brightness7 as DarkThemeIcon,
-  Brightness4 as LightThemeIcon,
+  Brightness7 as LightThemeIcon,
+  Brightness3 as DarkThemeIcon,
 } from '@material-ui/icons';
 
 import { SCREENS, DIALOGS, EVENTS } from "../enums";
@@ -65,7 +65,7 @@ function Header() {
   const theme = useTheme();
   const classes = useStyles();
 
-  const {t} = useTranslation("header");
+  const { t } = useTranslation("header");
 
   const [accountMenuAnchor, setAnchorEl] = useState(null);
   const [mainMoreAnchorEl, setMainMoreAnchorEl] = useState(null);
@@ -118,48 +118,59 @@ function Header() {
       <AppBar position="fixed" className={classes.appBar}>
         <Container>
           <Toolbar disableGutters>
-            <IconButton
-              edge="start"
-              color="inherit"
-              className={classes.menuButton}
-              aria-label={t("main-menu")}
-              aria-controls={MAIN_MENU_ID}
-              aria-haspopup="true"
-              onClick={handleMainMenuOpen}>
-              <MenuIcon />
-            </IconButton>
+            <Tooltip title={t("main-menu")}>
+              <IconButton
+                edge="start"
+                color="inherit"
+                className={classes.menuButton}
+                aria-controls={MAIN_MENU_ID}
+                aria-haspopup="true"
+                onClick={handleMainMenuOpen}>
+                <MenuIcon />
+              </IconButton>
+            </Tooltip>
+
             <Button variant="text" color="inherit" component={RouterLink} to={SCREENS.HOME}>
               {process.env.APP_NAME}
             </Button>
             <div className={classes.grow} />
 
-            <IconButton aria-label={t("toggle-theme")} color="inherit" onClick={handleChangeTheme}>
-                {(theme.palette.type === "dark") ? <DarkThemeIcon /> : <LightThemeIcon />}
+            <Tooltip title={t("toggle-theme")}>
+              <IconButton color="inherit" onClick={handleChangeTheme}>
+                {(theme.palette.type === "dark") ? <LightThemeIcon /> : <DarkThemeIcon />}
               </IconButton>
-              
+            </Tooltip>
+
             {/* Main menu buttons */}
             <Hidden xsDown implementation="css">
-              <IconButton aria-label={t("list-of-events")} color="inherit" component={RouterLink} to={SCREENS.LIST_OF_EVENTS}>
-                <TableIcon />
-              </IconButton>
-              <IconButton aria-label={t("event-map")} color="inherit" component={RouterLink} to={SCREENS.EVENT_MAP}>
-                <MapIcon />
-              </IconButton>
-              <IconButton aria-label={t("create-event")} color="inherit" onClick={handleCreateEvent}>
-                <AddEventIcon />
-              </IconButton>
+              <Tooltip title={t("list-of-events")}>
+                <IconButton color="inherit" component={RouterLink} to={SCREENS.LIST_OF_EVENTS}>
+                  <TableIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={t("event-map")}>
+                <IconButton color="inherit" component={RouterLink} to={SCREENS.EVENT_MAP}>
+                  <MapIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title={t("create-event")}>
+                <IconButton color="inherit" onClick={handleCreateEvent}>
+                  <AddEventIcon />
+                </IconButton>
+              </Tooltip>
             </Hidden>
 
-            <IconButton
-              edge="end"
-              aria-label={t("account")}
-              aria-controls={ACCOUNT_MENU_ID}
-              aria-haspopup="true"
-              onClick={handleAccountMenuOpen}
-              color="inherit"
-            >
-              <AccountIcon />
-            </IconButton>
+            <Tooltip title={t("account")}>
+              <IconButton
+                edge="end"
+                aria-controls={ACCOUNT_MENU_ID}
+                aria-haspopup="true"
+                onClick={handleAccountMenuOpen}
+                color="inherit"
+              >
+                <AccountIcon />
+              </IconButton>
+            </Tooltip>
           </Toolbar>
         </Container>
       </AppBar>
@@ -235,7 +246,7 @@ function Header() {
               </ListItemIcon>
               <ListItemText primary={t("event-map")} />
             </ListItem>
-            <ListItem button onClick={() => {handleMainMenuClose(); handleCreateEvent();}} dense>
+            <ListItem button onClick={() => { handleMainMenuClose(); handleCreateEvent(); }} dense>
               <ListItemIcon className={classes.menuItemIcon}>
                 <AddEventIcon />
               </ListItemIcon>
