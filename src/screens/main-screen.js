@@ -108,7 +108,7 @@ const MainScreen = () => {
             </Grid>
             <Grid item xs={12} lg={5} className={classes.alignCenter}>
               <Box pl={5} color='common.white'>
-                <Typography gutterBottom variant="h4">{t("leftBlockTitle")}</Typography>
+                <Typography  gutterBottom variant="h4">{t("leftBlockTitle")}</Typography>
                 <Typography>{t("leftBlockText")}</Typography>
               </Box>
             </Grid>
