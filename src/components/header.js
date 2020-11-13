@@ -17,6 +17,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
   Brightness7 as LightThemeIcon,
   Brightness3 as DarkThemeIcon,
+  ViewDay,
 } from '@material-ui/icons';
 
 import { SCREENS, DIALOGS, EVENTS } from "../enums";
@@ -148,6 +149,11 @@ function Header() {
                   <TableIcon />
                 </IconButton>
               </Tooltip>
+              <Tooltip title={t("page-of-events")}>
+                <IconButton color="inherit" component={RouterLink} to={SCREENS.PAGE_OF_EVENTS}>
+                  <ViewDay />
+                </IconButton>
+              </Tooltip>
               <Tooltip title={t("event-map")}>
                 <IconButton color="inherit" component={RouterLink} to={SCREENS.EVENT_MAP}>
                   <MapIcon />
@@ -239,6 +245,12 @@ function Header() {
                 <TableIcon />
               </ListItemIcon>
               <ListItemText primary={t("list-of-events")} />
+            </ListItem>
+            <ListItem button component={RouterLink} to={SCREENS.PAGE_OF_EVENTS} dense onClick={handleMainMenuClose}>
+              <ListItemIcon className={classes.menuItemIcon}>
+                <ViewDay />
+              </ListItemIcon>
+              <ListItemText primary={t("page-of-events")} />
             </ListItem>
             <ListItem button component={RouterLink} to={SCREENS.EVENT_MAP} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
