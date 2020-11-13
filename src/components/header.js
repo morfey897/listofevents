@@ -128,7 +128,7 @@ function Header() {
               onClick={handleMainMenuOpen}>
               <MenuIcon />
             </IconButton>
-            <Button variant="text" color="inherit" component={RouterLink} to={SCREENS.HOME}>
+            <Button variant="text" color="inherit" component={RouterLink} to={SCREENS.MAIN}>
               {process.env.APP_NAME}
             </Button>
             <div className={classes.grow} />

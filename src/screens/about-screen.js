@@ -1,9 +1,11 @@
-import { Box, Card, CardContent, CardMedia, Container, Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
-import { Build, Create, Facebook, Gesture, LocalSee, Telegram } from '@material-ui/icons';
+import { Box, Container, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Build, Create, Gesture } from '@material-ui/icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import Factory from '../components/factory';
 import Footer from '../components/footer';
 import LineSeparator from '../components/separators';
+import { PERSON_CARD } from '../enums/factory';
 
 let administrations = [
   {
@@ -38,22 +40,9 @@ let administrations = [
 
 
 const useStyles = makeStyles(() => ({
-  card: {
-    width: '280px',
-    height: '420px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  cardMedia: {
-    marginTop: '20px',
-    width: '130px',
-    height: '130px',
-    borderRadius: '50%'
-  },
   cardDescription: {
     margin: '20px',
-    width: '400px',
+    width: '370px',
     display: 'flex'
   }
 }));
@@ -74,27 +63,9 @@ function AboutScreen() {
         <Box mt={5}>
           <Grid container spacing={4}>
             {
-              administrations.map(({id, firstName, lastName, profesion, aboutMe}) => (
-                <Grid item key={id} xs={12} sm={6} md={4} lg={3}>
-                  <Card className={classes.card}>
-                    <CardMedia className={classes.cardMedia} image="http://source.unsplash.com/random" />
-                    <CardContent>
-                      <Typography variant="h5" align='center' gutterBottom>{firstName + ' ' + lastName}</Typography>
-                      <Typography variant="subtitle1" align='center' gutterBottom>{profesion}</Typography>
-                      <Typography align='center'>{aboutMe}</Typography>
-                    </CardContent>
-                    <Box>
-                      <IconButton color='primary'>
-                        <Facebook />
-                      </IconButton>
-                      <IconButton color='secondary'>
-                        <LocalSee/>
-                      </IconButton>
-                      <IconButton color='primary'>
-                        <Telegram />
-                      </IconButton>
-                    </Box>
-                  </Card>
+              administrations.map((item) => (
+                <Grid item key={item.id} xs={12} sm={6} md={4} lg={3}>
+                  <Factory type={PERSON_CARD} props={item}/>
                 </Grid>
               ))
             }

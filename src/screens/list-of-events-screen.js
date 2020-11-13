@@ -115,7 +115,7 @@ const mapStateToProps = (state) => {
   }) : [];
 
   return {
-    loading: s_events.state === STATES.STATE_LOADING, 
+    loading: s_events.state === STATES.STATE_LOADING,
     events,
     cities,
     categories,

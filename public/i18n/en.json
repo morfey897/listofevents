@@ -78,5 +78,12 @@
     "title": "Want to work with us?",
     "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
     "letsTalk": "LET'S TALK"
+  },
+
+  "main": {
+    "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
+    "sdfsa": "dfasdf",
+    "leftBlockTitle": "Basic Components",
+    "leftBlockText": "We re-styled every Bootstrap element to make it resemble Material Design and also fit with each other. All the Bootstrap components that you need in a development have been re-design with the new look. Besides the numerous basic elements, we have also created additional classes. All these items will help you take your project to the next level."
   }
 }

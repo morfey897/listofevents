@@ -1,4 +1,5 @@
 import { Box, Button, Container, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
+import { TextFields } from '@material-ui/icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/footer';
@@ -34,12 +35,12 @@ const JobsScreen = () => {
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <Box className={classes.justifyCenter}>
-                <TextField autoFocus margin="dense" id="yourPhone" label="Your phone" type="yourPhone" />
+                <TextField margin="dense" id="yourPhone" label="Your phone" type="yourPhone" />
               </Box>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <Box className={classes.justifyCenter}>
-                <TextField autoFocus margin="dense" id="yourEmail" label="Your email" type="yourEmail" />
+                <TextField margin="dense" id="yourEmail" label="Your email" type="yourEmail" />
               </Box>
             </Grid>
           </Grid>
