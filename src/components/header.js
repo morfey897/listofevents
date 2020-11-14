@@ -24,6 +24,7 @@ import { SCREENS, DIALOGS, EVENTS } from "../enums";
 
 import { DialogEmitter, ThemeEmitter } from '../emitters';
 import { useTranslation } from 'react-i18next';
+import { EVENT_SCREEN } from '../enums/screens';
 
 const ACCOUNT_MENU_ID = 'primary-account-menu';
 const MAIN_MENU_ID = 'primary-main-menu';

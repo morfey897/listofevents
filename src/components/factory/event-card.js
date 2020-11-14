@@ -1,5 +1,6 @@
 import { Box, CardMedia, Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
 
 const useStyles = makeStyles(() => ({
@@ -11,13 +12,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const Child = ({img, title, text}) => {
+const Child = ({img, url, title, text}) => {
   const classes = useStyles();
 
   return (
     <Grid container>
       <Grid item xs={12} md={4}>
-        <CardMedia className={classes.cardMedia} image={img} />
+        <RouterLink to={url}>
+          <CardMedia className={classes.cardMedia} image={img} />
+        </RouterLink>
       </Grid>
       <Grid item xs={12} md={8}>
         <Box mt={2}>
