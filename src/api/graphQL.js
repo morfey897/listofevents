@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { encode } from 'js-base64';
 import { logRequestInterceptor, logResponseInterceptor } from './interceptors';
 
 const FAIL = "fail";
@@ -6,7 +7,9 @@ const SUCCESS = "succes";
 
 const axiosGraphQL = axios.create({
   baseURL: process.env.API_URL,
-  headers: {},
+  headers: {
+    authorization: "Basic " + encode(process.env.BASIC_AUTH)
+  },
 });
 
 axiosGraphQL.interceptors.request.use(logRequestInterceptor);
