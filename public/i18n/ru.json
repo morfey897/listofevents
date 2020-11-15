@@ -1,7 +1,9 @@
 {
   "general": {
     "label-show": "Показать",
-    "label-hide": "Спрятать"
+    "label-hide": "Спрятать",
+    "button-sign-in": "Войти",
+    "button-close": "Закрыть"
   },
   
   "header": {
@@ -48,6 +50,13 @@
     "category-label": "Категория",
     "city-label": "Город",
     "tags-label": "Теги"
+  },
+
+  "login-dialog": {
+    "title": "Логин",
+    "description": "или",
+    "user-label": "Username or email address",
+    "password-label": "Пароль"
   },
   
   "contacts": {

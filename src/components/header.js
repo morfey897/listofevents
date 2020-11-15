@@ -93,6 +93,7 @@ function Header() {
 
   const handleLogin = useCallback(() => {
     handleAccountMenuClose();
+    DialogEmitter.open(DIALOGS.LOGIN);
   }, []);
 
   const handleLogout = useCallback(() => {

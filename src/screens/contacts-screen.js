@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/footer';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   containerImg: {
     backgroundImage: 'url(http://source.unsplash.com/random)',
     height: '700px'
@@ -13,22 +13,22 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'flex-end'
   },
-  whitePaper: {
+  paper: {
     marginTop: '80px',
     padding: '30px',
     width: '450px',
     height: '450px'
   },
-  purpleBox: {
+  headerBox: {
     position: 'relative',
     top: '-40px',
-    backgroundColor: '#3f51b5',
+    backgroundColor: theme.palette.info.main,
     height: '50px',
     borderRadius: '5px'
   },
-  purpleBoxText: {
+  headerBoxTitle: {
     paddingTop: '8px',
-    color: 'white'
+    color: theme.palette.info.contrastText
   },
   spaceBetween: {
     display: 'flex',
@@ -73,9 +73,9 @@ function ContactsScreen() {
               </Box>
             </Grid>
             <Grid item xs={12} md={6} className={classes.rightBlock}>
-              <Paper className={classes.whitePaper}>
-                <Box className={classes.purpleBox} >
-                  <Typography align='center' variant="h6" className={classes.purpleBoxText} >{t("contact_us")}</Typography>
+              <Paper className={classes.paper}>
+                <Box className={classes.headerBox} >
+                  <Typography align='center' variant="h6" className={classes.headerBoxTitle} >{t("contact_us")}</Typography>
                 </Box>
                 <Box className={classes.spaceBetween}>
                   <TextField autoFocus margin="dense" id="firstName" label="First name" type="firstName" />

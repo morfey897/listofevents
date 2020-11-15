@@ -1,7 +1,9 @@
 {
   "general": {
     "label-show": "Show",
-    "label-hide": "Hide"
+    "label-hide": "Hide",
+    "button-sign-in": "Sign in",
+    "button-close": "Close"
   },
   "header": {
     "main-menu": "Main menu",
@@ -49,6 +51,13 @@
     "category-label": "Category",
     "city-label": "City",
     "tags-label": "Tags"
+  },
+
+  "login-dialog": {
+    "title": "Login",
+    "description": "or",
+    "user-label": "Username or email address",
+    "password-label": "Password"
   },
 
   "contacts": {

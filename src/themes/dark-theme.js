@@ -104,6 +104,11 @@ export default {
         ...Object.keys(globalColors).reduce((prev, name) => Object.assign({}, prev, { [`.${name}`]: { color: `${globalColors[name].contrastText} !important`, backgroundColor: `${globalColors[name].main} !important` } }), {})
       }
     },
+    MuiDialog:{
+      paper: {
+        overflowY: "none"
+      }
+    },
     MuiAppBar: {
       colorPrimary: {
         backgroundColor: "#424242" // Pink AppBar       
