@@ -57,7 +57,8 @@
     "title": "Login",
     "description": "or",
     "user-label": "Username or email address",
-    "password-label": "Password"
+    "password-label": "Password",
+    "error": "Incorrect username or password."
   },
 
   "contacts": {

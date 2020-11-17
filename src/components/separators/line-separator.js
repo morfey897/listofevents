@@ -1,7 +1,14 @@
 import React from "react";
-import style from "./style.pure.scss";
+import { makeStyles } from "@material-ui/core";
 
-export const LineSeparator = () => {
+const useStyles = makeStyles((theme) => ({
+  line: {
+    color: theme.palette.grey["100"],
+    margin: theme.spacing(0)
+  }
+}));
 
-  return <hr className={style.line} />;
-};
+export function LineSeparator() {
+  const classes = useStyles();
+  return <hr className={classes.line} />;
+}

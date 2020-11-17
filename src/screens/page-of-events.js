@@ -1,8 +1,6 @@
-import { Box, Container } from '@material-ui/core';
+import { Box, Container, makeStyles } from '@material-ui/core';
 import React from 'react';
 import Factory from '../components/factory';
-import Footer from '../components/footer';
-import LineSeparator from '../components/separators';
 import { EVENTS_CARD } from '../enums/factory';
 
 const latestBlogs = [
@@ -29,26 +27,30 @@ const latestBlogs = [
   }
 ];
 
+const useStyles = makeStyles((theme) => ({
+
+  container: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(6)
+  },
+
+}));
+
 const PageOfEventsScreen = () => {
 
+  const classes = useStyles();
   return (
-    <>
-      <Container>
-        <Box mt={6} >
-          {
-            latestBlogs.map((item) => (
-              <Box key={item.id} my={4}>
-                <Factory type={EVENTS_CARD} props={item} />
-              </Box>
-            ))
-          }
-        </Box>
-      </Container>
-      <Box mt={5}>
-        <LineSeparator/>
+    <Container className={classes.container}>
+      <Box mt={6} >
+        {
+          latestBlogs.map((item) => (
+            <Box key={item.id} my={4}>
+              <Factory type={EVENTS_CARD} props={item} />
+            </Box>
+          ))
+        }
       </Box>
-      <Footer/>
-    </>
+    </Container>
   );
 };
 

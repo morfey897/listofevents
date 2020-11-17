@@ -1,4 +1,4 @@
-import { request } from "../../api/graphQL";
+import { request } from "../../api";
 import { STATES } from "../../enums";
 
 export const CATEGORY_LOADED = "category_loaded";
@@ -34,7 +34,7 @@ export function fetchCategoriesActionCreator() {
     const { state } = getState().categories;
     if (state === STATES.STATE_NONE) {
       dispatch({ type: CATEGORY_UPDATE_STATE, payload: {state: STATES.STATE_LOADING} });
-      return request(categoriesQuery())
+      return request(categoriesQuery(), dispatch)
               .then(({ success, data }) => {
                 if (success) return data;
                 throw new Error("Can't load");

@@ -1,4 +1,4 @@
-import { request } from "../../api/graphQL";
+import { request } from "../../api";
 import { STATES } from "../../enums";
 
 export const COUNTRY_LOADED = "country_loaded";
@@ -24,7 +24,7 @@ export function fetchCountriesActionCreator() {
     const { state } = getState().countries;
     if (state === STATES.STATE_NONE) {
       dispatch({type: COUNTRY_UPDATE_STATE, payload: {state: STATES.STATE_LOADING}});
-      return request(countriesQuery())
+      return request(countriesQuery(), dispatch)
               .then(({success, data}) => {
                 if (success) return data;
                 throw new Error("Can't loaded");

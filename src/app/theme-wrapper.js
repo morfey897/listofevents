@@ -10,13 +10,12 @@ import { ScreenProvider } from '../providers';
 import DialogProvider from '../providers/dialog-provider';
 import { useMediaQuery } from '@material-ui/core';
 import { ThemeEmitter } from '../emitters';
-import { EVENTS } from '../enums';
+import { EVENTS, STORAGEKEYS } from '../enums';
 
-const DARK_MODE = "dark_mode";
 function ThemeWrapper() {
   
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [darkMode, setDarkMode] = useState(store.get(DARK_MODE) === true);
+  const [darkMode, setDarkMode] = useState(store.get(STORAGEKEYS.DARK_MODE) === true);
 
   useEffect(() => {
     ThemeEmitter.on(EVENTS.UI_DARK_MODE, onChangeDarkMode);
@@ -26,18 +25,18 @@ function ThemeWrapper() {
   }, []);
 
   useEffect(() => {
-    const curState = store.get(DARK_MODE);
+    const curState = store.get(STORAGEKEYS.DARK_MODE);
     if (typeof curState === "boolean") {
       setDarkMode(curState);
     } else if (prefersDarkMode) {
-      store.set(DARK_MODE, prefersDarkMode);
+      store.set(STORAGEKEYS.DARK_MODE, prefersDarkMode);
       setDarkMode(prefersDarkMode);
     }
   }, [prefersDarkMode]);
 
   const onChangeDarkMode = useCallback(() => {
     setDarkMode((darkMode) => {
-      store.set(DARK_MODE, !darkMode);
+      store.set(STORAGEKEYS.DARK_MODE, !darkMode);
       return !darkMode;
     });
   }, []);

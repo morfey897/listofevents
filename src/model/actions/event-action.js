@@ -1,4 +1,4 @@
-import { request } from "../../api/graphQL";
+import { request } from "../../api";
 import { STATES } from "../../enums";
 
 export const EVENT_LOADED = "event_loaded";
@@ -48,7 +48,7 @@ export function fetchEventsActionCreator() {
     const { dateTo, dateFrom, categories_id, cities_id } = getState().filter;
     dispatch({type: EVENT_UPDATE_STATE, payload: {state: STATES.STATE_LOADING}});
     const req = eventsQuery({categories_id, cities_id, dateTo, dateFrom});
-    return request(req)
+    return request(req, dispatch)
             .then(({success, data}) => {
               if (success) return data;
               throw new Error("Can't loaded");

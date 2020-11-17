@@ -5,6 +5,7 @@ import * as TENSE from "./tense";
 import * as VIEWS from "./views";
 import * as EVENTS from "./events";
 import * as LANGS from "./langs";
+import * as STORAGEKEYS from "./storagekeys";
 
 export {
   DIALOGS,
@@ -14,4 +15,5 @@ export {
   VIEWS,
   EVENTS,
   LANGS,
+  STORAGEKEYS,
 };

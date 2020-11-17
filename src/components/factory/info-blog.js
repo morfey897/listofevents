@@ -1,5 +1,6 @@
 import { Box, IconButton, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
+import { ViewComfy, ViewDay, ViewCarousel } from '@material-ui/icons';
 
 const useStyles = makeStyles(() => ({
   cardDescription: {
@@ -15,14 +16,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const Child = ({icon, title, text}) => {
+const Child = ({ icon, title, text }) => {
   const classes = useStyles();
 
   return (
     <Box className={classes.cardDescription}>
       <Box mb={3} className={classes.justifyCenter}>
         {/* надо передавать картинки или svg, это вариант примерный иконка крыво отрисовуется и должна быть зарание имрортированой */}
-        <IconButton color='secondary' component={icon} />
+        <IconButton color='secondary'>
+          {icon === "ViewComfy" && <ViewComfy />}
+          {icon === "ViewDay" && <ViewDay />}
+          {icon === "ViewCarousel" && <ViewCarousel />}
+        </IconButton>
       </Box>
       <Typography align='center' gutterBottom variant="h6">{title}</Typography>
       <Typography align='center'>{text}</Typography>

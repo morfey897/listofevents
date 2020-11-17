@@ -3,8 +3,6 @@ import { Build, Create, Gesture } from '@material-ui/icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Factory from '../components/factory';
-import Footer from '../components/footer';
-import LineSeparator from '../components/separators';
 import { PERSON_CARD } from '../enums/factory';
 
 let administrations = [
@@ -39,7 +37,12 @@ let administrations = [
 ];
 
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(6)
+  },
+  
   cardDescription: {
     margin: '20px',
     width: '370px',
@@ -48,78 +51,72 @@ const useStyles = makeStyles(() => ({
 }));
 
 function AboutScreen() {
-  const {t} = useTranslation("about");
+  const { t } = useTranslation("about");
   const classes = useStyles();
 
   return (
-    <>
-      <Container>
-        <Box mt={8}>
-          <Typography variant="h2" align="center">{t("title")}</Typography>
-        </Box>
-        <Box mt={5}>
-          <Typography align="center">{t("description")}</Typography>
-        </Box>
-        <Box mt={5}>
-          <Grid container spacing={4}>
-            {
-              administrations.map((item) => (
-                <Grid item key={item.id} xs={12} sm={6} md={4} lg={3}>
-                  <Factory type={PERSON_CARD} props={item}/>
-                </Grid>
-              ))
-            }
-          </Grid>
-        </Box>
-        <Box mt={12}>
-          <Typography variant="h2" align="center">{t("title_2")}</Typography>
-        </Box>
-        <Box mt={5}>
-          <Typography align="center">{t("description_2")}</Typography>
-        </Box>
-        <Box mt={12}>
-          <Grid container>
-            <Grid item xs={12} md={6} lg={4}>
-              <Box className={classes.cardDescription}>
-                <Box mx={2}>
-                  <Gesture color='secondary'/>
-                </Box>
-                <Box>
-                  <Typography variant="h6">{`1. ${t("design")}`}</Typography>
-                  <Typography>{t("designDescription")}</Typography>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <Box className={classes.cardDescription}>
-                <Box mx={2}>
-                  <Build color='secondary'/>
-                </Box>
-                <Box>
-                  <Typography variant="h6">{`2. ${t("develop")}`}</Typography>
-                  <Typography>{t("developDescription")}</Typography>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <Box className={classes.cardDescription}>
-                <Box mx={2}>
-                  <Create color='secondary'/>
-                </Box>
-                <Box>
-                  <Typography variant="h6">{`3. ${t("makeEdits")}`}</Typography>
-                  <Typography>{t("makeEditsDescription")}</Typography>
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
-        </Box>
-      </Container>
-      <Box mt={5}>
-        <LineSeparator/>
+    <Container className={classes.container}>
+      <Box mt={8}>
+        <Typography variant="h2" align="center">{t("title")}</Typography>
       </Box>
-      <Footer/>
-    </>
+      <Box mt={5}>
+        <Typography align="center">{t("description")}</Typography>
+      </Box>
+      <Box mt={5}>
+        <Grid container spacing={4}>
+          {
+            administrations.map((item) => (
+              <Grid item key={item.id} xs={12} sm={6} md={4} lg={3}>
+                <Factory type={PERSON_CARD} props={item} />
+              </Grid>
+            ))
+          }
+        </Grid>
+      </Box>
+      <Box mt={12}>
+        <Typography variant="h2" align="center">{t("title_2")}</Typography>
+      </Box>
+      <Box mt={5}>
+        <Typography align="center">{t("description_2")}</Typography>
+      </Box>
+      <Box mt={12}>
+        <Grid container>
+          <Grid item xs={12} md={6} lg={4}>
+            <Box className={classes.cardDescription}>
+              <Box mx={2}>
+                <Gesture color='secondary' />
+              </Box>
+              <Box>
+                <Typography variant="h6">{`1. ${t("design")}`}</Typography>
+                <Typography>{t("designDescription")}</Typography>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <Box className={classes.cardDescription}>
+              <Box mx={2}>
+                <Build color='secondary' />
+              </Box>
+              <Box>
+                <Typography variant="h6">{`2. ${t("develop")}`}</Typography>
+                <Typography>{t("developDescription")}</Typography>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <Box className={classes.cardDescription}>
+              <Box mx={2}>
+                <Create color='secondary' />
+              </Box>
+              <Box>
+                <Typography variant="h6">{`3. ${t("makeEdits")}`}</Typography>
+                <Typography>{t("makeEditsDescription")}</Typography>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+    </Container>
   );
 }
 

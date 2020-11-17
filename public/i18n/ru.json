@@ -55,8 +55,9 @@
   "login-dialog": {
     "title": "Логин",
     "description": "или",
-    "user-label": "Username or email address",
-    "password-label": "Пароль"
+    "user-label": "Электронная почта или номер телефона",
+    "password-label": "Пароль",
+    "error": "Неверный логин или пароль."
   },
   
   "contacts": {

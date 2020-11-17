@@ -1,4 +1,4 @@
-import { request } from "../../api/graphQL";
+import { request } from "../../api";
 import { STATES } from "../../enums";
 
 export const CITY_LOADED = "city_loaded";
@@ -32,7 +32,7 @@ export function fetchCitiesActionCreator() {
     const { state } = getState().cities;
     if (state === STATES.STATE_NONE) {
       dispatch({type: CITY_UPDATE_STATE, payload: {state: STATES.STATE_LOADING}});
-      return request(citiesQuery())
+      return request(citiesQuery(), dispatch)
               .then(({success, data}) => {
                 if (success) return data;
                 throw new Error("Can't load");

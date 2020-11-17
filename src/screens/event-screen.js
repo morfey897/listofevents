@@ -1,8 +1,6 @@
 import { Box, Container, Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import Factory from '../components/factory';
-import Footer from '../components/footer';
-import LineSeparator from '../components/separators';
 import { LATEST_BLOG, IMG_CARD } from '../enums/factory';
 
 const latestBlogs = [
@@ -42,56 +40,55 @@ const photoArr = [
   }
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
+  container: {
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(6)
+  },
+
   text: {
     fontSize: '22px',
     lineHeight: '30px'
   }
 }));
 
-const EventScreen = () => {
+function EventScreen() {
   const classes = useStyles();
 
   return (
-    <>
-      <Container>
-        <Box mt={4} px={18}>
-          <Typography variant="h4" gutterBottom>{eventTitle}</Typography>
-          <Typography className={classes.text}>{eventText}</Typography>
-        </Box>
-        <Box>
-          <Grid container>
-            {
-              photoArr.map((item, i) => (
-                <Grid key={i} item xs={12} md={6} lg={4}>
-                  <Factory type={IMG_CARD} props={item} />
-                </Grid>
-              ))
-            }
-          </Grid>
-        </Box>
-        <Box mt={4} px={18}>
-          <Typography variant="h4" gutterBottom>{eventTitle}</Typography>
-          <Typography className={classes.text}>{eventText}</Typography>
-        </Box>
-        <Box mt={6}>
-          <Grid container>
-            {
-              latestBlogs.map((item) => (
-                <Grid key={item.id} item xs={12} md={6} lg={4}>
-                  <Factory type={LATEST_BLOG} props={item} />
-                </Grid>
-              ))
-            }
-          </Grid>
-        </Box>
-      </Container>
-      <Box mt={5}>
-        <LineSeparator/>
+    <Container className={classes.container}>
+      <Box px={18}>
+        <Typography variant="h4" gutterBottom>{eventTitle}</Typography>
+        <Typography className={classes.text}>{eventText}</Typography>
       </Box>
-      <Footer/>
-    </>
+      <Box>
+        <Grid container>
+          {
+            photoArr.map((item, i) => (
+              <Grid key={i} item xs={12} md={6} lg={4}>
+                <Factory type={IMG_CARD} props={item} />
+              </Grid>
+            ))
+          }
+        </Grid>
+      </Box>
+      <Box mt={4} px={18}>
+        <Typography variant="h4" gutterBottom>{eventTitle}</Typography>
+        <Typography className={classes.text}>{eventText}</Typography>
+      </Box>
+      <Box mt={6}>
+        <Grid container>
+          {
+            latestBlogs.map((item) => (
+              <Grid key={item.id} item xs={12} md={6} lg={4}>
+                <Factory type={LATEST_BLOG} props={item} />
+              </Grid>
+            ))
+          }
+        </Grid>
+      </Box>
+    </Container>
   );
-};
+}
 
 export default EventScreen;
