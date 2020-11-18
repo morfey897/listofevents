@@ -53,9 +53,6 @@ const Footer = () => {
               <RouterLink to={SCREENS.CONTACTS}>
                 <Typography className={classes.linksStyle}>{t("contact_us")}</Typography>
               </RouterLink>
-              <RouterLink to={SCREENS.JOBS}>
-                <Typography className={classes.linksStyle}>{t("jobs")}</Typography>
-              </RouterLink>
             </Box>
           </Grid>
         </Grid>

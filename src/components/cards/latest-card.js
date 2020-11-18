@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const Child = ({img, title, text}) => {
+function LatestCard({img, title, text}) {
   const classes = useStyles();
 
   return (
@@ -29,6 +29,6 @@ const Child = ({img, title, text}) => {
       <Typography>{text}</Typography>
     </Box>
   );
-};
+}
 
-export default Child;
+export default LatestCard;

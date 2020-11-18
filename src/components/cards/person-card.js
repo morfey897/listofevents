@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const Child = ({firstName, lastName, profesion, aboutMe}) => {
+function PersonCard({firstName, lastName, profesion, aboutMe}) {
   const classes = useStyles();
 
   return (
@@ -43,6 +43,6 @@ const Child = ({firstName, lastName, profesion, aboutMe}) => {
       </Box>
     </Card>
   );
-};
+}
 
-export default Child;
+export default PersonCard;

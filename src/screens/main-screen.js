@@ -1,8 +1,7 @@
 import { Box, CardMedia, Container, Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Factory from '../components/factory';
-import { INFO_BLOG, LATEST_BLOG } from '../enums/factory';
+import { InfoCard, LatestCard } from '../components/cards';
 
 const items = [
   {
@@ -82,7 +81,7 @@ const MainScreen = () => {
             {
               items.map((item) => (
                 <Grid key={item.id} item xs={12} md={6} lg={4}>
-                  <Factory type={INFO_BLOG} props={item} />
+                  <InfoCard {...item} />
                 </Grid>
               ))
             }
@@ -123,7 +122,7 @@ const MainScreen = () => {
             {
               latestBlogs.map((item) => (
                 <Grid key={item.id} item xs={12} md={6} lg={4}>
-                  <Factory type={LATEST_BLOG} props={item} />
+                  <LatestCard {...item} />
                 </Grid>
               ))
             }

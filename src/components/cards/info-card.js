@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const Child = ({ icon, title, text }) => {
+function InfoCard({ icon, title, text }) {
   const classes = useStyles();
 
   return (
@@ -33,6 +33,6 @@ const Child = ({ icon, title, text }) => {
       <Typography align='center'>{text}</Typography>
     </Box>
   );
-};
+}
 
-export default Child;
+export default InfoCard;

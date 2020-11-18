@@ -1,13 +1,13 @@
 import React, { useMemo } from "react";
 import { makeStyles, TableContainer, Table, TableBody, TableHead, TableRow, TableCell } from "@material-ui/core";
 import { addDays, compareAsc, format, startOfWeek, isSameDay, getMonth, getYear } from 'date-fns';
-import {indigo} from '@material-ui/core/colors';
+import { indigo } from '@material-ui/core/colors';
 
 import ruLocale from 'date-fns/locale/ru';
 import enLocale from 'date-fns/locale/en-US';
 
 import { capitalCaseTransform } from "capital-case";
-import CardOfDay from "./card-of-day";
+import { CardOfDay } from "./cards";
 import { connect } from "react-redux";
 import { LANGS } from "../enums";
 import { useTranslation } from "react-i18next";
@@ -24,7 +24,7 @@ const useTableStyles = makeStyles((theme) => ({
   table: {
     width: "100%",
     tableLayout: "fixed",
-    minWidth: `calc(720px - ${theme.spacing(2*3)}px)`,
+    minWidth: `calc(720px - ${theme.spacing(2 * 3)}px)`,
   },
   nowaday: {
     borderStyle: "solid",
@@ -36,7 +36,7 @@ const useTableStyles = makeStyles((theme) => ({
 function CalendarMontly({ date, events, now }) {
 
   const classes = useTableStyles();
-  const {i18n} = useTranslation();
+  const { i18n } = useTranslation();
 
   const calendarHeaderData = useMemo(() => {
     let locale = enLocale;
@@ -44,10 +44,10 @@ function CalendarMontly({ date, events, now }) {
       locale = ruLocale;
     }
 
-    const startWeek = startOfWeek(date, {weekStartsOn: 1});
-    return [0,1,2,3,4,5,6].map((day) => {
+    const startWeek = startOfWeek(date, { weekStartsOn: 1 });
+    return [0, 1, 2, 3, 4, 5, 6].map((day) => {
       let curDate = addDays(startWeek, day);
-      return capitalCaseTransform(format(curDate, 'eee', {weekStartsOn: 1, locale}));
+      return capitalCaseTransform(format(curDate, 'eee', { weekStartsOn: 1, locale }));
     });
   }, [date, i18n.language]);
 
@@ -66,8 +66,8 @@ function CalendarMontly({ date, events, now }) {
           date: curDate,
           nowaday: isSameDay(curDate, now),
           disabled: compareAsc(firstDate, curDate) == 1 || compareAsc(curDate, lastDate) == 1,
-          events: events.filter(({date}) => isSameDay(date, curDate) && compareAsc(firstDate, curDate) != 1 && compareAsc(curDate, lastDate) != 1)
-                        .sort((a, b) => compareAsc(a.date, b.date))
+          events: events.filter(({ date }) => isSameDay(date, curDate) && compareAsc(firstDate, curDate) != 1 && compareAsc(curDate, lastDate) != 1)
+            .sort((a, b) => compareAsc(a.date, b.date))
         };
       }
     }
@@ -92,7 +92,7 @@ function CalendarMontly({ date, events, now }) {
             <TableRow key={`row-${index}`}>
               {line.map((data, indexDay) => (
                 <TableCell key={`body-${index * 6 + indexDay}`} variant="body" className={`${classes.cellBody} ${data.nowaday ? classes.nowaday : ""}`}>
-                  <CardOfDay {...data}/>
+                  <CardOfDay {...data} />
                 </TableCell>
               ))}
             </TableRow>
@@ -104,7 +104,7 @@ function CalendarMontly({ date, events, now }) {
 }
 
 const mapStateToProps = (state) => {
-  const {date, now} = state.filter;
+  const { date, now } = state.filter;
   return {
     now,
     date

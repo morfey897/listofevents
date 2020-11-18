@@ -1,11 +1,11 @@
 import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import { AboutScreen, ContactsScreen, ListOfEventsScreen, EventMapScreen, MainScreen, JobsScreen, EventScreen, PageOfEventsScreen } from '../screens';
-import { Box, makeStyles } from '@material-ui/core';
+import { AboutScreen, ContactsScreen, ListOfEventsScreen, EventMapScreen, MainScreen, EventScreen, PageOfEventsScreen } from '../screens';
+import { makeStyles } from '@material-ui/core';
 import { Header } from '../components';
 import { SCREENS } from '../enums';
 import Footer from '../components/footer';
-import LineSeparator from '../components/separators';
+import LineSeparator from '../components/line-separator';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,7 +34,6 @@ function ScreenProvider({ location }) {
             <Route exact path={SCREENS.MAIN} component={MainScreen} />
             <Route exact path={SCREENS.ABOUT} component={AboutScreen} />
             <Route exact path={SCREENS.CONTACTS} component={ContactsScreen} />
-            <Route exact path={SCREENS.JOBS} component={JobsScreen} />
             <Route exact path={SCREENS.EVENT_MAP} component={EventMapScreen} />
             <Route exact path={SCREENS.EVENT_SCREEN} component={EventScreen} />
             <Route exact path={SCREENS.LIST_OF_EVENTS} component={ListOfEventsScreen} />

@@ -1,7 +1,6 @@
 import { Box, Container, makeStyles } from '@material-ui/core';
 import React from 'react';
-import Factory from '../components/factory';
-import { EVENTS_CARD } from '../enums/factory';
+import { EventCard } from '../components/cards';
 
 const latestBlogs = [
   {
@@ -45,7 +44,7 @@ const PageOfEventsScreen = () => {
         {
           latestBlogs.map((item) => (
             <Box key={item.id} my={4}>
-              <Factory type={EVENTS_CARD} props={item} />
+              <EventCard {...item} />
             </Box>
           ))
         }

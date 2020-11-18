@@ -1,13 +1,13 @@
 import React, { useMemo } from "react";
 import { makeStyles, TableContainer, Typography, Table, TableBody, TableHead, TableRow, TableCell } from "@material-ui/core";
 import { addDays, compareAsc, differenceInDays, format, isSameDay } from 'date-fns';
-import {indigo} from '@material-ui/core/colors';
+import { indigo } from '@material-ui/core/colors';
 
 import ruLocale from 'date-fns/locale/ru';
 import enLocale from 'date-fns/locale/en-US';
 
 import { capitalCaseTransform } from "capital-case";
-import CardOfTime from "./card-of-time";
+import { CardOfTime } from "./cards";
 import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { LANGS } from "../enums";
@@ -27,7 +27,7 @@ const useTableStyles = makeStyles((theme) => ({
   table: {
     width: "100%",
     tableLayout: "fixed",
-    minWidth: `calc(720px - ${theme.spacing(2*3)}px)`,
+    minWidth: `calc(720px - ${theme.spacing(2 * 3)}px)`,
   },
   nowaday: {
     borderLeftStyle: "solid",
@@ -44,7 +44,7 @@ function CalendarDaily({ dates, events, now }) {
 
   const classes = useTableStyles();
 
-  const {i18n} = useTranslation();
+  const { i18n } = useTranslation();
 
   const calendarHeaderData = useMemo(() => {
     let locale = enLocale;
@@ -53,11 +53,11 @@ function CalendarDaily({ dates, events, now }) {
     }
 
     const list = dates.map((d) => ({
-      label: format(d, 'eee dd.MM', {weekStartsOn: 1, locale}),
-      disabled: compareAsc(now, d) === 1 && !isSameDay(d, now), 
+      label: format(d, 'eee dd.MM', { weekStartsOn: 1, locale }),
+      disabled: compareAsc(now, d) === 1 && !isSameDay(d, now),
       nowaday: isSameDay(d, now)
     }));
-    return [{label: ""}].concat(list).map((data) => ({...data, label: capitalCaseTransform(data.label)}));
+    return [{ label: "" }].concat(list).map((data) => ({ ...data, label: capitalCaseTransform(data.label) }));
   }, [dates, i18n.language]);
 
   const calendarBodyData = useMemo(() => {
@@ -65,29 +65,29 @@ function CalendarDaily({ dates, events, now }) {
     const len = dates.length;
     for (let i = 0; i < len; i++) {
       let curDate = dates[i];
-      let filterEvents = events.filter(({date}) => isSameDay(date, curDate))
-                          .sort((a, b) => compareAsc(a.date, b.date));
-    
+      let filterEvents = events.filter(({ date }) => isSameDay(date, curDate))
+        .sort((a, b) => compareAsc(a.date, b.date));
+
       for (let j = 0; j < filterEvents.length; j++) {
         let event = filterEvents[j];
         let time = format(event.date, "HH:mm");
-        let timeIndex = grid.findIndex(({time: curTime}) => curTime === time);
+        let timeIndex = grid.findIndex(({ time: curTime }) => curTime === time);
         if (timeIndex == -1) {
           let week = [];
           for (let d = 0; d < len; d++) {
             let weekDate = dates[d];
             week.push({
-              events: [], 
+              events: [],
               disabled: compareAsc(now, weekDate) === 1 && !isSameDay(weekDate, now),
               nowaday: isSameDay(weekDate, now)
             });
           }
-          timeIndex = grid.push({time, week}) - 1;
+          timeIndex = grid.push({ time, week }) - 1;
         }
         grid[timeIndex].week[i].events.push(event);
       }
     }
-    grid.sort(({time: aTime}, {time: bTime}) => aTime > bTime ? 1 : (aTime < bTime ? -1 : 0));
+    grid.sort(({ time: aTime }, { time: bTime }) => aTime > bTime ? 1 : (aTime < bTime ? -1 : 0));
     return grid;
   }, [dates]);
 
@@ -97,7 +97,7 @@ function CalendarDaily({ dates, events, now }) {
         <TableHead>
           <TableRow>
             {calendarHeaderData.map((data, index) => (
-              <TableCell key={`header-${index}`} variant="head" className={`${data.nowaday ? classes.nowaday : ""}`}>                
+              <TableCell key={`header-${index}`} variant="head" className={`${data.nowaday ? classes.nowaday : ""}`}>
                 <Typography variant="body1" align="center" color={data.disabled ? "textSecondary" : "textPrimary"}>
                   {data.label}
                 </Typography>
@@ -106,7 +106,7 @@ function CalendarDaily({ dates, events, now }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {calendarBodyData.map(({time, week}) => (
+          {calendarBodyData.map(({ time, week }) => (
             <TableRow key={time}>
               <TableCell variant="body" className={classes.cellTime}>
                 <Typography variant="body1" align="right">
@@ -115,7 +115,7 @@ function CalendarDaily({ dates, events, now }) {
               </TableCell>
               {week.map((data, index) => (
                 <TableCell key={`body-${index}`} variant="body" className={`${classes.cellBody} ${data.nowaday ? classes.nowaday : ""}`}>
-                  <CardOfTime {...data}/>
+                  <CardOfTime {...data} />
                 </TableCell>
               ))}
             </TableRow>
@@ -127,7 +127,7 @@ function CalendarDaily({ dates, events, now }) {
 }
 
 const mapStateToProps = (state) => {
-  const {dateFrom, dateTo, now} = state.filter;
+  const { dateFrom, dateTo, now } = state.filter;
   const len = differenceInDays(dateTo, dateFrom);
   return {
     dates: new Array(len + 1).fill().map((_, i) => addDays(dateFrom, i)),

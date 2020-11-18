@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const Child = ({img, url, title, text}) => {
+function EventCard({img, url, title, text}) {
   const classes = useStyles();
 
   return (
@@ -30,6 +30,6 @@ const Child = ({img, url, title, text}) => {
       </Grid>
     </Grid>  
   );
-};
+}
 
-export default Child;
+export default EventCard;

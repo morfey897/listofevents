@@ -8,7 +8,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export function LineSeparator() {
+function LineSeparator() {
   const classes = useStyles();
   return <hr className={classes.line} />;
 }
+
+export default LineSeparator;

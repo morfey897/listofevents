@@ -21,22 +21,18 @@
     "profile": "Profile",
     "toggle-theme": "Toggle dark/light theme"
   },
-  
   "footer": {
     "community": "Community",
     "resources": "Resources",
     "company": "Company",
     "about": "About",
     "contact_us": "Contact Us",
-    "jobs": "Jobs",
     "support": "Support",
     "blog": "Blog"
   },
-
   "list-of-events-screen": {
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien faucibus et molestie ac."
   },
-
   "add-event-dialog": {
     "title": "Add new event",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
@@ -52,7 +48,6 @@
     "city-label": "City",
     "tags-label": "Tags"
   },
-
   "login-dialog": {
     "title": "Login",
     "description": "or",
@@ -60,7 +55,6 @@
     "password-label": "Password",
     "error": "Incorrect username or password."
   },
-
   "contacts": {
     "title": "Get in touch",
     "description": "You need more information? Check what other persons are saying about progect. They are very happy with thier purchace",
@@ -72,7 +66,6 @@
     "send_message": "Send message",
     "no_robot": "I'm not a robot"
   },
-
   "about": {
     "title": "We are nerd rockstars",
     "description": "This is the paragraph where you can write more details about your team. Keep you user engaged by providing meaningful information.",
@@ -83,15 +76,11 @@
     "develop": "Develop",
     "developDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
     "makeEdits": "Make Edits",
-    "makeEditsDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough."
+    "makeEditsDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
+    "partnership-title": "Want to work with us?",
+    "partnership-description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
+    "partnership-letsTalk": "LET'S TALK"
   },
-
-  "jobs": {
-    "title": "Want to work with us?",
-    "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
-    "letsTalk": "LET'S TALK"
-  },
-
   "main": {
     "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
     "sdfsa": "dfasdf",

@@ -1,7 +1,6 @@
 import { Box, Container, Grid, makeStyles, Typography } from '@material-ui/core';
 import React from 'react';
-import Factory from '../components/factory';
-import { LATEST_BLOG, IMG_CARD } from '../enums/factory';
+import { ImgCard, LatestCard } from '../components/cards';
 
 const latestBlogs = [
   {
@@ -66,7 +65,7 @@ function EventScreen() {
           {
             photoArr.map((item, i) => (
               <Grid key={i} item xs={12} md={6} lg={4}>
-                <Factory type={IMG_CARD} props={item} />
+                <ImgCard {...item} />
               </Grid>
             ))
           }
@@ -81,7 +80,7 @@ function EventScreen() {
           {
             latestBlogs.map((item) => (
               <Grid key={item.id} item xs={12} md={6} lg={4}>
-                <Factory type={LATEST_BLOG} props={item} />
+                <LatestCard {...item} />
               </Grid>
             ))
           }

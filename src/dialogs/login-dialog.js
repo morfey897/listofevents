@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from "react-i18next";
 import { Box, IconButton, InputAdornment, LinearProgress, makeStyles, Typography } from "@material-ui/core";
+import { cancelable } from 'cancelable-promise';
 
 import {
   Face as NameIcon,
@@ -18,6 +19,7 @@ import {
 } from '@material-ui/icons';
 import { signin } from "../api";
 
+let waitPromise;
 const useStyles = makeStyles((theme) => ({
   headerBox: {
     marginTop: '-40px',
@@ -50,10 +52,20 @@ function LoginDialog({ open, handleClose }) {
   const usernameRef = useRef(null);
   const passwordRef = useRef(null);
 
-  const onSubmit = useCallback(() => {
+  useEffect(() => {
+    return () => {
+      waitPromise && waitPromise.cancel();
+    };
+  }, []);
+
+  const onSubmit = useCallback((event) => {
+    if (event && typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
     if (usernameRef.current && passwordRef.current) {
+      waitPromise && waitPromise.cancel();
       setLoading(true);
-      signin({ username: usernameRef.current.value, password: passwordRef.current.value })
+      waitPromise = cancelable(signin({ username: usernameRef.current.value, password: passwordRef.current.value }))
         .then(({ success }) => {
           setLoading(false);
           if (success) {
@@ -80,23 +92,25 @@ function LoginDialog({ open, handleClose }) {
       <IconButton><InstagramIcon /></IconButton>
       <IconButton><FacebookIcon /></IconButton>
     </DialogActions>
-    <DialogContent>
-      <DialogContentText align='center' >{t("description")}</DialogContentText>
-      {error && <Alert severity="error">{t("error")}</Alert>}
-      <form className={classes.form}>
-        <TextField required name="username" autoFocus fullWidth label={t("user-label")} margin="normal"
+    <form className={classes.form} onSubmit={onSubmit} autoComplete="on">
+      <DialogContent>
+        <DialogContentText align='center' >{t("description")}</DialogContentText>
+        {error && <Alert severity="error">{t("error")}</Alert>}
+
+        <TextField required name="username" type="text" autoFocus fullWidth label={t("user-label")} margin="normal"
           InputProps={{
             startAdornment: <InputAdornment position="start"><NameIcon /></InputAdornment>,
           }} inputRef={usernameRef} />
         <TextField required name="password" type="password" fullWidth label={t("password-label")} margin="normal" InputProps={{
           startAdornment: <InputAdornment position="start"><PasswordIcon /></InputAdornment>,
         }} inputRef={passwordRef} />
-      </form>
-    </DialogContent>
-    <DialogActions>
-      <Button disabled={loading} onClick={onSubmit} color="primary" variant="contained">{t("general:button-sign-in")}</Button>
-      <Button disabled={loading} onClick={handleClose} color="secondary" variant="contained">{t("general:button-close")}</Button>
-    </DialogActions>
+
+      </DialogContent>
+      <DialogActions>
+        <Button type="submit" disabled={loading} onClick={onSubmit} color="primary" variant="contained">{t("general:button-sign-in")}</Button>
+        <Button disabled={loading} onClick={handleClose} color="secondary" variant="contained">{t("general:button-close")}</Button>
+      </DialogActions>
+    </form>
   </Dialog>;
 }
 

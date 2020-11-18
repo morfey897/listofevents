@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-function ItemOfCalendar({ date, label, disabled, colorClass}) {
+function ItemOfCalendar({ date, label, colorClass}) {
   const classes = useStyles();
   return (
     <ButtonBase className={`${colorClass || ""} ${classes.node}`}>

@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-const Child = ({url}) => {
+function ImgCard({url}) {
   const classes = useStyles();
 
   return (
@@ -23,6 +23,6 @@ const Child = ({url}) => {
       <CardMedia className={classes.cardMedia} image={url} />
     </Box>
   );
-};
+}
 
-export default Child;
+export default ImgCard;

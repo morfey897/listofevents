@@ -1,9 +1,8 @@
-import { Box, Container, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Box, Button, Container, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
 import { Build, Create, Gesture } from '@material-ui/icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Factory from '../components/factory';
-import { PERSON_CARD } from '../enums/factory';
+import { PersonCard } from '../components/cards';
 
 let administrations = [
   {
@@ -42,11 +41,16 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(6)
   },
-  
+
   cardDescription: {
     margin: '20px',
     width: '370px',
     display: 'flex'
+  },
+
+  justifyCenter: {
+    display: 'flex',
+    justifyContent: 'center'
   }
 }));
 
@@ -67,7 +71,7 @@ function AboutScreen() {
           {
             administrations.map((item) => (
               <Grid item key={item.id} xs={12} sm={6} md={4} lg={3}>
-                <Factory type={PERSON_CARD} props={item} />
+                <PersonCard {...item} />
               </Grid>
             ))
           }
@@ -115,6 +119,35 @@ function AboutScreen() {
             </Box>
           </Grid>
         </Grid>
+      </Box>
+
+      <Box mt={6}>
+        <Typography variant="h2" align="center">{t("partnership-title")}</Typography>
+      </Box>
+      <Box mt={5} px={15}>
+        <Typography align="center">{t("partnership-description")}</Typography>
+      </Box>
+      <Box mt={8} px={15}>
+        <Grid container>
+          <Grid item xs={12} md={6} lg={4}>
+            <Box className={classes.justifyCenter}>
+              <TextField autoFocus margin="dense" label="Your name" type="yourName" />
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <Box className={classes.justifyCenter}>
+              <TextField margin="dense" label="Your phone" type="yourPhone" />
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6} lg={4}>
+            <Box className={classes.justifyCenter}>
+              <TextField margin="dense" label="Your email" type="yourEmail" />
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+      <Box mt={5} className={classes.justifyCenter}>
+        <Button variant='contained' color="primary">{t("partnership-letsTalk")}</Button>
       </Box>
     </Container>
   );
