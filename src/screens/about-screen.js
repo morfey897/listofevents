@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AboutScreen() {
-  const { t } = useTranslation("about");
+  const { t } = useTranslation("about_screen");
   const classes = useStyles();
 
   return (
@@ -78,10 +78,10 @@ function AboutScreen() {
         </Grid>
       </Box>
       <Box mt={12}>
-        <Typography variant="h2" align="center">{t("title-2")}</Typography>
+        <Typography variant="h2" align="center">{t("title_2")}</Typography>
       </Box>
       <Box mt={5}>
-        <Typography align="center">{t("description-2")}</Typography>
+        <Typography align="center">{t("description_2")}</Typography>
       </Box>
       <Box mt={12}>
         <Grid container>
@@ -92,7 +92,7 @@ function AboutScreen() {
               </Box>
               <Box>
                 <Typography variant="h6">{`1. ${t("design")}`}</Typography>
-                <Typography>{t("design-description")}</Typography>
+                <Typography>{t("design_description")}</Typography>
               </Box>
             </Box>
           </Grid>
@@ -103,7 +103,7 @@ function AboutScreen() {
               </Box>
               <Box>
                 <Typography variant="h6">{`2. ${t("develop")}`}</Typography>
-                <Typography>{t("develop-description")}</Typography>
+                <Typography>{t("develop_description")}</Typography>
               </Box>
             </Box>
           </Grid>
@@ -113,8 +113,8 @@ function AboutScreen() {
                 <Create color='secondary' />
               </Box>
               <Box>
-                <Typography variant="h6">{`3. ${t("make-edits")}`}</Typography>
-                <Typography>{t("make-edits-description")}</Typography>
+                <Typography variant="h6">{`3. ${t("make_edits")}`}</Typography>
+                <Typography>{t("make_edits_description")}</Typography>
               </Box>
             </Box>
           </Grid>
@@ -122,10 +122,10 @@ function AboutScreen() {
       </Box>
 
       <Box mt={6}>
-        <Typography variant="h2" align="center">{t("partnership-title")}</Typography>
+        <Typography variant="h2" align="center">{t("partnership_title")}</Typography>
       </Box>
       <Box mt={5} px={15}>
-        <Typography align="center">{t("partnership-description")}</Typography>
+        <Typography align="center">{t("partnership_description")}</Typography>
       </Box>
       <Box mt={8} px={15}>
         <Grid container>
@@ -147,7 +147,7 @@ function AboutScreen() {
         </Grid>
       </Box>
       <Box mt={5} className={classes.justifyCenter}>
-        <Button variant='contained' color="primary">{t("partnership-letsTalk")}</Button>
+        <Button variant='contained' color="primary">{t("partnership_letsTalk")}</Button>
       </Box>
     </Container>
   );

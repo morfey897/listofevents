@@ -1,15 +1,17 @@
-import { USER_SIGN_IN, USER_SIGN_OUT, USER_TIME_OUT } from "../actions/user-action";
+import { USER_SIGN_IN, USER_SIGN_OUT, USER_TIME_OUT, USER_UPDATE_STATE } from "../actions/user-action";
 import store from "store2";
 import { STATES, STORAGEKEYS } from "../../enums";
+import { STATE_NONE } from "../../enums/states";
 
 const initState = {
+  state: STATE_NONE,
   id: 0,
   name: "",
   surname: "",
   email: "",
   phone: "",
   role: 0,
-  isLogging: false
+  isLogged: false
 };
 
 function getUser() {
@@ -31,7 +33,7 @@ function getUser() {
   const expireIn = parseInt(store.get(STORAGEKEYS.JWT_EXPIRES_IN));
   return {
     ...state,
-    isLogging: !isNaN(expireIn) && parseInt(Date.now() / 1000) < expireIn
+    isLogged: !isNaN(expireIn) && parseInt(Date.now() / 1000) < expireIn
   };
 }
 
@@ -39,6 +41,12 @@ export function user(state = { ...getUser() }, action) {
   const { type, payload } = action;
 
   switch (type) {
+    case USER_UPDATE_STATE: {
+      return {
+        ...state,
+        state: payload.state,
+      };
+    }
     case USER_SIGN_IN: {
       if (payload.state == STATES.STATE_READY) {
         store.set(STORAGEKEYS.USER_STATE, JSON.stringify(payload.user));
@@ -47,11 +55,13 @@ export function user(state = { ...getUser() }, action) {
         return {
           ...state,
           ...payload.user,
-          isLogging: true,
+          state: payload.state,
+          isLogged: true,
         };
       }
       return {
         ...state,
+        state: payload.state,
       };
     }
     case USER_SIGN_OUT:
@@ -61,18 +71,20 @@ export function user(state = { ...getUser() }, action) {
         store.set(STORAGEKEYS.JWT_EXPIRES_IN, payload.token && payload.token.expiresIn || 0);
         return {
           ...payload.user,
-          isLogging: false,
+          state: payload.state,
+          isLogged: false,
         };
       }
       return {
         ...state,
+        state: payload.state,
       };
     case USER_TIME_OUT:
       store.set(STORAGEKEYS.JWT_ACCESS_TOKEN, "");
       store.set(STORAGEKEYS.JWT_EXPIRES_IN, 0);
       return {
         ...state,
-        isLogging: false,
+        isLogged: false
       };
     default:
       return state;

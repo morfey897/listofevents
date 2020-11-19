@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Footer = () => {
-  const {t} = useTranslation("footer");
+  const {t} = useTranslation("footer_block");
   const classes = useStyles();
 
   const onClickFacebookLink = useCallback(() => {
@@ -65,7 +65,7 @@ const Footer = () => {
                 <Typography className={classes.linksStyle}>{t("about")}</Typography>
               </RouterLink>
               <RouterLink to={SCREENS.CONTACTS}>
-                <Typography className={classes.linksStyle}>{t("contact-us")}</Typography>
+                <Typography className={classes.linksStyle}>{t("contact_us")}</Typography>
               </RouterLink>
             </Box>
           </Grid>

@@ -17,10 +17,10 @@ class I18nService {
         .use(LanguageDetector)
         .use(initReactI18next) // bind react-i18next to the instance
         .init({
-          fallbackLng: 'en',
+          fallbackLng: 'ru',
           debug: true,
           lowerCaseLng: true,
-          lng: 'en',
+          lng: 'ru',
           supportedLngs: ['en', 'ru'],
           nonExplicitSupportedLngs: true,
 

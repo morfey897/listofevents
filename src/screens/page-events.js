@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const PageOfEventsScreen = () => {
+const PageEventsScreen = () => {
 
   const classes = useStyles();
   return (
@@ -53,4 +53,4 @@ const PageOfEventsScreen = () => {
   );
 };
 
-export default PageOfEventsScreen;
+export default PageEventsScreen;

@@ -1,8 +1,8 @@
 export const MAIN = "/";
 export const ABOUT = "/about";
 export const CONTACTS = "/contacts";
-export const LIST_OF_EVENTS = "/list-of-events";
-export const PAGE_OF_EVENTS = "/page-of-events";
-export const EVENT_MAP = "/event-map";
+export const LIST_EVENTS = "/list-events";
+export const PAGE_EVENTS = "/page-events";
+export const EVENT_MAP = "/event_map";
 export const EVENT_SCREEN = "/event-screen";
 

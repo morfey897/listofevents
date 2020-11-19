@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 const NOW = addDays(new Date(), 1);
 function AddEventDialog({ open, handleClose }) {
 
-  const { t, i18n } = useTranslation(["add-event-dialog", "general"]);
+  const { t, i18n } = useTranslation(["add_event_dialog", "general"]);
 
   const classes = useStyles();
 
@@ -52,34 +52,34 @@ function AddEventDialog({ open, handleClose }) {
     return locale;
   }, [i18n.language]);
 
-  // "name-label": "Name",
-  //   "name-helper": "Название не моюет быть пустым",
-  //   "description-label": "Description",
-  //   "name-description": "Описание слишком короткое",
+  // "name_label": "Name",
+  //   "name_helper": "Название не моюет быть пустым",
+  //   "description_label": "Description",
+  //   "name_description": "Описание слишком короткое",
   //   "place-label": "Place",
-  //   "url-label": "Link",
-  //   "date-label": "Date",
-  //   "time-label": "Time",
-  //   "category-label": "Category",
-  //   "city-label": "City",
-  //   "tags-label": "Tags"
+  //   "url_label": "Link",
+  //   "date_label": "Date",
+  //   "time_label": "Time",
+  //   "category_label": "Category",
+  //   "city_label": "City",
+  //   "tags_label": "Tags"
   return <Dialog open={open} onClose={handleClose}>
     <DialogTitle>{t("title")}</DialogTitle>
     <DialogContent>
       <DialogContentText>{t("description")}</DialogContentText>
       <form className={classes.form}>
-        <TextField required name="url" fullWidth label={t("url-label")} margin="dense"
+        <TextField required name="url" fullWidth label={t("url_label")} margin="dense"
           InputProps={{
             startAdornment: <InputAdornment position="start">{process.env.HOST + "/"}</InputAdornment>,
           }} />
-        <TextField required name="name" autoFocus fullWidth label={t("name-label")} margin="dense" />
-        <TextField required name="location" fullWidth label={t("location-label")} margin="dense" />
-        {/* <TextField required name="description" fullWidth multiline rows={3} label={t("description-label")} margin="dense" /> */}
+        <TextField required name="name" autoFocus fullWidth label={t("name_label")} margin="dense" />
+        <TextField required name="location" fullWidth label={t("location_label")} margin="dense" />
+        {/* <TextField required name="description" fullWidth multiline rows={3} label={t("description_label")} margin="dense" /> */}
 
         <div className={classes.datetime}>
           <KeyboardDatePicker
             // InputAdornmentProps={{ position: "start" }}
-            label={t("date-label")}
+            label={t("date_label")}
             margin="dense"
             clearable
             value={selectedDate}
@@ -93,7 +93,7 @@ function AddEventDialog({ open, handleClose }) {
           <KeyboardTimePicker
             ampm={false}
             margin="dense"
-            label={t("time-label")}
+            label={t("time_label")}
             placeholder={format(NOW, "HH:mm", { locale })}
             mask="__:__"
             value={selectedTime}

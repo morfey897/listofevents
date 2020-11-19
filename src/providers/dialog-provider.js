@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useReducer } from "react";
 import { DialogEmitter } from "../emitters";
 
-import { AddEventDialog, LoginDialog } from "../dialogs";
+import { AddEventDialog, SigninDialog, SignupDialog, SignoutDialog, ProfileDialog } from "../dialogs";
 import { DIALOGS, EVENTS } from "../enums";
+import { debounce, useTheme } from "@material-ui/core";
 
 const initialState = {
   wnds: [], //Object.values(WN).map(wnd => ({ wnd, isOpen: 0, data: {}, order: 0 }))
@@ -29,21 +30,32 @@ function reducer(state, action) {
         opening: wnds.reduce((accumulator, { isOpen }) => accumulator + isOpen, 0)
       };
     }
+    case 'clear':
+      return {
+        ...state,
+        wnds: state.wnds.filter(f => wnd !== f.wnd),
+    };
     default:
       throw new Error();
   }
 }
 
+const clears = {};
 function DialogProvider() {
 
+  const theme = useTheme(); 
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const onOpen = useCallback(({ wnd, ...data }) => {
+    clears[wnd] && clears[wnd].clear();
     dispatch({ type: 'open', payload: { wnd, data } });
   }, []);
 
   const onClose = useCallback(({ wnd, ...data }) => {
+    clears[wnd] && clears[wnd].clear();
     dispatch({ type: 'close', payload: { wnd, data } });
+    clears[wnd] = debounce(() => dispatch({ type: 'clear', payload: { wnd } }), theme.props.MuiDialog.transitionDuration.exit);
+    clears[wnd]();
   }, []);
 
   useEffect(() => {
@@ -58,9 +70,13 @@ function DialogProvider() {
   return <>
     {
       state.wnds.map(({ wnd, isOpen, data }) => {
+        const params = { ...data, open: isOpen === 1, handleClose: (state) => DialogEmitter.close(wnd, state) };
         switch (wnd) {
-          case DIALOGS.ADD_EVENT: return <AddEventDialog key={wnd} {...data} open={isOpen === 1} handleClose={(state) => DialogEmitter.close(wnd, state)} />;
-          case DIALOGS.LOGIN: return <LoginDialog key={wnd} {...data} open={isOpen === 1} handleClose={(state) => DialogEmitter.close(wnd, state)} />;
+          case DIALOGS.ADD_EVENT: return <AddEventDialog key={wnd} {...params} />;
+          case DIALOGS.SIGNIN: return <SigninDialog key={wnd} {...params} />;
+          case DIALOGS.SIGNUP: return <SignupDialog key={wnd} {...params} />;
+          case DIALOGS.SIGNOUT: return <SignoutDialog key={wnd} {...params} />;
+          case DIALOGS.PROFILE: return <ProfileDialog key={wnd} {...params} />;
           default: return null;
         }
       })

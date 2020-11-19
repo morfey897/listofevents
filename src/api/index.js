@@ -61,23 +61,23 @@ function userAction(url, data, Authorization) {
     })
     .then(result => {
       if (result.data.success) {
-        return { status: SUCCESS, ...result.data };
+        return { status: SUCCESS, success: true, data: result.data.data};
       } else {
         throw new Error("Can't load");
       }
     })
-    .catch(() => Promise.resolve({ status: FAIL, success: false }));
+    .catch(() => Promise.resolve({ status: FAIL, success: false, data: {} }));
 }
 
 function signin({ username, password }) {
-  return userAction('/signin', { username, password }, `Basic ${basicToken}`);
+  return userAction('/signin', { username: (username || "").trim(), password }, `Basic ${basicToken}`);
 }
 
-function signup(name, surname, email, phone, password) {
-  return userAction('/signup', { name, surname, email, phone, password }, `Basic ${basicToken}`);
+function signup({name, surname, email, phone, password}) {
+  return userAction('/signup', { name: (name || "").trim(), surname: (surname || "").trim(), email: (email || "").trim(), phone: (phone || "").replace(/\D/g, ""), password }, `Basic ${basicToken}`);
 }
 
-function signout() {
+function signout(_) {
   return userAction('/signout', {}, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
 }
 
