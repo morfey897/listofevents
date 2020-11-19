@@ -57,7 +57,7 @@ function ContactsScreen() {
                 <Box mr={2} color='primary.contrastText'>
                   <PinDrop />
                 </Box>
-                <Typography variant="h5">{t("find_us_in_office")}</Typography>
+                <Typography variant="h5">{t("find-us-in-office")}</Typography>
               </Box>
               <Typography>{t("address")}</Typography>
             </Box>
@@ -66,7 +66,7 @@ function ContactsScreen() {
                 <Box mr={2} color='primary.contrastText'>
                   <PhoneTwoTone />
                 </Box>
-                <Typography variant="h5">{t("give_us_ring")}</Typography>
+                <Typography variant="h5">{t("give-us-ring")}</Typography>
               </Box>
               <Typography>{t("telephone")}</Typography>
             </Box>
@@ -74,7 +74,7 @@ function ContactsScreen() {
           <Grid item xs={12} md={6} className={classes.rightBlock}>
             <Paper className={classes.paper}>
               <Box className={classes.headerBox} >
-                <Typography align='center' variant="h6" className={classes.headerBoxTitle} >{t("contact_us")}</Typography>
+                <Typography align='center' variant="h6" className={classes.headerBoxTitle} >{t("contact-us")}</Typography>
               </Box>
               <Box className={classes.spaceBetween}>
                 <TextField autoFocus margin="dense" id="firstName" label="First name" type="firstName" />
@@ -85,8 +85,8 @@ function ContactsScreen() {
                 <TextareaAutosize rows={8} rowsMax={8} style={{ width: "390px" }} />
               </Box>
               <Box mt={4} className={classes.spaceBetween}>
-                <FormControlLabel control={<Checkbox name="checked" />} label={t("no_robot")} />
-                <Button variant='contained' color="primary">{t("send_message")}</Button>
+                <FormControlLabel control={<Checkbox name="checked" />} label={t("no-robot")} />
+                <Button variant='contained' color="primary">{t("send-message")}</Button>
               </Box>
             </Paper>
           </Grid>

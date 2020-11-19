@@ -1,5 +1,5 @@
-import { Button, Container, Grid, Typography, Link, Box, makeStyles } from '@material-ui/core';
-import React from 'react';
+import { Button, Container, Grid, Typography, Box, makeStyles } from '@material-ui/core';
+import React, { useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Accessibility } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
@@ -10,12 +10,28 @@ const useStyles = makeStyles(() => ({
   linksStyle: {
     color: 'gray',
     paddingTop: '5px',
+  },
+  buttonStyle: {
+    textTransform: 'none',
+    justifyContent: 'start'
+  },
+  column: {
+    display: 'flex',
+    flexDirection: 'column'
   }
 }));
 
 const Footer = () => {
   const {t} = useTranslation("footer");
   const classes = useStyles();
+
+  const onClickFacebookLink = useCallback(() => {
+    window.open('https://www.facebook.com/');
+  }, []);
+
+  const onClickInstaLink = useCallback(() => {
+    window.open('https://www.instagram.com');
+  }, []);
 
   return (
     <Container>
@@ -27,14 +43,12 @@ const Footer = () => {
             </Box>
           </Grid>
           <Grid item xs={6} md={3}>
-            <Box m={2}>
-              <Typography>{t("community")}</Typography>
-              <Link href="https://www.facebook.com/">
-                <Typography className={classes.linksStyle}>FaceBook</Typography>
-              </Link>
-              <Link href="https://www.instagram.com">
-                <Typography className={classes.linksStyle}>Instagram</Typography>
-              </Link>
+            <Box m={2} className={classes.column}>
+              <Box ml={1}>
+                <Typography>{t("community")}</Typography>
+              </Box>
+              <Button onClick={onClickFacebookLink} className={classes.buttonStyle}>FaceBook</Button>
+              <Button onClick={onClickInstaLink} className={classes.buttonStyle}>Instagram</Button>
             </Box>
           </Grid>
           <Grid item xs={6} md={3}>
@@ -51,7 +65,7 @@ const Footer = () => {
                 <Typography className={classes.linksStyle}>{t("about")}</Typography>
               </RouterLink>
               <RouterLink to={SCREENS.CONTACTS}>
-                <Typography className={classes.linksStyle}>{t("contact_us")}</Typography>
+                <Typography className={classes.linksStyle}>{t("contact-us")}</Typography>
               </RouterLink>
             </Box>
           </Grid>

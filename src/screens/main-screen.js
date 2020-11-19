@@ -46,15 +46,18 @@ const latestBlogs = [
 ];
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(6)
+  textBox: {
+    maxWidth: '700px'
   },
-
+  justifyCenter: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
   alignCenter: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   cardMedia: {
     width: '700px',
@@ -71,16 +74,18 @@ const MainScreen = () => {
   const classes = useStyles();
 
   return (
-    <Container className={classes.container}>
+    <>
       <Container>
-        <Box mt={6} mx={15}>
-          <Typography align='center'>{t("description")}</Typography>
+        <Box className={classes.justifyCenter}>
+          <Box mt={6} className={classes.textBox}>
+            <Typography align='center'>{t("description")}</Typography>
+          </Box>
         </Box>
         <Box mt={6}>
-          <Grid container>
+          <Grid container className={classes.justifyCenter}>
             {
               items.map((item) => (
-                <Grid key={item.id} item xs={12} md={6} lg={4}>
+                <Grid key={item.id} item xs={12} md={6} lg={4} className={classes.justifyCenter}>
                   <InfoCard {...item} />
                 </Grid>
               ))
@@ -89,14 +94,16 @@ const MainScreen = () => {
         </Box>
         <Box mt={6}>
           <Grid container>
-            <Grid item xs={12} lg={5} className={classes.alignCenter}>
-              <Box pr={5}>
-                <Typography gutterBottom variant="h4">{t("leftBlockTitle")}</Typography>
-                <Typography>{t("leftBlockText")}</Typography>
+            <Grid item xs={12} lg={5} mb={2} className={classes.alignCenter}>
+              <Box pr={5} py={5} className={classes.textBox}>
+                <Typography gutterBottom variant="h4">{t("left-block-title")}</Typography>
+                <Typography>{t("left-block-text")}</Typography>
               </Box>
             </Grid>
             <Grid item xs={12} lg={7}>
-              <CardMedia className={classes.cardMedia} image="http://source.unsplash.com/random" />
+              <Box className={classes.justifyCenter}>
+                <CardMedia className={classes.cardMedia} image="http://source.unsplash.com/random" />
+              </Box>
             </Grid>
           </Grid>
         </Box>
@@ -105,23 +112,25 @@ const MainScreen = () => {
         <Container>
           <Grid container>
             <Grid item xs={12} lg={7}>
-              <CardMedia className={classes.cardMedia} image="http://source.unsplash.com/random" />
+              <Box className={classes.justifyCenter}>
+                <CardMedia className={classes.cardMedia} image="http://source.unsplash.com/random" />
+              </Box>
             </Grid>
             <Grid item xs={12} lg={5} className={classes.alignCenter}>
-              <Box pl={5} color='text.primary'>
-                <Typography gutterBottom variant="h4">{t("leftBlockTitle")}</Typography>
-                <Typography>{t("leftBlockText")}</Typography>
+              <Box pl={5} py={5} color='text.primary' className={classes.textBox}>
+                <Typography gutterBottom variant="h4">{t("left-block-title")}</Typography>
+                <Typography>{t("left-block-text")}</Typography>
               </Box>
             </Grid>
           </Grid>
         </Container>
       </Box>
       <Container>
-        <Box mt={6}>
-          <Grid container>
+        <Box mt={6} mb={5}>
+          <Grid container className={classes.justifyCenter}>
             {
               latestBlogs.map((item) => (
-                <Grid key={item.id} item xs={12} md={6} lg={4}>
+                <Grid key={item.id} item xs={12} md={6} lg={4} className={classes.justifyCenter}>
                   <LatestCard {...item} />
                 </Grid>
               ))
@@ -129,7 +138,7 @@ const MainScreen = () => {
           </Grid>
         </Box>
       </Container>
-    </Container>
+    </>
   );
 };
 

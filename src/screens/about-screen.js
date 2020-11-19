@@ -78,10 +78,10 @@ function AboutScreen() {
         </Grid>
       </Box>
       <Box mt={12}>
-        <Typography variant="h2" align="center">{t("title_2")}</Typography>
+        <Typography variant="h2" align="center">{t("title-2")}</Typography>
       </Box>
       <Box mt={5}>
-        <Typography align="center">{t("description_2")}</Typography>
+        <Typography align="center">{t("description-2")}</Typography>
       </Box>
       <Box mt={12}>
         <Grid container>
@@ -92,7 +92,7 @@ function AboutScreen() {
               </Box>
               <Box>
                 <Typography variant="h6">{`1. ${t("design")}`}</Typography>
-                <Typography>{t("designDescription")}</Typography>
+                <Typography>{t("design-description")}</Typography>
               </Box>
             </Box>
           </Grid>
@@ -103,7 +103,7 @@ function AboutScreen() {
               </Box>
               <Box>
                 <Typography variant="h6">{`2. ${t("develop")}`}</Typography>
-                <Typography>{t("developDescription")}</Typography>
+                <Typography>{t("develop-description")}</Typography>
               </Box>
             </Box>
           </Grid>
@@ -113,8 +113,8 @@ function AboutScreen() {
                 <Create color='secondary' />
               </Box>
               <Box>
-                <Typography variant="h6">{`3. ${t("makeEdits")}`}</Typography>
-                <Typography>{t("makeEditsDescription")}</Typography>
+                <Typography variant="h6">{`3. ${t("make-edits")}`}</Typography>
+                <Typography>{t("make-edits-description")}</Typography>
               </Box>
             </Box>
           </Grid>

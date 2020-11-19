@@ -26,7 +26,7 @@
     "resources": "Ресурсы",
     "company": "Компания",
     "about": "О нас",
-    "contact_us": "Связатся с нами",
+    "contact-us": "Связатся с нами",
     "support": "Поддержка",
     "blog": "Блог"
   },
@@ -62,25 +62,25 @@
   "contacts": {
     "title": "Get in touch",
     "description": "You need more information? Check what other persons are saying about progect. They are very happy with thier purchace",
-    "find_us_in_office": "Find us in office",
+    "find-us-in-office": "Find us in office",
     "address": "128 rue de la boetie 75008 Paris France",
-    "give_us_ring": "Give as a ring",
+    "give-us-ring": "Give as a ring",
     "telephone": "+3807845264235 Mon-Fri 8.00-22.00",
-    "contact_us": "Contact Us",
-    "send_message": "Send message",
-    "no_robot": "I'm not a robot"
+    "contact-us": "Contact Us",
+    "send-message": "Send message",
+    "no-robot": "I'm not a robot"
   },
 
   "about": {
     "title": "We are nerd rockstars",
     "description": "This is the paragraph where you can write more details about your team. Keep you user engaged by providing meaningful information.",
-    "title_2": "We build awesome products",
-    "description_2": "This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information.",
+    "title-2": "We build awesome products",
+    "description-2": "This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information.",
     "design": "Design",
-    "designDescription": "The moment you use Material Kit, you know you’ve never felt anything like it. With a single use, this powerfull UI Kit lets you do more than ever before.",
+    "design-description": "The moment you use Material Kit, you know you’ve never felt anything like it. With a single use, this powerfull UI Kit lets you do more than ever before.",
     "develop": "Develop",
-    "developDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
-    "makeEdits": "Make Edits",
-    "makeEditsDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough."
+    "develop-description": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
+    "make-edits": "Make Edits",
+    "make-edits-description": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough."
   }
 }
