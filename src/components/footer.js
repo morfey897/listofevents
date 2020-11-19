@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Footer = () => {
-  const {t} = useTranslation("footer");
+  const {t} = useTranslation("footer_block");
   const classes = useStyles();
 
   return (
@@ -48,7 +48,7 @@ const Footer = () => {
             <Box m={2}>
               <Typography>{t("company")}</Typography>
               <RouterLink to={SCREENS.ABOUT}>
-                <Typography className={classes.linksStyle}>{t("about")}</Typography>
+                <Typography className={classes.linksStyle}>{t("about_screen")}</Typography>
               </RouterLink>
               <RouterLink to={SCREENS.CONTACTS}>
                 <Typography className={classes.linksStyle}>{t("contact_us")}</Typography>

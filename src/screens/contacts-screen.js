@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function ContactsScreen() {
-  const { t } = useTranslation("contacts");
+  const { t } = useTranslation("contacts_screen");
   const classes = useStyles();
 
   return (

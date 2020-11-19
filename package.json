@@ -48,6 +48,7 @@
     "cancelable-promise": "^3.2.0",
     "change-case": "^4.1.1",
     "date-fns": "^2.15.0",
+    "debounce": "^1.2.0",
     "draft-js": "^0.11.7",
     "draft-js-anchor-plugin": "^2.0.3",
     "draft-js-inline-toolbar-plugin": "^3.0.1",

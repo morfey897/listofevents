@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MainScreen = () => {
-  const { t } = useTranslation("main");
+  const { t } = useTranslation("main_screen");
   const classes = useStyles();
 
   return (
@@ -91,8 +91,8 @@ const MainScreen = () => {
           <Grid container>
             <Grid item xs={12} lg={5} className={classes.alignCenter}>
               <Box pr={5}>
-                <Typography gutterBottom variant="h4">{t("leftBlockTitle")}</Typography>
-                <Typography>{t("leftBlockText")}</Typography>
+                <Typography gutterBottom variant="h4">{t("left_block_title")}</Typography>
+                <Typography>{t("left_block_text")}</Typography>
               </Box>
             </Grid>
             <Grid item xs={12} lg={7}>
@@ -109,8 +109,8 @@ const MainScreen = () => {
             </Grid>
             <Grid item xs={12} lg={5} className={classes.alignCenter}>
               <Box pl={5} color='text.primary'>
-                <Typography gutterBottom variant="h4">{t("leftBlockTitle")}</Typography>
-                <Typography>{t("leftBlockText")}</Typography>
+                <Typography gutterBottom variant="h4">{t("left_block_title")}</Typography>
+                <Typography>{t("left_block_text")}</Typography>
               </Box>
             </Grid>
           </Grid>

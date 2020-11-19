@@ -9,7 +9,8 @@ import {
   Room as MapIcon,
   Contacts as ContactsIcon,
   LabelImportant as AboutIcon,
-  Person as AccountIcon,
+  Person as GuestIcon,
+  AccountBox as AccountIcon,
   AssignmentInd as UserIcon,
   PersonAdd as CreateUserIcon,
   ExitToApp as LogoutIcon,
@@ -24,10 +25,10 @@ import { SCREENS, DIALOGS, EVENTS } from "../enums";
 
 import { DialogEmitter, ThemeEmitter } from '../emitters';
 import { useTranslation } from 'react-i18next';
-import { EVENT_SCREEN } from '../enums/screens';
+import { connect } from 'react-redux';
 
 const ACCOUNT_MENU_ID = 'primary-account-menu';
-const MAIN_MENU_ID = 'primary-main-menu';
+const MAIN_MENU_ID = 'primary-main_menu';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -63,11 +64,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Header() {
+function Header({ isLogged }) {
   const theme = useTheme();
   const classes = useStyles();
 
-  const { t } = useTranslation("header");
+  const { t } = useTranslation("header_block");
 
   const [accountMenuAnchor, setAnchorEl] = useState(null);
   const [mainMoreAnchorEl, setMainMoreAnchorEl] = useState(null);
@@ -91,21 +92,24 @@ function Header() {
     setMainMoreAnchorEl(null);
   }, []);
 
-  const handleLogin = useCallback(() => {
+  const handleSignin = useCallback(() => {
     handleAccountMenuClose();
-    DialogEmitter.open(DIALOGS.LOGIN);
+    DialogEmitter.open(DIALOGS.SIGNIN);
   }, []);
 
-  const handleLogout = useCallback(() => {
+  const handleSignout = useCallback(() => {
     handleAccountMenuClose();
+    DialogEmitter.open(DIALOGS.SIGNOUT);
   }, []);
 
   const handleProfile = useCallback(() => {
     handleAccountMenuClose();
+    DialogEmitter.open(DIALOGS.PROFILE);
   }, []);
 
-  const handleCreateAccount = useCallback(() => {
+  const handleSignup = useCallback(() => {
     handleAccountMenuClose();
+    DialogEmitter.open(DIALOGS.SIGNUP);
   }, []);
 
   const handleCreateEvent = useCallback(() => {
@@ -121,7 +125,7 @@ function Header() {
       <AppBar position="fixed" className={classes.appBar}>
         <Container>
           <Toolbar disableGutters>
-            <Tooltip title={t("main-menu")}>
+            <Tooltip title={t("main_menu")}>
               <IconButton
                 edge="start"
                 color="inherit"
@@ -138,7 +142,7 @@ function Header() {
             </Button>
             <div className={classes.grow} />
 
-            <Tooltip title={t("toggle-theme")}>
+            <Tooltip title={t("toggle_theme")}>
               <IconButton color="inherit" onClick={handleChangeTheme}>
                 {(theme.palette.type === "dark") ? <LightThemeIcon /> : <DarkThemeIcon />}
               </IconButton>
@@ -146,22 +150,22 @@ function Header() {
 
             {/* Main menu buttons */}
             <Hidden xsDown implementation="css">
-              <Tooltip title={t("list-of-events")}>
-                <IconButton color="inherit" component={RouterLink} to={SCREENS.LIST_OF_EVENTS}>
+              <Tooltip title={t("list_events")}>
+                <IconButton color="inherit" component={RouterLink} to={SCREENS.LIST_EVENTS}>
                   <TableIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={t("page-of-events")}>
-                <IconButton color="inherit" component={RouterLink} to={SCREENS.PAGE_OF_EVENTS}>
+              <Tooltip title={t("page_events")}>
+                <IconButton color="inherit" component={RouterLink} to={SCREENS.PAGE_EVENTS}>
                   <ViewDay />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={t("event-map")}>
+              <Tooltip title={t("event_map")}>
                 <IconButton color="inherit" component={RouterLink} to={SCREENS.EVENT_MAP}>
                   <MapIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={t("create-event")}>
+              <Tooltip title={t("create_event")}>
                 <IconButton color="inherit" onClick={handleCreateEvent}>
                   <AddEventIcon />
                 </IconButton>
@@ -176,7 +180,7 @@ function Header() {
                 onClick={handleAccountMenuOpen}
                 color="inherit"
               >
-                <AccountIcon />
+                {isLogged ? <AccountIcon /> : <GuestIcon />}
               </IconButton>
             </Tooltip>
           </Toolbar>
@@ -192,30 +196,30 @@ function Header() {
         open={isAccountMenuOpen}
         onClose={handleAccountMenuClose}
       >
-        <MenuItem onClick={handleLogin} dense>
+        {!isLogged && <MenuItem onClick={handleSignin} dense>
           <ListItemIcon className={classes.menuItemIcon}>
             <LoginIcon />
           </ListItemIcon>
           <ListItemText primary={t("login")} />
-        </MenuItem>
-        <MenuItem onClick={handleCreateAccount} dense>
+        </MenuItem>}
+        {!isLogged && <MenuItem onClick={handleSignup} dense>
           <ListItemIcon className={classes.menuItemIcon}>
             <CreateUserIcon />
           </ListItemIcon>
-          <ListItemText primary={t("create-account")} />
-        </MenuItem>
-        <MenuItem onClick={handleProfile} dense>
+          <ListItemText primary={t("create_account")} />
+        </MenuItem>}
+        {isLogged && <MenuItem onClick={handleProfile} dense>
           <ListItemIcon className={classes.menuItemIcon}>
             <UserIcon />
           </ListItemIcon>
           <ListItemText primary={t("profile")} />
-        </MenuItem>
-        <MenuItem onClick={handleLogout} dense>
+        </MenuItem>}
+        {isLogged && <MenuItem onClick={handleSignout} dense>
           <ListItemIcon className={classes.menuItemIcon}>
             <LogoutIcon />
           </ListItemIcon>
           <ListItemText primary={t("logout")} />
-        </MenuItem>
+        </MenuItem>}
       </Menu>
 
       <Drawer
@@ -242,29 +246,29 @@ function Header() {
               <ListItemText primary={t("about")} />
             </ListItem>
             <Divider />
-            <ListItem button component={RouterLink} to={SCREENS.LIST_OF_EVENTS} dense onClick={handleMainMenuClose}>
+            <ListItem button component={RouterLink} to={SCREENS.LIST_EVENTS} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
                 <TableIcon />
               </ListItemIcon>
-              <ListItemText primary={t("list-of-events")} />
+              <ListItemText primary={t("list_events")} />
             </ListItem>
-            <ListItem button component={RouterLink} to={SCREENS.PAGE_OF_EVENTS} dense onClick={handleMainMenuClose}>
+            <ListItem button component={RouterLink} to={SCREENS.PAGE_EVENTS} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
                 <ViewDay />
               </ListItemIcon>
-              <ListItemText primary={t("page-of-events")} />
+              <ListItemText primary={t("page_events")} />
             </ListItem>
             <ListItem button component={RouterLink} to={SCREENS.EVENT_MAP} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
                 <MapIcon />
               </ListItemIcon>
-              <ListItemText primary={t("event-map")} />
+              <ListItemText primary={t("event_map")} />
             </ListItem>
             <ListItem button onClick={() => { handleMainMenuClose(); handleCreateEvent(); }} dense>
               <ListItemIcon className={classes.menuItemIcon}>
                 <AddEventIcon />
               </ListItemIcon>
-              <ListItemText primary={t("create-event")} />
+              <ListItemText primary={t("create_event")} />
             </ListItem>
             <Divider />
             <ListItem button component={RouterLink} to={SCREENS.CONTACTS} dense onClick={handleMainMenuClose}>
@@ -280,4 +284,11 @@ function Header() {
   );
 }
 
-export default Header;
+const mapStateToProps = (state) => {
+  const { isLogged } = state.user;
+  return {
+    isLogged
+  };
+};
+
+export default connect(mapStateToProps)(Header);

@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AboutScreen() {
-  const { t } = useTranslation("about");
+  const { t } = useTranslation("about_screen");
   const classes = useStyles();
 
   return (
@@ -92,7 +92,7 @@ function AboutScreen() {
               </Box>
               <Box>
                 <Typography variant="h6">{`1. ${t("design")}`}</Typography>
-                <Typography>{t("designDescription")}</Typography>
+                <Typography>{t("design_description")}</Typography>
               </Box>
             </Box>
           </Grid>
@@ -103,7 +103,7 @@ function AboutScreen() {
               </Box>
               <Box>
                 <Typography variant="h6">{`2. ${t("develop")}`}</Typography>
-                <Typography>{t("developDescription")}</Typography>
+                <Typography>{t("develop_description")}</Typography>
               </Box>
             </Box>
           </Grid>
@@ -113,8 +113,8 @@ function AboutScreen() {
                 <Create color='secondary' />
               </Box>
               <Box>
-                <Typography variant="h6">{`3. ${t("makeEdits")}`}</Typography>
-                <Typography>{t("makeEditsDescription")}</Typography>
+                <Typography variant="h6">{`3. ${t("make_edits")}`}</Typography>
+                <Typography>{t("make_edits_description")}</Typography>
               </Box>
             </Box>
           </Grid>

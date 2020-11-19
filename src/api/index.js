@@ -61,12 +61,12 @@ function userAction(url, data, Authorization) {
     })
     .then(result => {
       if (result.data.success) {
-        return { status: SUCCESS, ...result.data };
+        return { status: SUCCESS, success: true, data: result.data.data};
       } else {
         throw new Error("Can't load");
       }
     })
-    .catch(() => Promise.resolve({ status: FAIL, success: false }));
+    .catch(() => Promise.resolve({ status: FAIL, success: false, data: {} }));
 }
 
 function signin({ username, password }) {

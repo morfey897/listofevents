@@ -1,27 +1,27 @@
 {
   "general": {
-    "label-show": "Show",
-    "label-hide": "Hide",
-    "button-sign-in": "Sign in",
-    "button-close": "Close"
+    "label_show": "Show",
+    "label_hide": "Hide",
+    "button_signin": "Sign in",
+    "button_close": "Close"
   },
-  "header": {
-    "main-menu": "Main menu",
+  "header_block": {
+    "main_menu": "Main menu",
     "about": "About",
     "contacts": "Contacts",
-    "list-of-events": "List of event",
-    "page-of-events": "Page of event",
+    "list_events": "List of event",
+    "page_events": "Page of event",
     "event-screen": "Event screen",
-    "event-map": "Event map",
-    "create-event": "Create event",
+    "event_map": "Event map",
+    "create_event": "Create event",
     "account": "Account",
     "login": "Login",
     "logout": "Logout",
-    "create-account": "Create",
+    "create_account": "Create",
     "profile": "Profile",
-    "toggle-theme": "Toggle dark/light theme"
+    "toggle_theme": "Toggle dark/light theme"
   },
-  "footer": {
+  "footer_block": {
     "community": "Community",
     "resources": "Resources",
     "company": "Company",
@@ -30,32 +30,32 @@
     "support": "Support",
     "blog": "Blog"
   },
-  "list-of-events-screen": {
+  "list_events_screen": {
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien faucibus et molestie ac."
   },
-  "add-event-dialog": {
+  "add_event_dialog": {
     "title": "Add new event",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
-    "name-label": "Name",
-    "name-helper": "Название не моюет быть пустым",
-    "description-label": "Description",
-    "name-description": "Описание слишком короткое",
-    "location-label": "Location",
-    "url-label": "Link",
-    "date-label": "Date",
-    "time-label": "Time",
-    "category-label": "Category",
-    "city-label": "City",
-    "tags-label": "Tags"
+    "name_label": "Name",
+    "name_helper": "Название не моюет быть пустым",
+    "description_label": "Description",
+    "name_description": "Описание слишком короткое",
+    "location_label": "Location",
+    "url_label": "Link",
+    "date_label": "Date",
+    "time_label": "Time",
+    "category_label": "Category",
+    "city_label": "City",
+    "tags_label": "Tags"
   },
-  "login-dialog": {
+  "signin_dialog": {
     "title": "Login",
     "description": "or",
-    "user-label": "Username or email address",
-    "password-label": "Password",
+    "use_label": "Username or email address",
+    "password_label": "Password",
     "error": "Incorrect username or password."
   },
-  "contacts": {
+  "contacts_screen": {
     "title": "Get in touch",
     "description": "You need more information? Check what other persons are saying about progect. They are very happy with thier purchace",
     "find_us_in_office": "Find us in office",
@@ -66,25 +66,24 @@
     "send_message": "Send message",
     "no_robot": "I'm not a robot"
   },
-  "about": {
+  "about_screen": {
     "title": "We are nerd rockstars",
     "description": "This is the paragraph where you can write more details about your team. Keep you user engaged by providing meaningful information.",
     "title_2": "We build awesome products",
     "description_2": "This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information.",
     "design": "Design",
-    "designDescription": "The moment you use Material Kit, you know you’ve never felt anything like it. With a single use, this powerfull UI Kit lets you do more than ever before.",
+    "design_description": "The moment you use Material Kit, you know you’ve never felt anything like it. With a single use, this powerfull UI Kit lets you do more than ever before.",
     "develop": "Develop",
-    "developDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
-    "makeEdits": "Make Edits",
-    "makeEditsDescription": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
+    "develop_description": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
+    "make_edits": "Make Edits",
+    "make_edits_description": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
     "partnership-title": "Want to work with us?",
     "partnership-description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
     "partnership-letsTalk": "LET'S TALK"
   },
-  "main": {
+  "main_screen": {
     "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
-    "sdfsa": "dfasdf",
-    "leftBlockTitle": "Basic Components",
-    "leftBlockText": "We re-styled every Bootstrap element to make it resemble Material Design and also fit with each other. All the Bootstrap components that you need in a development have been re-design with the new look. Besides the numerous basic elements, we have also created additional classes. All these items will help you take your project to the next level."
+    "left_block_title": "Basic Components",
+    "left_block_text": "We re-styled every Bootstrap element to make it resemble Material Design and also fit with each other. All the Bootstrap components that you need in a development have been re-design with the new look. Besides the numerous basic elements, we have also created additional classes. All these items will help you take your project to the next level."
   }
 }

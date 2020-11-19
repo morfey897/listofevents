@@ -1,17 +1,17 @@
-import ListOfEventsScreen from './list-of-events-screen';
+import ListEventsScreen from './list-events-screen';
 import EventMapScreen from './event-map-screen';
 import ContactsScreen from './contacts-screen';
 import AboutScreen from './about-screen';
 import MainScreen from '../screens/main-screen';
-import PageOfEventsScreen from '../screens/page-of-events';
+import PageEventsScreen from './page-events';
 import EventScreen from '../screens/event-screen';
 
 export {
-  ListOfEventsScreen,
+  ListEventsScreen,
   EventMapScreen,
   ContactsScreen,
   AboutScreen,
   MainScreen,
-  PageOfEventsScreen,
+  PageEventsScreen,
   EventScreen
 };

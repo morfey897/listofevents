@@ -36,7 +36,7 @@ function DropList({ list, showItems = Number.MAX_SAFE_INTEGER, generator, onTogg
     {contentGenerator(0, showItems)}
     {showItems < list.length && <>
       <ListItem button onClick={handleOpen} dense>
-        <ListItemText primary={open ? t("hide") : t("hide")} />
+        <ListItemText primary={open ? t("label_hide") : t("label_show")} />
         {open ? <ExpandLess /> : <Badge color="primary" badgeContent={list.length - showItems}>
           <ExpandMore />
         </Badge>}

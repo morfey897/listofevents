@@ -42,11 +42,11 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-function ListOfEventsScreen({ cities, categories, events, filter, fetchCities, fetchCategories, citiesReady, categoriesReady, fetchEvents, loading }) {
+function ListEventsScreen({ cities, categories, events, filter, fetchCities, fetchCategories, citiesReady, categoriesReady, fetchEvents, loading }) {
 
   const classes = useStyles();
 
-  const { t } = useTranslation("list-of-events-screen");
+  const { t } = useTranslation("list_events_screen");
 
   useEffect(() => {
     if (!citiesReady) {
@@ -139,4 +139,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchCategories: fetchCategoriesActionCreator,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListOfEventsScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ListEventsScreen);

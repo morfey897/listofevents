@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useReducer } from "react";
 import { DialogEmitter } from "../emitters";
 
-import { AddEventDialog, LoginDialog } from "../dialogs";
+import { AddEventDialog, SigninDialog, SignupDialog, SignoutDialog, ProfileDialog } from "../dialogs";
 import { DIALOGS, EVENTS } from "../enums";
 
 const initialState = {
@@ -58,9 +58,13 @@ function DialogProvider() {
   return <>
     {
       state.wnds.map(({ wnd, isOpen, data }) => {
+        const params = { ...data, open: isOpen === 1, handleClose: (state) => DialogEmitter.close(wnd, state), name: wnd };
         switch (wnd) {
-          case DIALOGS.ADD_EVENT: return <AddEventDialog key={wnd} {...data} open={isOpen === 1} handleClose={(state) => DialogEmitter.close(wnd, state)} />;
-          case DIALOGS.LOGIN: return <LoginDialog key={wnd} {...data} open={isOpen === 1} handleClose={(state) => DialogEmitter.close(wnd, state)} />;
+          case DIALOGS.ADD_EVENT: return <AddEventDialog key={wnd} {...params} />;
+          case DIALOGS.SIGNIN: return <SigninDialog key={wnd} {...params} />;
+          case DIALOGS.SIGNUP: return <SignupDialog key={wnd} {...params} />;
+          case DIALOGS.SIGNOUT: return <SignoutDialog key={wnd} {...params} />;
+          case DIALOGS.PROFILE: return <ProfileDialog key={wnd} {...params} />;
           default: return null;
         }
       })
