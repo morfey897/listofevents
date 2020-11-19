@@ -43,9 +43,9 @@ const useStyles = makeStyles((theme) => ({
 
 let waitPromise;
 let waitClose;
-function ProfileDialog({ open, name, handleClose }) {
+function ProfileDialog({ open, handleClose }) {
 
-  const { t } = useTranslation([name, "general"]);
+  const { t } = useTranslation(["profile_dialog", "general"]);
 
   const classes = useStyles();
 

@@ -35,9 +35,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NOW = addDays(new Date(), 1);
-function AddEventDialog({ open, name, handleClose }) {
+function AddEventDialog({ open, handleClose }) {
 
-  const { t, i18n } = useTranslation([name, "general"]);
+  const { t, i18n } = useTranslation(["add_event_dialog", "general"]);
 
   const classes = useStyles();
 

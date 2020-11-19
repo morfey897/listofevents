@@ -70,14 +70,14 @@ function userAction(url, data, Authorization) {
 }
 
 function signin({ username, password }) {
-  return userAction('/signin', { username, password }, `Basic ${basicToken}`);
+  return userAction('/signin', { username: (username || "").trim(), password }, `Basic ${basicToken}`);
 }
 
-function signup(name, surname, email, phone, password) {
-  return userAction('/signup', { name, surname, email, phone, password }, `Basic ${basicToken}`);
+function signup({name, surname, email, phone, password}) {
+  return userAction('/signup', { name: (name || "").trim(), surname: (surname || "").trim(), email: (email || "").trim(), phone: (phone || "").replace(/\D/g, ""), password }, `Basic ${basicToken}`);
 }
 
-function signout() {
+function signout(_) {
   return userAction('/signout', {}, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
 }
 

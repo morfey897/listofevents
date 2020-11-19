@@ -24,16 +24,16 @@ import { STATES } from "../enums";
 
 
 const useStyles = makeStyles((theme) => ({
-  headerBox: {
+  dialogTitle: {
     marginTop: '-40px',
     backgroundColor: theme.palette.info.main,
     background: `linear-gradient(90deg, ${theme.palette.info.main} 0, ${theme.palette.info[theme.palette.type]} 100%)`,
-    borderRadius: theme.shape.borderRadius
-  },
-  headerBoxTitle: {
-    paddingTop: theme.spacing(1),
-    height: '50px',
-    color: theme.palette.info.contrastText
+    borderRadius: theme.shape.borderRadius,
+    "& > .MuiTypography-root": {
+      paddingTop: theme.spacing(1),
+      height: '50px',
+      color: theme.palette.info.contrastText
+    }
   },
   socialButtons: {
     justifyContent: "center",
@@ -44,9 +44,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 let waitClose;
-function SigninDialog({ open, name, handleClose, username, isLogged, isError, isLoading, signRequest }) {
+function SigninDialog({ open, handleClose, username, isLogged, isError, isLoading, signinRequest }) {
 
-  const { t } = useTranslation([name, "general"]);
+  const { t } = useTranslation(["signin_dialog", "general"]);
 
   const classes = useStyles();
 
@@ -75,7 +75,7 @@ function SigninDialog({ open, name, handleClose, username, isLogged, isError, is
     }
     if (usernameRef.current && passwordRef.current && usernameRef.current.value && passwordRef.current.value) {
       setEmpty(false);
-      signRequest({ username: usernameRef.current.value, password: passwordRef.current.value });
+      signinRequest({ username: usernameRef.current.value, password: passwordRef.current.value });
     } else {
       setEmpty(true);
     }
@@ -89,9 +89,9 @@ function SigninDialog({ open, name, handleClose, username, isLogged, isError, is
 
   return <Dialog open={open} onClose={handleClose}>
     <DialogTitle disableTypography>
-      <Box className={classes.headerBox} >
-        <Typography align='center' variant="h6" className={classes.headerBoxTitle} >{t("title")}</Typography>
-        {isLoading && <LinearProgress className={classes.indicator} />}
+      <Box className={classes.dialogTitle} >
+        <Typography align='center' variant="h6">{t("title")}</Typography>
+        {isLoading && <LinearProgress />}
       </Box>
     </DialogTitle>
     <DialogActions className={classes.socialButtons}>
@@ -110,17 +110,17 @@ function SigninDialog({ open, name, handleClose, username, isLogged, isError, is
         {isError && <Alert severity={"error"}>{t("error_incorrect")}</Alert>}
         {isEmpty && <Alert severity={"warning"}>{t("error_empty")}</Alert>}
 
-        <TextField disabled={isLogged} required name="username" type="text" autoFocus fullWidth label={t("use_label")} margin="normal"
+        <TextField disabled={isLogged} error={isEmpty && usernameRef.current && !usernameRef.current.value} required name="username" type="text" autoFocus fullWidth label={t("username_label")} margin="normal"
           InputProps={{
             startAdornment: <InputAdornment position="start"><NameIcon /></InputAdornment>,
-          }} inputRef={usernameRef} onChange={debounce(onChange, 300)} />
-        <TextField disabled={isLogged} required name="password" type="password" fullWidth label={t("password_label")} margin="normal" InputProps={{
+          }} inputRef={usernameRef} onChange={debounce(onChange, 300)} autoComplete="on"/>
+        <TextField disabled={isLogged} required error={isEmpty && passwordRef.current && !passwordRef.current.value} name="password" type="password" fullWidth label={t("password_label")} margin="normal" InputProps={{
           startAdornment: <InputAdornment position="start"><PasswordIcon /></InputAdornment>,
-        }} inputRef={passwordRef} onChange={debounce(onChange, 300)} />
+        }} inputRef={passwordRef} onChange={debounce(onChange, 300)} autoComplete="on"/>
 
       </DialogContent>
       <DialogActions>
-        <Button type="submit" disabled={isLoading || isLogged} onClick={onSubmit} color="primary" variant="contained">{t("general:button_signin")}</Button>
+        <Button type="submit" disabled={isLoading || isLogged} onClick={onSubmit} color="primary" variant="contained">{t("button_signin")}</Button>
         <Button disabled={isLoading || isLogged} onClick={handleClose} color="secondary" variant="contained">{t("general:button_close")}</Button>
       </DialogActions>
     </form>
@@ -138,7 +138,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  signRequest: signinActionCreator,
+  signinRequest: signinActionCreator,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(SigninDialog);

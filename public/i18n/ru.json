@@ -2,7 +2,6 @@
   "general": {
     "label_show": "Показать",
     "label_hide": "Спрятать",
-    "button_signin": "Войти",
     "button_close": "Закрыть",
     "button_yes": "Да",
     "button_no": "Нет",
@@ -54,20 +53,30 @@
 
   "signin_dialog": {
     "title": "Логин",
+    "title_signup": "Создать аккаунт",
     "description": "или",
-    "use_label": "Электронная почта или номер телефона",
+    "username_label": "Электронная почта или номер телефона",
+    "name_label": "Имя",
+    "surname_label": "Фамилия",
+    "phone_label": "Номер телефона",
+    "email_label": "Електронная почта",
     "password_label": "Пароль",
+    "confirm_password_label": "Подтверждение пароля",
     "success": "Приветствуем вас {{name}}.",
     "error_incorrect": "Неверный логин или пароль.",
-    "error_empty": "Заполните логин и пароль.",
+    "error_empty": "Заполните все необходимые поля.",
+    "error_incorrect_password": "Пароль не совпадает",
     "instagram_enter": "Вход с помощью Instagram аккаунта",
-    "facebook_enter": "Вход с помощью Facebook аккаунта"
+    "facebook_enter": "Вход с помощью Facebook аккаунта",
+    "button_signin": "Войти",
+    "button_create": "Создать"
   },
 
   "signout_dialog": {
     "title": "Выход",
     "description": "Вы уверены что хотите выйти из аккаунты?",
-    "success": "Вы вышли из аккаунта"
+    "success": "Вы вышли из аккаунта",
+    "error": "Упс... что то пошло не так."
   },
   
   "contacts_screen": {

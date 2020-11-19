@@ -40,7 +40,6 @@ function getUser() {
 export function user(state = { ...getUser() }, action) {
   const { type, payload } = action;
 
-  console.log("USER_TYPE", type);
   switch (type) {
     case USER_UPDATE_STATE: {
       return {
