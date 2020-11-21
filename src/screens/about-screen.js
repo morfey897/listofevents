@@ -85,7 +85,7 @@ function AboutScreen() {
       </Box>
       <Box mt={12}>
         <Grid container>
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid item xs={12} md={6} lg={4} className={classes.justifyCenter}>
             <Box className={classes.cardDescription}>
               <Box mx={2}>
                 <Gesture color='secondary' />
@@ -96,7 +96,7 @@ function AboutScreen() {
               </Box>
             </Box>
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid item xs={12} md={6} lg={4} className={classes.justifyCenter}>
             <Box className={classes.cardDescription}>
               <Box mx={2}>
                 <Build color='secondary' />
@@ -107,7 +107,7 @@ function AboutScreen() {
               </Box>
             </Box>
           </Grid>
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid item xs={12} md={6} lg={4} className={classes.justifyCenter}>
             <Box className={classes.cardDescription}>
               <Box mx={2}>
                 <Create color='secondary' />
@@ -124,10 +124,10 @@ function AboutScreen() {
       <Box mt={6}>
         <Typography variant="h2" align="center">{t("partnership_title")}</Typography>
       </Box>
-      <Box mt={5} px={15}>
+      <Box mt={5}>
         <Typography align="center">{t("partnership_description")}</Typography>
       </Box>
-      <Box mt={8} px={15}>
+      <Box mt={8}>
         <Grid container>
           <Grid item xs={12} md={6} lg={4}>
             <Box className={classes.justifyCenter}>

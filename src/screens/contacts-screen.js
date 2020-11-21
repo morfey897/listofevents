@@ -1,13 +1,16 @@
-import { Box, Button, Checkbox, Container, FormControlLabel, Grid, makeStyles, Paper, TextareaAutosize, TextField, Typography } from '@material-ui/core';
+import { Box, Button, Checkbox, Container, FormControlLabel, Grid, makeStyles, Paper, TextareaAutosize, TextField, Typography, useMediaQuery } from '@material-ui/core';
 import { PhoneTwoTone, PinDrop } from '@material-ui/icons';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
 
-  container: {
+  imgContainer: {
     backgroundImage: 'url(http://source.unsplash.com/random)',
     minHeight: '700px'
+  },
+  leftBlock: {
+    maxWidth: '450px'
   },
   rightBlock: {
     display: 'flex',
@@ -15,9 +18,9 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     marginTop: '80px',
+    marginBottom: '40px',
     padding: '30px',
-    width: '450px',
-    height: '450px'
+    maxWidth: '450px'
   },
   headerBox: {
     position: 'relative',
@@ -30,10 +33,6 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: '8px',
     color: theme.palette.info.contrastText
   },
-  spaceBetween: {
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
   displayFlex: {
     display: 'flex'
   },
@@ -42,13 +41,16 @@ const useStyles = makeStyles((theme) => ({
 function ContactsScreen() {
   const { t } = useTranslation("contacts_screen");
   const classes = useStyles();
+  const matches = useMediaQuery(theme => theme.breakpoints.up('sm'));
+  let textAreaWidth = {width: "290px" };
+  if ( matches ) textAreaWidth = {width: "390px" };
 
   return (
-    <Container maxWidth={false} className={classes.container}>
+    <Box className={classes.imgContainer}>
       <Container>
         <Grid container>
-          <Grid item xs={12} md={6}>
-            <Box mt={12} color='primary.contrastText'>
+          <Grid item xs={12} md={6} lg={5}>
+            <Box mt={10} className={classes.leftBlock} color='primary.contrastText'>
               <Typography variant="h3" component="h2">{t("title")}</Typography>
               <Typography>{t("description")}</Typography>
             </Box>
@@ -71,28 +73,41 @@ function ContactsScreen() {
               <Typography>{t("telephone")}</Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} md={6} className={classes.rightBlock}>
+          <Grid item lg={2}></Grid>
+          <Grid item xs={12} md={6} lg={5}>
             <Paper className={classes.paper}>
               <Box className={classes.headerBox} >
                 <Typography align='center' variant="h6" className={classes.headerBoxTitle} >{t("contact_us")}</Typography>
               </Box>
-              <Box className={classes.spaceBetween}>
-                <TextField autoFocus margin="dense" id="firstName" label="First name" type="firstName" />
-                <TextField autoFocus margin="dense" id="lastName" label="Last name" type="lastName" />
-              </Box>
+              <Grid container justify='space-between'>
+                <Grid item xs={12} sm={6}>
+                  <TextField autoFocus margin="dense" id="firstName" label="First name" type="firstName" />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField autoFocus margin="dense" id="lastName" label="Last name" type="lastName" />
+                </Grid>
+              </Grid>
               <TextField autoFocus margin="dense" id="EmailAddress" label="Email address" type="EmailAddress" fullWidth />
               <Box mt={4}>
-                <TextareaAutosize rows={8} rowsMax={8} style={{ width: "390px" }} />
+                <TextareaAutosize rows={8} rowsMax={8} style={textAreaWidth} />
               </Box>
-              <Box mt={4} className={classes.spaceBetween}>
-                <FormControlLabel control={<Checkbox name="checked" />} label={t("no_robot")} />
-                <Button variant='contained' color="primary">{t("send_message")}</Button>
+              <Box mt={4}>
+                <Grid container justify='space-between'>
+                  <Grid item>
+                    <Box mb={2}>
+                      <FormControlLabel control={<Checkbox name="checked" />} label={t("no_robot")} />
+                    </Box>
+                  </Grid>
+                  <Grid item>
+                    <Button variant='contained' color="primary">{t("send_message")}</Button>
+                  </Grid>
+                </Grid>
               </Box>
             </Paper>
           </Grid>
         </Grid>
       </Container>
-    </Container>
+    </Box>
   );
 }
 

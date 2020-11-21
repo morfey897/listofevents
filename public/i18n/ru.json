@@ -101,7 +101,9 @@
     "develop": "Develop",
     "develop_description": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
     "make_edits": "Make Edits",
-    "make_edits_description": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough."
+    "make_edits_description": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
+    "partnership_title": "Want to work with us?",
+    "partnership_description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours."
   },
   
   "main_screen": {
