@@ -17,7 +17,7 @@ import {
   Person as LoginIcon,
   ChevronLeft as ChevronLeftIcon,
   Brightness7 as LightThemeIcon,
-  Brightness3 as DarkThemeIcon,
+  Brightness5 as DarkThemeIcon,
   ViewDay,
 } from '@material-ui/icons';
 
@@ -285,9 +285,9 @@ function Header({ isLogged }) {
 }
 
 const mapStateToProps = (state) => {
-  const { isLogged } = state.user;
+  const { user } = state;
   return {
-    isLogged
+    isLogged: user.isLogged
   };
 };
 

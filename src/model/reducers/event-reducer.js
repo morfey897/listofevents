@@ -1,9 +1,9 @@
 import {EVENT_LOADED, EVENT_UPDATE_STATE} from "../actions/event-action";
-import { STATE_NONE } from "../../enums/states";
+import { STATES } from "../../enums";
 
 const initState = {
   list: [],
-  state: STATE_NONE,
+  state: STATES.STATE_NONE,
 };
 
 export function events(state = initState, action) {

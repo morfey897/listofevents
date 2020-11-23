@@ -1,34 +1,34 @@
 import { signin, signout, signup } from "../../api";
-import { STATES } from "../../enums";
+import { ERRORCODES, STATES } from "../../enums";
 
 export const USER_UPDATE_STATE = "user_update_state";
 export const USER_SIGN_IN = "user_sign_in";
 export const USER_SIGN_OUT = "user_sign_out";
 export const USER_TIME_OUT = "user_time_out";
 
-function actionCreator(params, apiMethod) {
+function actionCreator(params, dispatchType, apiMethod) {
   return (dispatch) => {
-    dispatch({ type: USER_UPDATE_STATE, payload: { state: STATES.STATE_LOADING } });
+    dispatch({ type: USER_UPDATE_STATE, payload: { state: STATES.STATE_LOADING, errorCode: 0 } });
     return apiMethod(params)
-      .then(({ success, data }) => {
-        if (success) return data;
-        throw new Error("Can't loaded");
+      .then(({ success, errorCode, data }) => {
+        if (success) {
+          dispatch({ type: dispatchType, payload: { user: data.user, token: data.token, state: STATES.STATE_READY, errorCode: 0 } });
+        } else {
+          dispatch({ type: dispatchType, payload: { state: STATES.STATE_ERROR, errorCode } });
+        }
       })
-      .then(({ user, token }) => dispatch({ type: USER_SIGN_IN, payload: { user, token, state: STATES.STATE_READY } }))
-      .catch(() => {
-        dispatch({ type: USER_SIGN_IN, payload: { state: STATES.STATE_ERROR } });
-      });
+      .catch(() => dispatch({ type: dispatchType, payload: { state: STATES.STATE_ERROR, errorCode: ERRORCODES.ERROR_WRONG } }));
   };
 }
 
 export function signinActionCreator({ username, password }) {
-  return actionCreator({ username, password }, signin);
+  return actionCreator({ username, password }, USER_SIGN_IN, signin);
 }
 
-export function signupActionCreator({ name, surname, email, phone, password }) {
-  return actionCreator({ name, surname, email, phone, password }, signup);
+export function signupActionCreator({ username, name, code, password }) {
+  return actionCreator({ username, name, code, password }, USER_SIGN_IN, signup);
 }
 
 export function signoutActionCreator() {
-  return actionCreator({ }, signout);
+  return actionCreator({}, USER_SIGN_OUT, signout);
 }

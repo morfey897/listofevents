@@ -37,7 +37,7 @@ function SignoutDialog({ open, handleClose, isLoading, isError, isLogged, signou
   const classes = useStyles();
 
   useEffect(() => {
-    if (!isLogged) {
+    if (!isLogged || isError) {
       waitClose && waitClose.clear();
       waitClose = debounce(handleClose, 500);
       waitClose();

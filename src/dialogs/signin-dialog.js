@@ -114,6 +114,7 @@ function SigninDialog({ open, handleClose, username, isLogged, isError, isLoadin
           InputProps={{
             startAdornment: <InputAdornment position="start"><NameIcon /></InputAdornment>,
           }} inputRef={usernameRef} onChange={debounce(onChange, 300)} autoComplete="on"/>
+          
         <TextField disabled={isLogged} required error={isEmpty && passwordRef.current && !passwordRef.current.value} name="password" type="password" fullWidth label={t("password_label")} margin="normal" InputProps={{
           startAdornment: <InputAdornment position="start"><PasswordIcon /></InputAdornment>,
         }} inputRef={passwordRef} onChange={debounce(onChange, 300)} autoComplete="on"/>
@@ -129,8 +130,14 @@ function SigninDialog({ open, handleClose, username, isLogged, isError, isLoadin
 
 const mapStateToProps = (state) => {
   const { user } = state;
+  let username = [user.user.name, user.user.surname].filter(a => !!a).join(" ");
+  if (!username && user.user.email) {
+    username = user.user.email;
+  } else if (!username && user.user.phone) {
+    username = user.user.phone;
+  }
   return {
-    username: [user.name, user.surname].filter(a => !!a).join(" "),
+    username,
     isLogged: user.isLogged,
     isLoading: user.state === STATES.STATE_LOADING,
     isError: user.state === STATES.STATE_ERROR
