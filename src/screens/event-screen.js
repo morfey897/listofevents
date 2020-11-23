@@ -44,7 +44,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(6)
   },
-
+  justifyCenter: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  textBox: {
+    maxWidth: '950px'
+  },
   text: {
     fontSize: '22px',
     lineHeight: '30px'
@@ -56,12 +62,14 @@ function EventScreen() {
 
   return (
     <Container className={classes.container}>
-      <Box px={18}>
-        <Typography variant="h4" gutterBottom>{eventTitle}</Typography>
-        <Typography className={classes.text}>{eventText}</Typography>
+      <Box className={classes.justifyCenter}>
+        <Box className={classes.textBox}>
+          <Typography variant="h4" gutterBottom>{eventTitle}</Typography>
+          <Typography className={classes.text}>{eventText}</Typography>
+        </Box>
       </Box>
       <Box>
-        <Grid container>
+        <Grid container justify='center'>
           {
             photoArr.map((item, i) => (
               <Grid key={i} item xs={12} md={6} lg={4}>
@@ -71,15 +79,17 @@ function EventScreen() {
           }
         </Grid>
       </Box>
-      <Box mt={4} px={18}>
-        <Typography variant="h4" gutterBottom>{eventTitle}</Typography>
-        <Typography className={classes.text}>{eventText}</Typography>
+      <Box className={classes.justifyCenter}>
+        <Box mt={4} className={classes.textBox}>
+          <Typography variant="h4" gutterBottom>{eventTitle}</Typography>
+          <Typography className={classes.text}>{eventText}</Typography>
+        </Box>
       </Box>
       <Box mt={6}>
-        <Grid container>
+        <Grid container justify='center'>
           {
             latestBlogs.map((item) => (
-              <Grid key={item.id} item xs={12} md={6} lg={4}>
+              <Grid key={item.id} item xs={12} md={6} lg={4} className={classes.justifyCenter}>
                 <LatestCard {...item} />
               </Grid>
             ))

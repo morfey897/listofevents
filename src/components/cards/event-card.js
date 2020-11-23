@@ -30,7 +30,9 @@ function EventCard({img, url, title, text}) {
       </Grid>
       <Grid item xs={12} md={7} lg={8}>
         <Box my={2}>
-          <Typography variant="h6" gutterBottom>{title}</Typography>
+          <RouterLink to={url}>
+            <Typography variant="h6" gutterBottom>{title}</Typography>
+          </RouterLink>
           <Typography>{text}</Typography>
         </Box>
       </Grid>

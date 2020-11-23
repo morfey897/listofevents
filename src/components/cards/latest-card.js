@@ -3,14 +3,14 @@ import React from 'react';
 
 const useStyles = makeStyles(() => ({
   card: {
-    margin: '20px',
-    width: '370px',
+    marginTop: '20px',
+    maxWidth: '370px',
     display: 'flex',
     flexDirection: 'column'
   },
   cardMedia: {
     marginTop: '20px',
-    width: '370px',
+    maxWidth: '370px',
     height: '250px',
     borderRadius: '8px'
   }

@@ -36,13 +36,19 @@ const useStyles = makeStyles((theme) => ({
   displayFlex: {
     display: 'flex'
   },
+  imputFirstName: {
+    paddingRight: '10px'
+  },
+  imputLastName: {
+    paddingLeft: '10px'
+  }
 }));
 
 function ContactsScreen() {
   const { t } = useTranslation("contacts_screen");
   const classes = useStyles();
   const matches = useMediaQuery(theme => theme.breakpoints.up('sm'));
-  let textAreaWidth = {width: "290px" };
+  let textAreaWidth = {width: "270px" };
   if ( matches ) textAreaWidth = {width: "390px" };
 
   return (
@@ -80,11 +86,11 @@ function ContactsScreen() {
                 <Typography align='center' variant="h6" className={classes.headerBoxTitle} >{t("contact_us")}</Typography>
               </Box>
               <Grid container justify='space-between'>
-                <Grid item xs={12} sm={6}>
-                  <TextField autoFocus margin="dense" id="firstName" label="First name" type="firstName" />
+                <Grid item xs={12} sm={6} className={matches ? classes.imputFirstName : ''}>
+                  <TextField autoFocus margin="dense" id="firstName" label="First name" type="firstName" fullWidth />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField autoFocus margin="dense" id="lastName" label="Last name" type="lastName" />
+                <Grid item xs={12} sm={6} className={matches ? classes.imputLastName : ''}>
+                  <TextField autoFocus margin="dense" id="lastName" label="Last name" type="lastName" fullWidth />
                 </Grid>
               </Grid>
               <TextField autoFocus margin="dense" id="EmailAddress" label="Email address" type="EmailAddress" fullWidth />
