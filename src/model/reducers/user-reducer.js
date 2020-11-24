@@ -7,7 +7,7 @@ const initState = {
   errorCode: 0,
   isLogged: false,
   user: {
-    id: 0,
+    id: "",
     name: "",
     surname: "",
     email: "",

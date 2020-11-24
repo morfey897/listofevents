@@ -73,8 +73,29 @@ function signout() {
   return userAction('/signout', {}, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
 }
 
+function rename({ surname, name, phone, email, code, password }) {
+  return userAction('/rename', { surname, name, phone, email, code, password }, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
+}
+
 function outhcode({ username }) {
-  return userAction('/outhcode', { username, isNew: true }, `Basic ${basicToken}`);
+  return userAction('/outhcode', { username }, `Basic ${basicToken}`);
+}
+
+function config() {
+  return axiosInstance
+  .get("/api/config", {
+    headers: {
+      Authorization: `Basic ${basicToken}`
+    }
+  })
+  .then(result => {
+    if (result.data.success) {
+      return { success: true, data: result.data.data };
+    } else {
+      return { success: false, data: {}, errorCode: result.data.errorCode };
+    }
+  })
+  .catch(() => ({ success: false, data: {}, errorCode: ERRORCODES.ERROR_WRONG }));
 }
 
 export {
@@ -82,5 +103,7 @@ export {
   signin,
   signout,
   signup,
+  rename,
   outhcode,
+  config
 };

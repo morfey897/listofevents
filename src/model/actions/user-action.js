@@ -1,4 +1,4 @@
-import { signin, signout, signup } from "../../api";
+import { signin, signout, signup, rename } from "../../api";
 import { ERRORCODES, STATES } from "../../enums";
 
 export const USER_UPDATE_STATE = "user_update_state";
@@ -27,6 +27,10 @@ export function signinActionCreator({ username, password }) {
 
 export function signupActionCreator({ username, name, code, password }) {
   return actionCreator({ username, name, code, password }, USER_SIGN_IN, signup);
+}
+
+export function renameActionCreator({ name, surname, phone, email, code, password }) {
+  return actionCreator({ surname, name, phone, email, code, password }, USER_SIGN_IN, rename);
 }
 
 export function signoutActionCreator() {

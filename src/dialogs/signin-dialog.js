@@ -121,8 +121,8 @@ function SigninDialog({ open, handleClose, username, isLogged, isError, isLoadin
 
       </DialogContent>
       <DialogActions>
-        <Button type="submit" disabled={isLoading || isLogged} onClick={onSubmit} color="primary" variant="contained">{t("button_signin")}</Button>
-        <Button disabled={isLoading || isLogged} onClick={handleClose} color="secondary" variant="contained">{t("general:button_close")}</Button>
+        <Button type="submit" disabled={isLoading || isLogged} onClick={onSubmit} color="primary" variant="contained">{t("general:button_signin")}</Button>
+        <Button onClick={handleClose} color="secondary" variant="contained">{t("general:button_close")}</Button>
       </DialogActions>
     </form>
   </Dialog>;

@@ -181,13 +181,13 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
         {isLogged && <Alert severity={"success"}>{t("success", { name: username })}</Alert>}
         {
           !isLogged && (authcode.state === STATES.STATE_READY || (authcode.state === STATES.STATE_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
-          <Alert severity={"success"}>{t(`wait_validate_code_${authcode.type}`, { username: authcode.username })}</Alert>
+          <Alert severity={"success"}>{t(`general:wait_validate_code_${authcode.type}`, { username: authcode.username })}</Alert>
         }
         {localErrorCode === ERRORCODES.ERROR_EMPTY && <Alert severity={"warning"}>{t("error_empty")}</Alert>}
         {localErrorCode === ERRORCODES.ERROR_INCORRECT_PASSWORD && <Alert severity={"warning"}>{t("error_incorrect_password")}</Alert>}
         {localErrorCode === ERRORCODES.ERROR_EXIST && <Alert severity={"error"}>{t("error_user_esist")}</Alert>}
         {localErrorCode === ERRORCODES.ERROR_INCORRECT_USERNAME && <Alert severity={"error"}>{t("error_incorrect_username")}</Alert>}
-        {localErrorCode === ERRORCODES.ERROR_WRONG && <Alert severity={"warning"}>{t("error_wrong")}</Alert>}
+        {localErrorCode === ERRORCODES.ERROR_WRONG && <Alert severity={"warning"}>{t("general:error_wrong")}</Alert>}
 
         <TextField disabled={isLogged || isLoading} name="name" type="text" autoFocus fullWidth label={t("name_label")} margin="normal"
           InputProps={{
@@ -209,13 +209,13 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
 
         {
           (authcode.state === STATES.STATE_READY || (authcode.state === STATES.STATE_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
-          <TextField disabled={isLogged || isLoading} error={errorCode === ERRORCODES.ERROR_INCORRECT_CODE} required name="validation_code" type="number" fullWidth label={t("validation_code")} helperText={t("validation_code_timer", { seconds: authcode.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
+          <TextField disabled={isLogged || isLoading} error={errorCode === ERRORCODES.ERROR_INCORRECT_CODE} required name="validation_code" type="number" fullWidth label={t("general:validation_code")} helperText={t("general:validation_code_timer", { seconds: authcode.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
         }
 
       </DialogContent>
       <DialogActions>
-        <Button type="submit" disabled={isLoading || isLogged} onClick={onSubmit} color="primary" variant="contained">{t("button_create")}</Button>
-        <Button disabled={isLoading || isLogged} onClick={handleClose} color="secondary" variant="contained">{t("general:button_close")}</Button>
+        <Button type="submit" disabled={isLoading || isLogged} onClick={onSubmit} color="primary" variant="contained">{t("general:button_create")}</Button>
+        <Button onClick={handleClose} color="secondary" variant="contained">{t("general:button_close")}</Button>
       </DialogActions>
     </form>
   </Dialog>;

@@ -6,7 +6,16 @@
     "button_yes": "Да",
     "button_no": "Нет",
     "button_ok": "Ок",
-    "button_cancel": "Отмена"
+    "button_cancel": "Отмена",
+    "button_signin": "Войти",
+    "button_create": "Создать",
+    "button_save": "Сохранить",
+
+    "error_wrong": "Упс... что то пошло не так. Попробуйте похже.",
+    "validation_code": "Код подтверждения",
+    "validation_code_timer": "Осталось {{seconds}} секунд",
+    "wait_validate_code_email": "Вам на почту {{username}} выслан код подтверждения",
+    "wait_validate_code_phone": "Вам на номер телефона {{username}} выслан код подтверждения"
   },
   
   "header_block": {
@@ -17,6 +26,7 @@
     "page_events": "Страничка событий",
     "event_map": "Карта событий",
     "create_event": "Создать событие",
+    "users_list": "Список пользователей",
     "account": "Учетная запись",
     "login": "Вход",
     "logout": "Выход",
@@ -62,19 +72,12 @@
     "success": "Приветствуем вас {{name}}.",
     "instagram_enter": "Вход с помощью Instagram аккаунта",
     "facebook_enter": "Вход с помощью Facebook аккаунта",
-    "button_signin": "Войти",
-    "button_create": "Создать",
-    "validation_code": "Код подтверждения",
-    "validation_code_timer": "Осталось {{seconds}} секунд",
-    "wait_validate_code_email": "Вам на почту {{username}} выслан код подтверждения",
-    "wait_validate_code_phone": "Вам на номер телефона {{username}} выслан код подтверждения",
 
     "error_incorrect": "Неверный логин или пароль.",
     "error_empty": "Заполните все необходимые поля.",
     "error_incorrect_password": "Пароль не совпадает",
     "error_user_esist": "Пользователь с таким логином уже существует",
-    "error_incorrect_username": "Неверный логин",
-    "error_wrong": "Упс... что то пошло не так. Попробуйте похже."
+    "error_incorrect_username": "Неверный логин"
   },
 
   "signout_dialog": {
@@ -82,6 +85,35 @@
     "description": "Вы уверены что хотите выйти из аккаунты?",
     "success": "Вы вышли из аккаунта",
     "error": "Упс... что то пошло не так."
+  },
+
+  "users_list_dialog": {
+    "title": "Список пользователей",
+    "empty_list": "Пользователи отсутсвуют",
+    "loading_list": "Идет закгрузка...",
+    "header_name": "Имя",
+    "header_email": "Почта@",
+    "header_phone": "Телефон",
+    "header_role": "Роль",
+    "empty_field": "---"
+  },
+
+  "profile_dialog": {
+    "title": "Профиль",
+    "name_label": "Ваше имя",
+    "surname_label": "Ваша фамилия",
+    "phone_label": "Номер телефона",
+    "email_label": "Электронная почта",
+    "password_label": "Новый пароль",
+    "button_change_password": "Сменить пароль",
+    "success": "Изменения вступили в силу.",
+
+    "error_incorrect": "Неверный логин или пароль.",
+    "error_empty": "Номер телефона и почта не могут быть пустыми",
+    "error_incorrect_password": "Пароль не совпадает",
+    "error_user_esist": "Пользователь с таким логином уже существует",
+    "error_incorrect_username": "Неверный логин"
+    
   },
   
   "contacts_screen": {
