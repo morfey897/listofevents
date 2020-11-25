@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Container, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button, Drawer, List, ListItem, useTheme, Tooltip } from '@material-ui/core';
 
@@ -17,15 +17,19 @@ import {
   Person as LoginIcon,
   ChevronLeft as ChevronLeftIcon,
   Brightness7 as LightThemeIcon,
-  Brightness3 as DarkThemeIcon,
+  Brightness5 as DarkThemeIcon,
+  People as UsersIcon,
   ViewDay,
 } from '@material-ui/icons';
 
-import { SCREENS, DIALOGS, EVENTS } from "../enums";
+import { SCREENS, DIALOGS, EVENTS, STATES } from "../enums";
 
 import { DialogEmitter, ThemeEmitter } from '../emitters';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { fetchConfigActionCreator } from "../model/actions";
 
 const ACCOUNT_MENU_ID = 'primary-account-menu';
 const MAIN_MENU_ID = 'primary-main_menu';
@@ -64,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Header({ isLogged }) {
+function Header({ isLogged, isModerator, configState, fetchConfig }) {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -75,6 +79,13 @@ function Header({ isLogged }) {
 
   const isAccountMenuOpen = Boolean(accountMenuAnchor);
   const isMainMenuOpen = Boolean(mainMoreAnchorEl);
+
+
+  useEffect(() => {
+    if (isLogged && configState == STATES.STATE_NONE) {
+      fetchConfig();
+    }
+  }, [isLogged, configState]);
 
   const handleAccountMenuOpen = useCallback((event) => {
     setAnchorEl(event.currentTarget);
@@ -113,11 +124,17 @@ function Header({ isLogged }) {
   }, []);
 
   const handleCreateEvent = useCallback(() => {
+    handleMainMenuClose();
     DialogEmitter.open(DIALOGS.ADD_EVENT);
   }, []);
 
   const handleChangeTheme = useCallback(() => {
     ThemeEmitter.emit(EVENTS.UI_DARK_MODE);
+  }, []);
+
+  const handleUsersList = useCallback(() => {
+    handleMainMenuClose();
+    DialogEmitter.open(DIALOGS.USERS_LIST);
   }, []);
 
   return (
@@ -170,6 +187,12 @@ function Header({ isLogged }) {
                   <AddEventIcon />
                 </IconButton>
               </Tooltip>
+              {isModerator &&
+                <Tooltip title={t("users_list")}>
+                  <IconButton color="inherit" onClick={handleUsersList}>
+                    <UsersIcon />
+                  </IconButton>
+                </Tooltip>}
             </Hidden>
 
             <Tooltip title={t("account")}>
@@ -264,12 +287,20 @@ function Header({ isLogged }) {
               </ListItemIcon>
               <ListItemText primary={t("event_map")} />
             </ListItem>
-            <ListItem button onClick={() => { handleMainMenuClose(); handleCreateEvent(); }} dense>
+            <ListItem button onClick={handleCreateEvent} dense>
               <ListItemIcon className={classes.menuItemIcon}>
                 <AddEventIcon />
               </ListItemIcon>
               <ListItemText primary={t("create_event")} />
             </ListItem>
+
+            {isModerator &&
+              <ListItem button onClick={handleUsersList} dense>
+                <ListItemIcon className={classes.menuItemIcon}>
+                  <AddEventIcon />
+                </ListItemIcon>
+                <ListItemText primary={t("users_list")} />
+              </ListItem>}
             <Divider />
             <ListItem button component={RouterLink} to={SCREENS.CONTACTS} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
@@ -285,10 +316,18 @@ function Header({ isLogged }) {
 }
 
 const mapStateToProps = (state) => {
-  const { isLogged } = state.user;
+  const { user, config } = state;
+
   return {
-    isLogged
+    isLogged: user.isLogged,
+    isModerator: user.isLogged && (user.user.role & config.roles.moderator) === config.roles.moderator,
+    configState: config.state,
+    roles: config.roles
   };
 };
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchConfig: fetchConfigActionCreator,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

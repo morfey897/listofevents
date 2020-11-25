@@ -7,11 +7,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Alert from '@material-ui/lab/Alert';
-import MuiPhoneNumber from "material-ui-phone-number";
 import { useTranslation } from "react-i18next";
-import { Box, debounce, Grid, IconButton, InputAdornment, LinearProgress, makeStyles, Tooltip, Typography } from "@material-ui/core";
+import { Box, debounce, IconButton, InputAdornment, LinearProgress, makeStyles, Tooltip, Typography } from "@material-ui/core";
+import { cancelable } from "cancelable-promise";
 
 import {
+  Label as LabelIcon,
+  Person as NameIcon,
   LockOutlined as ConfirmPasswordIcon,
   Lock as PasswordIcon,
   Instagram as InstagramIcon,
@@ -21,7 +23,8 @@ import {
 import { connect } from "react-redux";
 import { signupActionCreator } from "../model/actions";
 import { bindActionCreators } from "redux";
-import { STATES } from "../enums";
+import { ERRORCODES, STATES } from "../enums";
+import { outhcode } from "../api";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -44,29 +47,52 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const EMAIL_REG_EXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-export const PHONE_REG_EXP = /^\+?\d{10,}$/;
-export const NAME_REG_EXP = /^\s*\S{3,}/;
-
 let waitClose;
-function SignupDialog({ open, handleClose, username, isLogged, isError, isLoading, signupRequest }) {
+let timerUID = 0;
+let waitCodePromise;
+
+function SignupDialog({ open, handleClose, username, isLogged, isError, isLoading, errorCode, signupRequest }) {
 
   const { t } = useTranslation(["signin_dialog", "general"]);
 
   const classes = useStyles();
 
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [emailAddr, setEmailAddr] = useState("");
-  const [isEmpty, setEmpty] = useState(false);
-  const [isIncorrectPassword, setIncorrectPassword] = useState(false);
+  const [lostTime, setLostTime] = useState(0);
+  const [authcode, setAuthCode] = useState({ state: STATES.STATE_NONE });
+  const [localErrorCode, setLocalErrorCode] = useState(errorCode);
 
   const nameRef = useRef(null);
-  const surnameRef = useRef(null);
+  const usernameRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
+  const validateCodeRef = useRef(null);
 
   useEffect(() => {
-    if (isError) {
+    return () => {
+      waitCodePromise && waitCodePromise.cancel();
+    };
+  }, []);
+
+  useEffect(() => {
+    clearInterval(timerUID);
+    if (authcode.state === STATES.STATE_READY) {
+      timerUID = setInterval(() => {
+        setLostTime((lostTime) => {
+          if (lostTime > authcode.lifetime) {
+            clearInterval(timerUID);
+          }
+          return Math.min(lostTime + 1, authcode.lifetime);
+        });
+      },
+        1000);
+    }
+    return () => {
+      clearInterval(timerUID);
+    };
+  }, [authcode]);
+
+  useEffect(() => {
+    if (isError && errorCode !== ERRORCODES.ERROR_INCORRECT_CODE) {
       passwordRef.current.value = "";
       confirmPasswordRef.current.value = "";
     }
@@ -78,44 +104,60 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
     return () => {
       waitClose && waitClose.clear();
     };
-  }, [isError, isLogged]);
+  }, [isError, errorCode, isLogged]);
 
   const onSubmit = useCallback((event) => {
     if (event && typeof event.preventDefault === "function") {
       event.preventDefault();
     }
-    if (nameRef.current && passwordRef.current && passwordRef.current.value && PHONE_REG_EXP.test(phoneNumber) && EMAIL_REG_EXP.test(emailAddr) && NAME_REG_EXP.test(nameRef.current.value)) {
+
+    if (usernameRef.current && passwordRef.current && passwordRef.current.value && usernameRef.current.value) {
       if (passwordRef.current.value !== (confirmPasswordRef.current && confirmPasswordRef.current.value || "")) {
-        setIncorrectPassword(true);
+        setLocalErrorCode(ERRORCODES.ERROR_INCORRECT_PASSWORD);
       } else {
-        setEmpty(false);
-        signupRequest({
-          name: nameRef.current.value, surname: (surnameRef.current && surnameRef.current.value || ""),
-          phone: phoneNumber,
-          email: emailAddr,
-          password: passwordRef.current.value
-        });
+        if (authcode.state === STATES.STATE_NONE) {
+          setAuthCode({ state: STATES.STATE_LOADING });
+          waitCodePromise = cancelable(outhcode({ username: usernameRef.current.value }))
+            .then(({ success, errorCode, data }) => {
+              if (success !== true) {
+                setAuthCode({ state: STATES.STATE_ERROR });
+                setLocalErrorCode(errorCode);
+              } else {
+                setAuthCode({ state: STATES.STATE_READY, ...data });
+                setLocalErrorCode(0);
+              }
+            })
+            .catch(() => {
+              setAuthCode({ state: STATES.STATE_ERROR });
+              setLocalErrorCode(ERRORCODES.ERROR_WRONG);
+            });
+        } else {
+          setLocalErrorCode(0);
+          signupRequest({
+            name: nameRef.current && nameRef.current.value || "",
+            username: usernameRef.current.value || "",
+            code: validateCodeRef.current && validateCodeRef.current.value || 0,
+            password: passwordRef.current.value
+          });
+        }
       }
     } else {
-      setEmpty(true);
+      setLocalErrorCode(ERRORCODES.ERROR_EMPTY);
     }
-  }, [phoneNumber, emailAddr]);
+  }, [authcode]);
 
   const onChange = useCallback(() => {
-    if (nameRef.current && passwordRef.current && PHONE_REG_EXP.test(phoneNumber) && EMAIL_REG_EXP.test(emailAddr) && NAME_REG_EXP.test(nameRef.current.value) && passwordRef.current.value) {
-      setEmpty(false);
+    if (usernameRef.current && passwordRef.current && usernameRef.current.value && passwordRef.current.value) {
+      setAuthCode({ state: STATES.STATE_NONE });
+      setLocalErrorCode(0);
     }
-  }, [phoneNumber, emailAddr]);
-
-  const onEmailChange = useCallback((e) => {
-    setEmailAddr((e.target && e.target.value || ""));
-    onChange();
   }, []);
 
-  const onPhoneChange = useCallback((value) => {
-    setPhoneNumber(value.replace(/\D/g, ""));
-    onChange();
-  }, []);
+  const onChangeCode = useCallback(() => {
+    if (authcode.state === STATES.STATE_READY && validateCodeRef.current && validateCodeRef.current.value.length === authcode.codeLen) {
+      onSubmit();
+    }
+  }, [authcode]);
 
   return <Dialog open={open} onClose={handleClose}>
     <DialogTitle disableTypography>
@@ -137,40 +179,43 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
       <DialogContent>
         <DialogContentText align='center'>{t("description")}</DialogContentText>
         {isLogged && <Alert severity={"success"}>{t("success", { name: username })}</Alert>}
-        {isError && <Alert severity={"error"}>{t("error_incorrect")}</Alert>}
-        {isEmpty && <Alert severity={"warning"}>{t("error_empty")}</Alert>}
-        {isIncorrectPassword && <Alert severity={"warning"}>{t("error_incorrect_password")}</Alert>}
+        {
+          !isLogged && (authcode.state === STATES.STATE_READY || (authcode.state === STATES.STATE_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
+          <Alert severity={"success"}>{t(`general:wait_validate_code_${authcode.type}`, { username: authcode.username })}</Alert>
+        }
+        {localErrorCode === ERRORCODES.ERROR_EMPTY && <Alert severity={"warning"}>{t("error_empty")}</Alert>}
+        {localErrorCode === ERRORCODES.ERROR_INCORRECT_PASSWORD && <Alert severity={"warning"}>{t("error_incorrect_password")}</Alert>}
+        {localErrorCode === ERRORCODES.ERROR_EXIST && <Alert severity={"error"}>{t("error_user_esist")}</Alert>}
+        {localErrorCode === ERRORCODES.ERROR_INCORRECT_USERNAME && <Alert severity={"error"}>{t("error_incorrect_username")}</Alert>}
+        {localErrorCode === ERRORCODES.ERROR_WRONG && <Alert severity={"warning"}>{t("general:error_wrong")}</Alert>}
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <TextField disabled={isLogged} fullWidth error={isEmpty && !NAME_REG_EXP.test(nameRef.current && nameRef.current.value || "")} required name="name" type="text" autoFocus label={t("name_label")} margin="normal" inputRef={nameRef} onChange={debounce(onChange, 300)} />
-          </Grid>
-          <Grid item xs={6} sm={6}>
-            <TextField disabled={isLogged} fullWidth name="name" type="text" label={t("surname_label")} margin="normal" inputRef={surnameRef} />
-          </Grid>
-        </Grid>
+        <TextField disabled={isLogged || isLoading} name="name" type="text" autoFocus fullWidth label={t("name_label")} margin="normal"
+          InputProps={{
+            startAdornment: <InputAdornment position="start"><NameIcon /></InputAdornment>,
+          }} inputRef={nameRef} />
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <MuiPhoneNumber defaultCountry="ua" disabled={isLogged} error={isEmpty && !PHONE_REG_EXP.test(phoneNumber)} value={phoneNumber} required name="phone" type="text" label={t("phone_label")} margin="normal" onChange={onPhoneChange} />
-          </Grid>
-          <Grid item xs={6} sm={6}>
-            <TextField disabled={isLogged} error={isEmpty && !EMAIL_REG_EXP.test(emailAddr)} value={emailAddr} required name="email" type="email" label={t("email_label")} margin="normal" onChange={onEmailChange} />
-          </Grid>
-        </Grid>
+        <TextField disabled={isLogged || isLoading} error={(localErrorCode === ERRORCODES.ERROR_EMPTY && (!usernameRef.current || !usernameRef.current.value)) || localErrorCode === ERRORCODES.ERROR_INCORRECT_USERNAME} required name="username" type="text" fullWidth label={t("username_label")} margin="normal"
+          InputProps={{
+            startAdornment: <InputAdornment position="start"><LabelIcon /></InputAdornment>,
+          }} inputRef={usernameRef} onChange={debounce(onChange, 300)} autoComplete="on" />
 
-        <TextField disabled={isLogged} error={isEmpty && passwordRef.current && !passwordRef.current.value} required name="password" type="password" fullWidth label={t("password_label")} margin="normal" InputProps={{
+        <TextField disabled={isLogged || isLoading} error={localErrorCode === ERRORCODES.ERROR_EMPTY && (!passwordRef.current || !passwordRef.current.value)} required name="password" type="password" fullWidth label={t("password_label")} margin="normal" InputProps={{
           startAdornment: <InputAdornment position="start"><PasswordIcon /></InputAdornment>,
-        }} inputRef={passwordRef} onChange={debounce(onChange, 300)} />
+        }} inputRef={passwordRef} onChange={debounce(onChange, 300)} autoComplete="on" />
 
-        <TextField disabled={isLogged} required name="confirm_password" type="password" fullWidth label={t("confirm_password_label")} margin="normal" InputProps={{
+        <TextField disabled={isLogged || isLoading} error={localErrorCode === ERRORCODES.ERROR_INCORRECT_PASSWORD} required name="confirm_password" type="password" fullWidth label={t("confirm_password_label")} margin="normal" InputProps={{
           startAdornment: <InputAdornment position="start"><ConfirmPasswordIcon /></InputAdornment>,
         }} inputRef={confirmPasswordRef} />
 
+        {
+          (authcode.state === STATES.STATE_READY || (authcode.state === STATES.STATE_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
+          <TextField disabled={isLogged || isLoading} error={errorCode === ERRORCODES.ERROR_INCORRECT_CODE} required name="validation_code" type="number" fullWidth label={t("general:validation_code")} helperText={t("general:validation_code_timer", { seconds: authcode.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
+        }
+
       </DialogContent>
       <DialogActions>
-        <Button type="submit" disabled={isLoading || isLogged} onClick={onSubmit} color="primary" variant="contained">{t("button_create")}</Button>
-        <Button disabled={isLoading || isLogged} onClick={handleClose} color="secondary" variant="contained">{t("general:button_close")}</Button>
+        <Button type="submit" disabled={isLoading || isLogged} onClick={onSubmit} color="primary" variant="contained">{t("general:button_create")}</Button>
+        <Button onClick={handleClose} color="secondary" variant="contained">{t("general:button_close")}</Button>
       </DialogActions>
     </form>
   </Dialog>;
@@ -178,11 +223,19 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
 
 const mapStateToProps = (state) => {
   const { user } = state;
+  let username = [user.user.name, user.user.surname].filter(a => !!a).join(" ");
+  if (!username && user.user.email) {
+    username = user.user.email;
+  } else if (!username && user.user.phone) {
+    username = user.user.phone;
+  }
+  
   return {
-    username: [user.name, user.surname].filter(a => !!a).join(" "),
+    username,
     isLogged: user.isLogged,
     isLoading: user.state === STATES.STATE_LOADING,
-    isError: user.state === STATES.STATE_ERROR
+    isError: user.state === STATES.STATE_ERROR,
+    errorCode: user.errorCode || 0
   };
 };
 

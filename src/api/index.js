@@ -2,13 +2,10 @@ import axios from 'axios';
 import { encode } from 'js-base64';
 import { logRequestInterceptor, logResponseInterceptor } from './interceptors';
 import store from "store2";
-import { STORAGEKEYS } from '../enums';
+import { ERRORCODES, STORAGEKEYS } from '../enums';
 import { USER_TIME_OUT } from '../model/actions/user-action';
 
 const basicToken = encode(process.env.BASIC_AUTH);
-
-const FAIL = "fail";
-const SUCCESS = "success";
 
 const axiosInstance = axios.create({
   baseURL: process.env.API_URL
@@ -38,18 +35,13 @@ function request(query, dispatch) {
         Authorization: expiresIn > 0 ? `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}` : `Basic ${basicToken}`
       }
     })
-    .then(result => {
-      let status, data;
-      if (result.status === 200) {
-        status = SUCCESS;
-        data = result.data.data;
-      } else {
-        status = FAIL;
-        data = {};
-      }
-      return { status, data, success: status === SUCCESS };
+    .then(({status, data}) => {
+      if (status === 200) {
+        return { data: data.data, success: true };
+      } 
+      throw new Error("Can't load");
     })
-    .catch(() => Promise.resolve({ status: FAIL, data: {}, success: false }));
+    .catch(() => Promise.resolve({ data: {}, success: false }));
 }
 
 function userAction(url, data, Authorization) {
@@ -61,31 +53,57 @@ function userAction(url, data, Authorization) {
     })
     .then(result => {
       if (result.data.success) {
-        return { status: SUCCESS, success: true, data: result.data.data};
+        return { success: true, data: result.data.data };
       } else {
-        throw new Error("Can't load");
+        return { success: false, data: {}, errorCode: result.data.errorCode };
       }
     })
-    .catch(() => Promise.resolve({ status: FAIL, success: false, data: {} }));
+    .catch(() => ({ success: false, data: {}, errorCode: ERRORCODES.ERROR_WRONG }));
 }
 
 function signin({ username, password }) {
-  return userAction('/signin', { username: (username || "").trim(), password }, `Basic ${basicToken}`);
+  return userAction('/signin', { username, password }, `Basic ${basicToken}`);
 }
 
-function signup({name, surname, email, phone, password}) {
-  return userAction('/signup', { name: (name || "").trim(), surname: (surname || "").trim(), email: (email || "").trim(), phone: (phone || "").replace(/\D/g, ""), password }, `Basic ${basicToken}`);
+function signup({ username, name, code, password }) {
+  return userAction('/signup', { name, username, code, password }, `Basic ${basicToken}`);
 }
 
-function signout(_) {
+function signout() {
   return userAction('/signout', {}, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
 }
 
+function rename({ surname, name, phone, email, code, password }) {
+  return userAction('/rename', { surname, name, phone, email, code, password }, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
+}
+
+function outhcode({ username }) {
+  return userAction('/outhcode', { username }, `Basic ${basicToken}`);
+}
+
+function config() {
+  return axiosInstance
+  .get("/api/config", {
+    headers: {
+      Authorization: `Basic ${basicToken}`
+    }
+  })
+  .then(result => {
+    if (result.data.success) {
+      return { success: true, data: result.data.data };
+    } else {
+      return { success: false, data: {}, errorCode: result.data.errorCode };
+    }
+  })
+  .catch(() => ({ success: false, data: {}, errorCode: ERRORCODES.ERROR_WRONG }));
+}
+
 export {
-  FAIL,
-  SUCCESS,
   request,
   signin,
   signout,
   signup,
+  rename,
+  outhcode,
+  config
 };

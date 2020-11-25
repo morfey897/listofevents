@@ -1,39 +1,45 @@
 import { USER_SIGN_IN, USER_SIGN_OUT, USER_TIME_OUT, USER_UPDATE_STATE } from "../actions/user-action";
 import store from "store2";
 import { STATES, STORAGEKEYS } from "../../enums";
-import { STATE_NONE } from "../../enums/states";
 
 const initState = {
-  state: STATE_NONE,
-  id: 0,
-  name: "",
-  surname: "",
-  email: "",
-  phone: "",
-  role: 0,
-  isLogged: false
+  state: STATES.STATE_NONE,
+  errorCode: 0,
+  isLogged: false,
+  user: {
+    id: "",
+    name: "",
+    surname: "",
+    email: "",
+    phone: "",
+    role: 0,
+  }
 };
 
 function getUser() {
-  const userStr = store.get(STORAGEKEYS.USER_STATE);
-  let user = {};
-  if (userStr) {
-    try {
-      user = JSON.parse(userStr);
-    } catch (e) {
-      user = {};
-    }
-  }
-
-  const state = {};
-  for (let name in initState) {
-    state[name] = typeof user[name] === typeof initState[name] ? user[name] : initState[name];
-  }
-
   const expireIn = parseInt(store.get(STORAGEKEYS.JWT_EXPIRES_IN));
+  const userStr = store.get(STORAGEKEYS.USER_STATE);
+  const isLogged = !isNaN(expireIn) && parseInt(Date.now() / 1000) < expireIn;
+  if (!isLogged || !userStr) return initState;
+
+  let userLocalState = {};
+  const userInitState = initState.user;
+  try {
+    userLocalState = JSON.parse(userStr);
+  } catch (e) {
+    return initState;
+  }
+
+  const user = {};
+  for (let name in userInitState) {
+    user[name] = typeof userLocalState[name] === typeof userInitState[name] ? userLocalState[name] : userInitState[name];
+  }
+
   return {
-    ...state,
-    isLogged: !isNaN(expireIn) && parseInt(Date.now() / 1000) < expireIn
+    ...initState,
+    state: STATES.STATE_READY,
+    isLogged: true,
+    user
   };
 }
 
@@ -45,6 +51,7 @@ export function user(state = { ...getUser() }, action) {
       return {
         ...state,
         state: payload.state,
+        errorCode: payload.errorCode
       };
     }
     case USER_SIGN_IN: {
@@ -54,14 +61,16 @@ export function user(state = { ...getUser() }, action) {
         store.set(STORAGEKEYS.JWT_EXPIRES_IN, payload.token.expiresIn);
         return {
           ...state,
-          ...payload.user,
           state: payload.state,
+          errorCode: payload.errorCode,
           isLogged: true,
+          user: payload.user
         };
       }
       return {
         ...state,
         state: payload.state,
+        errorCode: payload.errorCode,
       };
     }
     case USER_SIGN_OUT:
@@ -70,14 +79,17 @@ export function user(state = { ...getUser() }, action) {
         store.set(STORAGEKEYS.JWT_ACCESS_TOKEN, payload.token && payload.token.accessToken || "");
         store.set(STORAGEKEYS.JWT_EXPIRES_IN, payload.token && payload.token.expiresIn || 0);
         return {
-          ...payload.user,
+          ...state,
           state: payload.state,
+          errorCode: payload.errorCode,
           isLogged: false,
+          user: payload.user,
         };
       }
       return {
         ...state,
         state: payload.state,
+        errorCode: payload.errorCode,
       };
     case USER_TIME_OUT:
       store.set(STORAGEKEYS.JWT_ACCESS_TOKEN, "");

@@ -6,6 +6,7 @@ import * as VIEWS from "./views";
 import * as EVENTS from "./events";
 import * as LANGS from "./langs";
 import * as STORAGEKEYS from "./storagekeys";
+import * as ERRORCODES from "./errorcodes";
 
 export {
   DIALOGS,
@@ -16,4 +17,5 @@ export {
   EVENTS,
   LANGS,
   STORAGEKEYS,
+  ERRORCODES,
 };

@@ -21,11 +21,11 @@ class I18nService {
           debug: true,
           lowerCaseLng: true,
           lng: 'ru',
-          supportedLngs: ['en', 'ru'],
+          supportedLngs: ['ru'],
           nonExplicitSupportedLngs: true,
 
           resources: {
-            en: { ...enJson },
+            // en: { ...enJson },
             ru: { ...ruJson },
           },
 
