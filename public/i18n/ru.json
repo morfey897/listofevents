@@ -58,7 +58,9 @@
     "time_label": "Время",
     "category_label": "Категория",
     "city_label": "Город",
-    "tags_label": "Теги"
+    "tags_label": "Теги",
+    "login_title": "Внимание",
+    "login_description": "Для доступа к добавлению события необходимо иметь аккаунт РЕДАКТОРА"
   },
 
   "signin_dialog": {
@@ -141,6 +143,10 @@
     "make_edits_description": "Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.",
     "partnership_title": "Want to work with us?",
     "partnership_description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours."
+  },
+
+  "list_events_screen": {
+    "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours."
   },
   
   "main_screen": {

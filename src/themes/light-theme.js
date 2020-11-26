@@ -100,10 +100,10 @@ export default {
   overrides: {
     MuiCssBaseline: {
       "@global": {
-        ...Object.keys(globalColors).reduce((prev, name) => Object.assign({}, prev, { [`.${name}`]: { color: `${globalColors[name].contrastText} !important`, backgroundColor: `${globalColors[name].main} !important` } }), {})
+        ...Object.keys(globalColors).reduce((prev, name) => Object.assign({}, prev, { [`.${name}`]: { color: `${globalColors[name].contrastText} !important`, backgroundColor: `${globalColors[name].main} !important` } }), {}),
       }
     },
-    MuiDialog:{
+    MuiDialog: {
       paper: {
         overflowY: "none"
       }
@@ -117,6 +117,23 @@ export default {
       colorInherit: {
         color: "#fff"
       }
-    }
+    },
+    MuiDialogTitle: {
+      root: {
+        "&.boxes": {
+          "& > .MuiBox-root": {
+            marginTop: '-40px',
+            backgroundColor: "#2196f3",
+            background: `linear-gradient(90deg, #2196f3 0, #64b5f6 100%)`,
+            borderRadius: "8px",
+            "& > .MuiTypography-root": {
+              paddingTop: "8px",
+              height: '50px',
+              color: "#fff"
+            }
+          }
+        }
+      }
+    },
   }
 };

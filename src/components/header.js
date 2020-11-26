@@ -7,7 +7,7 @@ import {
   AddBox as AddEventIcon,
   TableChart as TableIcon,
   Room as MapIcon,
-  Contacts as ContactsIcon,
+  Forum as ContactsIcon,
   LabelImportant as AboutIcon,
   Person as GuestIcon,
   AccountBox as AccountIcon,
@@ -19,6 +19,7 @@ import {
   Brightness7 as LightThemeIcon,
   Brightness5 as DarkThemeIcon,
   People as UsersIcon,
+  PeopleAlt as PeopleIcon,
   ViewDay,
 } from '@material-ui/icons';
 
@@ -297,7 +298,7 @@ function Header({ isLogged, isModerator, configState, fetchConfig }) {
             {isModerator &&
               <ListItem button onClick={handleUsersList} dense>
                 <ListItemIcon className={classes.menuItemIcon}>
-                  <AddEventIcon />
+                  <PeopleIcon />
                 </ListItemIcon>
                 <ListItemText primary={t("users_list")} />
               </ListItem>}

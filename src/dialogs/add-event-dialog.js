@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { useTranslation } from "react-i18next";
-import { FormControl, IconButton, Input, InputAdornment, InputLabel, makeStyles, Typography } from "@material-ui/core";
+import { Box, FormControl, IconButton, Input, InputAdornment, InputLabel, LinearProgress, makeStyles, Typography } from "@material-ui/core";
 
 import { addDays, format } from "date-fns";
 import ruLocale from 'date-fns/locale/ru';
@@ -19,14 +19,11 @@ import {
 } from '@material-ui/pickers';
 import { LANGS } from "../enums";
 import { useCallback } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 
 const useStyles = makeStyles((theme) => ({
-  form: {
-    '& .MuiTextField-root': {
-      // margin: theme.spacing(1),
-    },
-  },
   datetime: {
     display: "flex",
     justifyContent: "space-between",
@@ -35,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NOW = addDays(new Date(), 1);
-function AddEventDialog({ open, handleClose }) {
+function AddEventDialog({ open, handleClose, isEditor, isLoading }) {
 
   const { t, i18n } = useTranslation(["add_event_dialog", "general"]);
 
@@ -64,10 +61,15 @@ function AddEventDialog({ open, handleClose }) {
   //   "city_label": "City",
   //   "tags_label": "Tags"
   return <Dialog open={open} onClose={handleClose}>
-    <DialogTitle>{t("title")}</DialogTitle>
+    <DialogTitle disableTypography className={"boxes"}>
+      <Box>
+        <Typography align='center' variant="h6" >{isEditor ? t("title") : t("login_title")}</Typography>
+        {isLoading && <LinearProgress />}
+      </Box>
+    </DialogTitle>
     <DialogContent>
-      <DialogContentText>{t("description")}</DialogContentText>
-      <form className={classes.form}>
+      <DialogContentText>{isEditor ? t("description") : t("login_description")}</DialogContentText>
+      {isEditor && <form className={classes.form}>
         <TextField required name="url" fullWidth label={t("url_label")} margin="dense"
           InputProps={{
             startAdornment: <InputAdornment position="start">{process.env.HOST + "/"}</InputAdornment>,
@@ -101,7 +103,7 @@ function AddEventDialog({ open, handleClose }) {
           />
         </div>
 
-      </form>
+      </form>}
     </DialogContent>
     <DialogActions>
       <Button onClick={handleClose} color="primary">
@@ -114,4 +116,17 @@ function AddEventDialog({ open, handleClose }) {
   </Dialog>;
 }
 
-export default AddEventDialog;
+const mapStateToProps = (state) => {
+  const { user, config } = state;
+
+  return {
+    isLogged: user.isLogged,
+    isEditor: user.isLogged && (user.user.role & config.roles.editor) === config.roles.editor
+  };
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  // fetchConfig: fetchConfigActionCreator,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddEventDialog);

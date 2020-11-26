@@ -18,18 +18,6 @@ import {
 } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
-  dialogTitle: {
-    marginTop: '-40px',
-    backgroundColor: theme.palette.info.main,
-    background: `linear-gradient(90deg, ${theme.palette.info.main} 0, ${theme.palette.info[theme.palette.type]} 100%)`,
-    borderRadius: theme.shape.borderRadius,
-    "& > .MuiTypography-root": {
-      paddingTop: theme.spacing(1),
-      height: '50px',
-      color: theme.palette.info.contrastText
-    }
-  },
-
   grid: {
     overflowWrap: "anywhere",
     borderBottom: "1px solid rgba(0, 0, 0, 0.12)"
@@ -44,19 +32,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function UsersListDialog({ open, handleClose, isLogged, isModerator, isSuperAdmin, userRole, configState, isLoading, isUpdating, fetchConfig, roles, users, fetchUsers, updateUser, deleteUser }) {
+function UsersListDialog({ open, handleClose, isLogged, isModerator, isSuperAdmin, userRole, isLoading, isUpdating, roles, users, fetchUsers, updateUser, deleteUser }) {
 
   const { t } = useTranslation(["users_list_dialog", "general"]);
 
   const classes = useStyles();
   const fullScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
-
-  useEffect(() => {
-    console.log(isLoading, configState);
-    if (isLogged && configState == STATES.STATE_NONE) {
-      fetchConfig();
-    }
-  }, [isLogged]);
 
   useEffect(() => {
     if (isModerator) {
@@ -65,7 +46,7 @@ function UsersListDialog({ open, handleClose, isLogged, isModerator, isSuperAdmi
   }, [isModerator]);
 
   return <Dialog open={open} onClose={handleClose} scroll={"paper"} fullScreen={fullScreen} fullWidth={true} maxWidth={"sm"}>
-    <DialogTitle disableTypography={!fullScreen}>
+    <DialogTitle disableTypography={!fullScreen} className={fullScreen ? "" : "boxes"}>
       {fullScreen ?
         <>
           {t("title")}
@@ -142,7 +123,6 @@ const mapStateToProps = (state) => {
     userRole: user.isLogged && user.user.role || 0,
 
     roles,
-    configState: config.state,
     usersState: users.state,
 
     isLoading: users.state === STATES.STATE_LOADING || config.state === STATES.STATE_LOADING,
@@ -153,7 +133,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchUsers: fetchUsersActionCreator,
-  fetchConfig: fetchConfigActionCreator,
   updateUser: updateUserActionCreator,
   deleteUser: deleteUsersActionCreator,
 }, dispatch);

@@ -24,17 +24,6 @@ import { STATES } from "../enums";
 
 
 const useStyles = makeStyles((theme) => ({
-  dialogTitle: {
-    marginTop: '-40px',
-    backgroundColor: theme.palette.info.main,
-    background: `linear-gradient(90deg, ${theme.palette.info.main} 0, ${theme.palette.info[theme.palette.type]} 100%)`,
-    borderRadius: theme.shape.borderRadius,
-    "& > .MuiTypography-root": {
-      paddingTop: theme.spacing(1),
-      height: '50px',
-      color: theme.palette.info.contrastText
-    }
-  },
   socialButtons: {
     justifyContent: "center",
     "& svg": {
@@ -88,8 +77,8 @@ function SigninDialog({ open, handleClose, username, isLogged, isError, isLoadin
   }, []);
 
   return <Dialog open={open} onClose={handleClose}>
-    <DialogTitle disableTypography>
-      <Box className={classes.dialogTitle} >
+    <DialogTitle disableTypography className={"boxes"}>
+      <Box>
         <Typography align='center' variant="h6">{t("title")}</Typography>
         {isLoading && <LinearProgress />}
       </Box>
