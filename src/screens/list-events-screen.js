@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { CalendarMontly, CalendarDaily, Filters, Toolbar } from '../components';
-import { VIEWS, TENSE, STATES } from '../enums';
+import { VIEWS, TENSE, STATUSES } from '../enums';
 import { connect } from 'react-redux';
 import { compareAsc, isSameDay } from 'date-fns';
 import { getColorIndex } from '../themes/colors';
@@ -116,16 +116,16 @@ const mapStateToProps = (state) => {
   const categories = s_categories.list.map(({ _id, name }, index) => {
     return { _id, name, checked: state.filter.categories_id.indexOf(_id) != -1, colorClass: generateColorClass({ tense: TENSE.FUTURE, colorIndex: getColorIndex(index) }) };
   });
-  const events = s_events.state === STATES.STATE_READY ? s_events.list.map(({ _id, date, city, category }) => {
+  const events = s_events.status === STATUSES.STATUS_INITED ? s_events.list.map(({ _id, date, city, category }) => {
     const tense = isSameDay(date, now) ? TENSE.PRESENT : (compareAsc(now, date) == 1 ? TENSE.PAST : TENSE.FUTURE);
     const colorClass = generateColorClass({ tense, colorIndex: getColorIndex(categories.findIndex(({ _id }) => _id == category._id)) });
     return { _id, date, label: city.name, tense, colorClass };
   }) : [];
 
   return {
-    loading: [s_events.state, s_cities.state, s_categories.state].some(state => state === STATES.STATE_LOADING),
-    citiesReady: s_cities.state === STATES.STATE_READY,
-    categoriesReady: s_categories.state === STATES.STATE_READY,
+    loading: [s_events.status, s_cities.status, s_categories.status].some(state => state === STATUSES.STATUS_PENDING),
+    citiesReady: s_cities.status === STATUSES.STATUS_INITED,
+    categoriesReady: s_categories.status === STATUSES.STATUS_INITED,
     events,
     cities,
     categories,

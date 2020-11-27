@@ -3,12 +3,9 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
 import ruJson from "../../public/i18n/ru.json";
+import Service from "./service";
 
-class I18nService {
-
-  init() {
-    return Promise.resolve();
-  }
+class I18nService extends Service {
 
   run() {
     return new Promise((resolve, reject) => {

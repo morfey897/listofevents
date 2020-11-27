@@ -20,10 +20,10 @@ import {
 import { connect } from "react-redux";
 import { signinActionCreator } from "../model/actions";
 import { bindActionCreators } from "redux";
-import { STATES } from "../enums";
+import { STATUSES } from "../enums";
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   socialButtons: {
     justifyContent: "center",
     "& svg": {
@@ -128,8 +128,8 @@ const mapStateToProps = (state) => {
   return {
     username,
     isLogged: user.isLogged,
-    isLoading: user.state === STATES.STATE_LOADING,
-    isError: user.state === STATES.STATE_ERROR
+    isLoading: user.status === STATUSES.STATUS_PENDING,
+    isError: user.status === STATUSES.STATUS_ERROR
   };
 };
 

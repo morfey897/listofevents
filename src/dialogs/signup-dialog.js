@@ -23,11 +23,11 @@ import {
 import { connect } from "react-redux";
 import { signupActionCreator } from "../model/actions";
 import { bindActionCreators } from "redux";
-import { ERRORCODES, STATES } from "../enums";
+import { ERRORCODES, STATUSES } from "../enums";
 import { outhcode } from "../api";
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   socialButtons: {
     justifyContent: "center",
     "& svg": {
@@ -47,7 +47,7 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
   const classes = useStyles();
 
   const [lostTime, setLostTime] = useState(0);
-  const [authcode, setAuthCode] = useState({ state: STATES.STATE_NONE });
+  const [authcode, setAuthCode] = useState({ status: STATUSES.STATUS_NONE });
   const [localErrorCode, setLocalErrorCode] = useState(errorCode);
 
   const nameRef = useRef(null);
@@ -64,7 +64,7 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
 
   useEffect(() => {
     clearInterval(timerUID);
-    if (authcode.state === STATES.STATE_READY) {
+    if (authcode.status === STATUSES.STATUS_INITED) {
       timerUID = setInterval(() => {
         setLostTime((lostTime) => {
           if (lostTime > authcode.lifetime) {
@@ -104,20 +104,20 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
       if (passwordRef.current.value !== (confirmPasswordRef.current && confirmPasswordRef.current.value || "")) {
         setLocalErrorCode(ERRORCODES.ERROR_INCORRECT_PASSWORD);
       } else {
-        if (authcode.state === STATES.STATE_NONE) {
-          setAuthCode({ state: STATES.STATE_LOADING });
+        if (authcode.status === STATUSES.STATUS_NONE) {
+          setAuthCode({ status: STATUSES.STATUS_PENDING });
           waitCodePromise = cancelable(outhcode({ username: usernameRef.current.value }))
             .then(({ success, errorCode, data }) => {
               if (success !== true) {
-                setAuthCode({ state: STATES.STATE_ERROR });
+                setAuthCode({ status: STATUSES.STATUS_ERROR });
                 setLocalErrorCode(errorCode);
               } else {
-                setAuthCode({ state: STATES.STATE_READY, ...data });
+                setAuthCode({ status: STATUSES.STATUS_INITED, ...data });
                 setLocalErrorCode(0);
               }
             })
             .catch(() => {
-              setAuthCode({ state: STATES.STATE_ERROR });
+              setAuthCode({ status: STATUSES.STATUS_ERROR });
               setLocalErrorCode(ERRORCODES.ERROR_WRONG);
             });
         } else {
@@ -137,13 +137,13 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
 
   const onChange = useCallback(() => {
     if (usernameRef.current && passwordRef.current && usernameRef.current.value && passwordRef.current.value) {
-      setAuthCode({ state: STATES.STATE_NONE });
+      setAuthCode({ status: STATUSES.STATUS_NONE });
       setLocalErrorCode(0);
     }
   }, []);
 
   const onChangeCode = useCallback(() => {
-    if (authcode.state === STATES.STATE_READY && validateCodeRef.current && validateCodeRef.current.value.length === authcode.codeLen) {
+    if (authcode.status === STATUSES.STATUS_INITED && validateCodeRef.current && validateCodeRef.current.value.length === authcode.codeLen) {
       onSubmit();
     }
   }, [authcode]);
@@ -169,7 +169,7 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
         <DialogContentText align='center'>{t("description")}</DialogContentText>
         {isLogged && <Alert severity={"success"}>{t("success", { name: username })}</Alert>}
         {
-          !isLogged && (authcode.state === STATES.STATE_READY || (authcode.state === STATES.STATE_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
+          !isLogged && (authcode.status === STATUSES.STATUS_INITED || (authcode.status === STATUSES.STATUS_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
           <Alert severity={"success"}>{t(`general:wait_validate_code_${authcode.type}`, { username: authcode.username })}</Alert>
         }
         {localErrorCode === ERRORCODES.ERROR_EMPTY && <Alert severity={"warning"}>{t("error_empty")}</Alert>}
@@ -197,7 +197,7 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
         }} inputRef={confirmPasswordRef} />
 
         {
-          (authcode.state === STATES.STATE_READY || (authcode.state === STATES.STATE_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
+          (authcode.status === STATUSES.STATUS_INITED || (authcode.status === STATUSES.STATUS_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
           <TextField disabled={isLogged || isLoading} error={errorCode === ERRORCODES.ERROR_INCORRECT_CODE} required name="validation_code" type="number" fullWidth label={t("general:validation_code")} helperText={t("general:validation_code_timer", { seconds: authcode.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
         }
 
@@ -222,8 +222,8 @@ const mapStateToProps = (state) => {
   return {
     username,
     isLogged: user.isLogged,
-    isLoading: user.state === STATES.STATE_LOADING,
-    isError: user.state === STATES.STATE_ERROR,
+    isLoading: user.status === STATUSES.STATUS_PENDING,
+    isError: user.status === STATUSES.STATUS_ERROR,
     errorCode: user.errorCode || 0
   };
 };

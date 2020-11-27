@@ -3,7 +3,6 @@ import { encode } from 'js-base64';
 import { logRequestInterceptor, logResponseInterceptor } from './interceptors';
 import store from "store2";
 import { ERRORCODES, STORAGEKEYS } from '../enums';
-import { USER_TIME_OUT } from '../model/actions/user-action';
 
 const basicToken = encode(process.env.BASIC_AUTH);
 
@@ -14,23 +13,23 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(logRequestInterceptor);
 axiosInstance.interceptors.response.use(logResponseInterceptor);
 
-function request(query, dispatch) {
+function request(query) {
 
   let expiresIn = parseInt(store.get(STORAGEKEYS.JWT_EXPIRES_IN));
-  if (isNaN(expiresIn)) {
-    expiresIn = 0;
-  } else if (parseInt(Date.now() / 1000) >= expiresIn) {
-    expiresIn = 0;
-    if (typeof dispatch === "function") {
-      dispatch({ type: USER_TIME_OUT });
-    }
-    if (/^mutation/.test(query)) {
-      //todo need open wnd login
-    }
-  }
+  // if (isNaN(expiresIn)) {
+  //   expiresIn = 0;
+  // } else if (parseInt(Date.now() / 1000) >= expiresIn) {
+  //   expiresIn = 0;
+  //   if (typeof dispatch === "function") {
+  //     dispatch({ type: USER_TIME_OUT });
+  //   }
+  //   if (/^mutation/.test(query)) {
+  //     //todo need open wnd login
+  //   }
+  // }
 
   return axiosInstance
-    .post('/api/graphql', { query }, {
+    .post('api/graphql', { query }, {
       headers: {
         Authorization: expiresIn > 0 ? `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}` : `Basic ${basicToken}`
       }
@@ -46,7 +45,7 @@ function request(query, dispatch) {
 
 function userAction(url, data, Authorization) {
   return axiosInstance
-    .post(`/oauth${url}`, data, {
+    .post(`oauth/${url}`, data, {
       headers: {
         Authorization
       }
@@ -62,28 +61,28 @@ function userAction(url, data, Authorization) {
 }
 
 function signin({ username, password }) {
-  return userAction('/signin', { username, password }, `Basic ${basicToken}`);
+  return userAction('signin', { username, password }, `Basic ${basicToken}`);
 }
 
 function signup({ username, name, code, password }) {
-  return userAction('/signup', { name, username, code, password }, `Basic ${basicToken}`);
+  return userAction('signup', { name, username, code, password }, `Basic ${basicToken}`);
 }
 
 function signout() {
-  return userAction('/signout', {}, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
+  return userAction('signout', {}, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
 }
 
 function rename({ surname, name, phone, email, code, password }) {
-  return userAction('/rename', { surname, name, phone, email, code, password }, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
+  return userAction('rename', { surname, name, phone, email, code, password }, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
 }
 
 function outhcode({ username }) {
-  return userAction('/outhcode', { username }, `Basic ${basicToken}`);
+  return userAction('outhcode', { username }, `Basic ${basicToken}`);
 }
 
 function config() {
   return axiosInstance
-  .get("/api/config", {
+  .get("api/config", {
     headers: {
       Authorization: `Basic ${basicToken}`
     }

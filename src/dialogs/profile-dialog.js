@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from "react-i18next";
-import { Box, Grid, InputAdornment, LinearProgress, makeStyles, Typography } from "@material-ui/core";
+import { Box, Grid, InputAdornment, LinearProgress, Typography } from "@material-ui/core";
 import { cancelable } from 'cancelable-promise';
 
 import MuiPhoneInput from "material-ui-phone-number";
@@ -19,34 +19,22 @@ import {
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { renameActionCreator } from "../model/actions";
+import { renameActionCreator, resetUserStatusActionCreator } from "../model/actions";
 import { outhcode } from "../api";
-import { ERRORCODES, STATES } from "../enums";
+import { ERRORCODES, STATUSES } from "../enums";
 import { debounce } from "debounce";
-
-const useStyles = makeStyles((theme) => ({
-  socialButtons: {
-    justifyContent: "center",
-    "& svg": {
-      fontSize: "3rem",
-    }
-  },
-}));
 
 let waitClose;
 let timerUID = 0;
 let waitCodePromise;
 
-function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCode, username, name, surname, phone, email, renameUser }) {
+function ProfileDialog({ open, handleClose, isLoading, isError, isUpdated, errorCode, username, name, surname, phone, email, renameUser, resetUserStatus }) {
 
   const { t } = useTranslation(["profile_dialog", "general"]);
 
-  const classes = useStyles();
-
   const [lostTime, setLostTime] = useState(0);
-  const [authcode, setAuthCode] = useState({ state: STATES.STATE_NONE });
+  const [authcode, setAuthCode] = useState({ status: STATUSES.STATUS_NONE });
   const [localErrorCode, setLocalErrorCode] = useState(errorCode);
-  const [isWaitSave, setWaitSave] = useState(false);
 
   const [changePassword, setChangePassword] = useState(false);
   const [locName, setName] = useState(name);
@@ -56,6 +44,7 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCo
   const [locPassword, setPassword] = useState("");
 
   const validateCodeRef = useRef(null);
+
   useEffect(() => {
     return () => {
       waitCodePromise && waitCodePromise.cancel();
@@ -64,7 +53,7 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCo
 
   useEffect(() => {
     clearInterval(timerUID);
-    if (authcode.state === STATES.STATE_READY) {
+    if (authcode.status === STATUSES.STATUS_INITED) {
       timerUID = setInterval(() => {
         setLostTime((lostTime) => {
           if (lostTime > authcode.lifetime) {
@@ -84,7 +73,7 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCo
     if (isError && errorCode !== ERRORCODES.ERROR_INCORRECT_CODE) {
       setPassword("");
     }
-    if (isReady && isWaitSave) {
+    if (open && isUpdated) {
       waitClose && waitClose.clear();
       waitClose = debounce(handleClose, 1000);
       waitClose();
@@ -92,7 +81,13 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCo
     return () => {
       waitClose && waitClose.clear();
     };
-  }, [isError, errorCode, isReady, isWaitSave, authcode]);
+  }, [open, isError, isUpdated, errorCode]);
+
+  useEffect(() => {
+    if (!open) {
+      resetUserStatus();
+    }
+  }, [open]);
 
   const onSubmit = useCallback((event) => {
     if (event && typeof event.preventDefault === "function") {
@@ -104,8 +99,8 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCo
     }
 
     if (locPhone || locEmail) {
-      if (authcode.state === STATES.STATE_NONE) {
-        setAuthCode({ state: STATES.STATE_LOADING });
+      if (authcode.status === STATUSES.STATUS_NONE || authcode.status === STATUSES.STATUS_ERROR) {
+        setAuthCode({ status: STATUSES.STATUS_PENDING });
         let username = "";
         if (locEmail && locEmail === email) {
           username = locEmail;
@@ -117,15 +112,15 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCo
         waitCodePromise = cancelable(outhcode({ username }))
           .then(({ success, errorCode, data }) => {
             if (success !== true) {
-              setAuthCode({ state: STATES.STATE_ERROR });
+              setAuthCode({ status: STATUSES.STATUS_ERROR });
               setLocalErrorCode(errorCode);
             } else {
-              setAuthCode({ state: STATES.STATE_READY, ...data });
+              setAuthCode({ status: STATUSES.STATUS_INITED, ...data });
               setLocalErrorCode(0);
             }
           })
           .catch(() => {
-            setAuthCode({ state: STATES.STATE_ERROR });
+            setAuthCode({ status: STATUSES.STATUS_ERROR });
             setLocalErrorCode(ERRORCODES.ERROR_WRONG);
           });
       } else {
@@ -138,7 +133,6 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCo
           password: locPassword,
           code: validateCodeRef.current && validateCodeRef.current.value || 0,
         });
-        setWaitSave(true);
       }
     } else {
       setLocalErrorCode(ERRORCODES.ERROR_EMPTY);
@@ -147,7 +141,7 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCo
   }, [authcode, locName, locSurname, locPhone, locEmail, locPassword, name, surname, phone, email]);
 
   const onChangeCode = useCallback(() => {
-    if (authcode.state === STATES.STATE_READY && validateCodeRef.current && validateCodeRef.current.value.length === authcode.codeLen) {
+    if (authcode.status === STATUSES.STATUS_INITED && validateCodeRef.current && validateCodeRef.current.value.length === authcode.codeLen) {
       onSubmit();
     }
   }, [authcode]);
@@ -159,11 +153,11 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCo
         {isLoading && <LinearProgress />}
       </Box>
     </DialogTitle>
-    <form className={classes.form} onSubmit={onSubmit}>
+    <form onSubmit={onSubmit}>
       <DialogContent>
-        {(isReady && isWaitSave) && <Alert severity={"success"}>{t("success", { name: username })}</Alert>}
+        {isUpdated && <Alert severity={"success"}>{t("success", { name: username })}</Alert>}
         {
-          !(isReady && isWaitSave) && (authcode.state === STATES.STATE_READY || (authcode.state === STATES.STATE_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
+          !isUpdated && (authcode.status === STATUSES.STATUS_INITED || (authcode.status === STATUSES.STATUS_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
           <Alert severity={"success"}>{t(`general:wait_validate_code_${authcode.type}`, { username: authcode.username })}</Alert>
         }
         {localErrorCode === ERRORCODES.ERROR_EMPTY && <Alert severity={"warning"}>{t("error_empty")}</Alert>}
@@ -195,12 +189,12 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isReady, errorCo
         }
 
         {
-          (authcode.state === STATES.STATE_READY || (authcode.state === STATES.STATE_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
-          <TextField disabled={isLoading || (isReady && isWaitSave)} error={errorCode === ERRORCODES.ERROR_INCORRECT_CODE} required name="validation_code" type="number" fullWidth label={t("general:validation_code")} helperText={t("general:validation_code_timer", { seconds: authcode.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
+          (authcode.status === STATUSES.STATUS_INITED || (authcode.status === STATUSES.STATUS_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
+          <TextField disabled={isLoading || isUpdated} error={errorCode === ERRORCODES.ERROR_INCORRECT_CODE} required name="validation_code" type="number" fullWidth label={t("general:validation_code")} helperText={t("general:validation_code_timer", { seconds: authcode.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
         }
       </DialogContent>
       <DialogActions>
-        <Button type="submit" disabled={isLoading || (isReady && isWaitSave)} onClick={onSubmit} color="primary" variant="contained">{t("general:button_save")}</Button>
+        <Button type="submit" disabled={isLoading || isUpdated} onClick={onSubmit} color="primary" variant="contained">{t("general:button_save")}</Button>
         <Button disabled={isLoading} onClick={handleClose} color="secondary" variant="contained">{t("general:button_cancel")}</Button>
       </DialogActions>
     </form>
@@ -223,15 +217,16 @@ const mapStateToProps = (state) => {
     surname: user.isLogged ? user.user.surname : "",
     email: user.isLogged ? user.user.email : "",
     phone: user.isLogged ? user.user.phone : "",
-    isLoading: user.state === STATES.STATE_LOADING,
-    isError: user.state === STATES.STATE_ERROR,
-    isReady: user.state === STATES.STATE_READY,
+    isLoading: user.status === STATUSES.STATUS_PENDING,
+    isError: user.status === STATUSES.STATUS_ERROR,
+    isUpdated: user.status === STATUSES.STATUS_UPDATED,
     errorCode: user.errorCode || 0
   };
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   renameUser: renameActionCreator,
+  resetUserStatus: resetUserStatusActionCreator,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileDialog);

@@ -1,9 +1,9 @@
 import {CITY_LOADED, CITY_UPDATE_STATE} from "../actions/city-action";
-import { STATES } from "../../enums";
+import { STATUSES } from "../../enums";
 
 const initState = {
   list: [],
-  state: STATES.STATE_NONE
+  status: STATUSES.STATUS_NONE
 };
 
 export function cities(state = initState, action) {
@@ -13,13 +13,13 @@ export function cities(state = initState, action) {
     case CITY_LOADED:
       return {
         ...state,
-        state: payload.state,
+        status: payload.state,
         list: payload.list
       };
     case CITY_UPDATE_STATE:
       return {
         ...state,
-        state: payload.state
+        status: payload.state
       };
     default:
       return state;

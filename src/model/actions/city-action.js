@@ -1,5 +1,5 @@
 import { request } from "../../api";
-import { STATES } from "../../enums";
+import { STATUSES } from "../../enums";
 
 export const CITY_LOADED = "city_loaded";
 export const CITY_UPDATE_STATE = "city_update_state";
@@ -30,17 +30,17 @@ function processing(data) {
 export function fetchCitiesActionCreator() {
   return (dispatch, getState) => {
     const { state } = getState().cities;
-    if (state === STATES.STATE_NONE) {
-      dispatch({type: CITY_UPDATE_STATE, payload: {state: STATES.STATE_LOADING}});
-      return request(citiesQuery(), dispatch)
+    if (state === STATUSES.STATUS_NONE) {
+      dispatch({type: CITY_UPDATE_STATE, payload: {status: STATUSES.STATUS_PENDING}});
+      return request(citiesQuery())
               .then(({success, data}) => {
                 if (success) return data;
                 throw new Error("Can't load");
               })
               .then(({list}) => list.map(processing))
-              .then((list) => dispatch({ type: CITY_LOADED, payload: {list, state: STATES.STATE_READY}}))
+              .then((list) => dispatch({ type: CITY_LOADED, payload: {list, status: STATUSES.STATUS_INITED}}))
               .catch(() => {
-                dispatch({type: CITY_UPDATE_STATE, payload: {state: STATES.STATE_ERROR}});
+                dispatch({type: CITY_UPDATE_STATE, payload: {status: STATUSES.STATUS_ERROR}});
               });
     }
     return Promise.resolve();

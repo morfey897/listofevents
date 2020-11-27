@@ -1,9 +1,9 @@
 import {EVENT_LOADED, EVENT_UPDATE_STATE} from "../actions/event-action";
-import { STATES } from "../../enums";
+import { STATUSES } from "../../enums";
 
 const initState = {
   list: [],
-  state: STATES.STATE_NONE,
+  status: STATUSES.STATUS_NONE,
 };
 
 export function events(state = initState, action) {
@@ -13,13 +13,13 @@ export function events(state = initState, action) {
     case EVENT_LOADED:
       return {
         ...state,
-        state: payload.state,
+        status: payload.state,
         list: payload.list
       };
     case EVENT_UPDATE_STATE:
       return {
         ...state,
-        state: payload.state,
+        status: payload.state,
       };
     default:
       return state;

@@ -8,22 +8,20 @@ import { BrowserRouter, Router } from 'react-router-dom';
 import { initServices, runServices } from "../services";
 import DateFnsUtils from '@date-io/date-fns';
 import ThemeWrapper from './theme-wrapper';
-
-const ST_NONE = 0;
-const ST_INITED = 1;
-const ST_RUNNED = 2;
+import { STORE_INIT } from "../model/actions";
+import { STATUSES } from '../enums';
 
 function reducer(state, action) {
   switch (action.type) {
     case "inited":
       return {
         ...state,
-        condition: ST_INITED
+        status: STATUSES.STATUS_INITED
       };
     case "runned":
       return {
         ...state,
-        condition: ST_RUNNED,
+        status: STATUSES.STATUS_UPDATED,
         results: action.payload.reduce((prev, obj) => {
           for (let name in obj) {
             prev[name] = obj[name];
@@ -40,10 +38,10 @@ function reducer(state, action) {
 
 function Root() {
 
-  const [state, dispatch] = useReducer(reducer, { condition: ST_NONE, results: {} });
+  const [state, dispatch] = useReducer(reducer, { status: STATUSES.STATUS_NONE, results: {} });
 
   useEffect(() => {
-    if (state.condition !== ST_NONE) return;
+    if (state.status !== STATUSES.STATUS_NONE) return;
     initServices()
       .then(() => {
         dispatch({ type: "inited" });
@@ -55,8 +53,13 @@ function Root() {
   }, []);
 
 
-  return (state.condition === ST_RUNNED ? (
-    <Provider store={state.results.store}>
+  return (state.status === STATUSES.STATUS_UPDATED ? (
+    <Provider store={state.results.store} >
+      {
+        (function () {
+          state.results.store.dispatch({ type: STORE_INIT });
+        })()
+      }
       <BrowserRouter>
         <Router history={createBrowserHistory()}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>

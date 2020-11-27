@@ -1,5 +1,5 @@
 import { request } from "../../api";
-import { STATES } from "../../enums";
+import { STATUSES } from "../../enums";
 
 export const EVENT_LOADED = "event_loaded";
 export const EVENT_UPDATE_STATE = "event_update_state";
@@ -46,17 +46,17 @@ function processing(data) {
 export function fetchEventsActionCreator() {
   return (dispatch, getState) => {
     const { dateTo, dateFrom, categories_id, cities_id } = getState().filter;
-    dispatch({type: EVENT_UPDATE_STATE, payload: {state: STATES.STATE_LOADING}});
+    dispatch({type: EVENT_UPDATE_STATE, payload: {status: STATUSES.STATUS_PENDING}});
     const req = eventsQuery({categories_id, cities_id, dateTo, dateFrom});
-    return request(req, dispatch)
+    return request(req)
             .then(({success, data}) => {
               if (success) return data;
               throw new Error("Can't loaded");
             })
             .then(({list}) => list.map(processing))
-            .then((list) => dispatch({ type: EVENT_LOADED, payload: {list, state: STATES.STATE_READY} }))
+            .then((list) => dispatch({ type: EVENT_LOADED, payload: {list, status: STATUSES.STATUS_INITED} }))
             .catch(() => {
-              dispatch({ type: EVENT_UPDATE_STATE, payload: {state: STATES.STATE_ERROR} });
+              dispatch({ type: EVENT_UPDATE_STATE, payload: {status: STATUSES.STATUS_ERROR} });
             });
   };
 }

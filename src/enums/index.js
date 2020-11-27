@@ -1,6 +1,6 @@
 import * as DIALOGS from "./dialogs";
 import * as SCREENS from "./screens";
-import * as STATES from "./states";
+import * as STATUSES from "./statuses";
 import * as TENSE from "./tense";
 import * as VIEWS from "./views";
 import * as EVENTS from "./events";
@@ -11,7 +11,7 @@ import * as ERRORCODES from "./errorcodes";
 export {
   DIALOGS,
   SCREENS,
-  STATES,
+  STATUSES,
   TENSE,
   VIEWS,
   EVENTS,

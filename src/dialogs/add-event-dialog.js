@@ -126,7 +126,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  // fetchConfig: fetchConfigActionCreator,
+  
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddEventDialog);

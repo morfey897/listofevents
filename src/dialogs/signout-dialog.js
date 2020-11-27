@@ -7,24 +7,18 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from "react-i18next";
-import { Box, LinearProgress, makeStyles, Typography } from "@material-ui/core";
+import { Box, LinearProgress, Typography } from "@material-ui/core";
 import { debounce } from 'debounce';
 
 import { connect } from "react-redux";
 import { signoutActionCreator } from "../model/actions";
 import { bindActionCreators } from "redux";
-import { STATES } from "../enums";
-
-const useStyles = makeStyles((theme) => ({
-  
-}));
+import { STATUSES } from "../enums";
 
 let waitClose;
 function SignoutDialog({ open, handleClose, isLoading, isError, isLogged, signoutRequest }) {
 
   const { t } = useTranslation(["signout_dialog", "general"]);
-
-  const classes = useStyles();
 
   useEffect(() => {
     if (!isLogged || isError) {
@@ -67,8 +61,8 @@ const mapStateToProps = (state) => {
   const { user } = state;
   return {
     isLogged: user.isLogged,
-    isLoading: user.state === STATES.STATE_LOADING,
-    isError: user.state === STATES.STATE_ERROR
+    isLoading: user.status === STATUSES.STATUS_PENDING,
+    isError: user.status === STATUSES.STATUS_ERROR
   };
 };
 
