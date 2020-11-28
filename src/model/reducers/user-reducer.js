@@ -1,9 +1,9 @@
-import { USER_SIGN_IN, USER_SIGN_OUT, USER_TIME_OUT, USER_UPDATE_STATE } from "../actions/user-action";
+import { USER_SIGNED_IN, USER_SIGNED_OUT, USER_PENDING, USER_SIGN_IN_ERROR, USER_SIGN_OUT_ERROR, USER_RENAME_ERROR, USER_RENAMED, USER_RESET_STATUS } from "../actions/user-action";
 import store from "store2";
-import { STATES, STORAGEKEYS } from "../../enums";
+import { STATUSES, STORAGEKEYS } from "../../enums";
 
 const initState = {
-  state: STATES.STATE_NONE,
+  status: STATUSES.STATUS_NONE,
   errorCode: 0,
   isLogged: false,
   user: {
@@ -37,7 +37,7 @@ function getUser() {
 
   return {
     ...initState,
-    state: STATES.STATE_READY,
+    status: STATUSES.STATUS_INITED,
     isLogged: true,
     user
   };
@@ -47,56 +47,49 @@ export function user(state = { ...getUser() }, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case USER_UPDATE_STATE: {
+    case USER_PENDING: {
       return {
         ...state,
-        state: payload.state,
-        errorCode: payload.errorCode
+        status: STATUSES.STATUS_PENDING,
+        errorCode: 0
       };
     }
-    case USER_SIGN_IN: {
-      if (payload.state == STATES.STATE_READY) {
-        store.set(STORAGEKEYS.USER_STATE, JSON.stringify(payload.user));
-        store.set(STORAGEKEYS.JWT_ACCESS_TOKEN, payload.token.accessToken);
-        store.set(STORAGEKEYS.JWT_EXPIRES_IN, payload.token.expiresIn);
-        return {
-          ...state,
-          state: payload.state,
-          errorCode: payload.errorCode,
-          isLogged: true,
-          user: payload.user
-        };
-      }
+    case USER_SIGN_IN_ERROR:
+    case USER_SIGN_OUT_ERROR:
+    case USER_RENAME_ERROR:
       return {
         ...state,
-        state: payload.state,
+        status: STATUSES.STATUS_ERROR,
         errorCode: payload.errorCode,
+      };
+    case USER_RENAMED:
+    case USER_SIGNED_IN: {
+      store.set(STORAGEKEYS.USER_STATE, JSON.stringify(payload.user));
+      store.set(STORAGEKEYS.JWT_ACCESS_TOKEN, payload.token.accessToken);
+      store.set(STORAGEKEYS.JWT_EXPIRES_IN, payload.token.expiresIn);
+      return {
+        ...state,
+        status: type === USER_SIGNED_IN ? STATUSES.STATUS_INITED : STATUSES.STATUS_UPDATED,
+        errorCode: 0,
+        isLogged: true,
+        user: payload.user
       };
     }
-    case USER_SIGN_OUT:
-      if (payload.state == STATES.STATE_READY) {
-        store.set(STORAGEKEYS.USER_STATE, JSON.stringify(payload.user || {}));
-        store.set(STORAGEKEYS.JWT_ACCESS_TOKEN, payload.token && payload.token.accessToken || "");
-        store.set(STORAGEKEYS.JWT_EXPIRES_IN, payload.token && payload.token.expiresIn || 0);
-        return {
-          ...state,
-          state: payload.state,
-          errorCode: payload.errorCode,
-          isLogged: false,
-          user: payload.user,
-        };
-      }
+    case USER_SIGNED_OUT:
+      store.set(STORAGEKEYS.USER_STATE, JSON.stringify(payload.user || {}));
+      store.set(STORAGEKEYS.JWT_ACCESS_TOKEN, payload.token && payload.token.accessToken || "");
+      store.set(STORAGEKEYS.JWT_EXPIRES_IN, payload.token && payload.token.expiresIn || 0);
       return {
         ...state,
-        state: payload.state,
-        errorCode: payload.errorCode,
+        status: STATUSES.STATUS_NONE,
+        errorCode: 0,
+        isLogged: false,
+        user: payload.user,
       };
-    case USER_TIME_OUT:
-      store.set(STORAGEKEYS.JWT_ACCESS_TOKEN, "");
-      store.set(STORAGEKEYS.JWT_EXPIRES_IN, 0);
+    case USER_RESET_STATUS:
       return {
         ...state,
-        isLogged: false
+        status: state.isLogged ? STATUSES.STATUS_INITED : STATUSES.STATUS_NONE,
       };
     default:
       return state;

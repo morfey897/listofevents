@@ -7,34 +7,18 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from "react-i18next";
-import { Box, LinearProgress, makeStyles, Typography } from "@material-ui/core";
+import { Box, LinearProgress, Typography } from "@material-ui/core";
 import { debounce } from 'debounce';
 
 import { connect } from "react-redux";
 import { signoutActionCreator } from "../model/actions";
 import { bindActionCreators } from "redux";
-import { STATES } from "../enums";
-
-const useStyles = makeStyles((theme) => ({
-  dialogTitle: {
-    marginTop: '-40px',
-    backgroundColor: theme.palette.info.main,
-    background: `linear-gradient(90deg, ${theme.palette.info.main} 0, ${theme.palette.info[theme.palette.type]} 100%)`,
-    borderRadius: theme.shape.borderRadius,
-    "& > .MuiTypography-root": {
-      paddingTop: theme.spacing(1),
-      height: '50px',
-      color: theme.palette.info.contrastText
-    }
-  }
-}));
+import { STATUSES } from "../enums";
 
 let waitClose;
 function SignoutDialog({ open, handleClose, isLoading, isError, isLogged, signoutRequest }) {
 
   const { t } = useTranslation(["signout_dialog", "general"]);
-
-  const classes = useStyles();
 
   useEffect(() => {
     if (!isLogged || isError) {
@@ -55,8 +39,8 @@ function SignoutDialog({ open, handleClose, isLoading, isError, isLogged, signou
   }, []);
 
   return <Dialog open={open} onClose={handleClose}>
-    <DialogTitle disableTypography>
-      <Box className={classes.dialogTitle} >
+    <DialogTitle disableTypography className={"boxes"}>
+      <Box>
         <Typography align='center' variant="h6" >{t("title")}</Typography>
         {isLoading && <LinearProgress />}
       </Box>
@@ -77,8 +61,8 @@ const mapStateToProps = (state) => {
   const { user } = state;
   return {
     isLogged: user.isLogged,
-    isLoading: user.state === STATES.STATE_LOADING,
-    isError: user.state === STATES.STATE_ERROR
+    isLoading: user.status === STATUSES.STATUS_PENDING,
+    isError: user.status === STATUSES.STATUS_ERROR
   };
 };
 

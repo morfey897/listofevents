@@ -2,14 +2,10 @@ import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
-import enJson from "../../public/i18n/en.json";
 import ruJson from "../../public/i18n/ru.json";
+import Service from "./service";
 
-class I18nService {
-
-  init() {
-    return Promise.resolve();
-  }
+class I18nService extends Service {
 
   run() {
     return new Promise((resolve, reject) => {
@@ -29,7 +25,7 @@ class I18nService {
             ru: { ...ruJson },
           },
 
-          ns: [...new Set([].concat(Object.keys(enJson)).concat(Object.keys(ruJson)))],
+          ns: [...new Set([].concat(Object.keys(ruJson)))],
           interpolation: {
             escapeValue: false, // not needed for react!!
           },

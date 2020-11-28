@@ -9,27 +9,15 @@ import { useTranslation } from "react-i18next";
 import { Box, FormControlLabel, Grid, LinearProgress, makeStyles, Radio, RadioGroup, Typography, useMediaQuery } from "@material-ui/core";
 
 import { connect } from "react-redux";
-import { fetchUsersActionCreator, fetchConfigActionCreator, updateUserActionCreator, deleteUsersActionCreator } from "../model/actions";
+import { fetchUsersActionCreator, updateUserActionCreator, deleteUsersActionCreator } from "../model/actions";
 import { bindActionCreators } from "redux";
-import { STATES } from "../enums";
+import { STATUSES } from "../enums";
 
 import {
   Delete as DeleteIcon,
 } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) => ({
-  dialogTitle: {
-    marginTop: '-40px',
-    backgroundColor: theme.palette.info.main,
-    background: `linear-gradient(90deg, ${theme.palette.info.main} 0, ${theme.palette.info[theme.palette.type]} 100%)`,
-    borderRadius: theme.shape.borderRadius,
-    "& > .MuiTypography-root": {
-      paddingTop: theme.spacing(1),
-      height: '50px',
-      color: theme.palette.info.contrastText
-    }
-  },
-
   grid: {
     overflowWrap: "anywhere",
     borderBottom: "1px solid rgba(0, 0, 0, 0.12)"
@@ -44,19 +32,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function UsersListDialog({ open, handleClose, isLogged, isModerator, isSuperAdmin, userRole, configState, isLoading, isUpdating, fetchConfig, roles, users, fetchUsers, updateUser, deleteUser }) {
+function UsersListDialog({ open, handleClose, isModerator, isSuperAdmin, userRole, isLoading, isUpdating, updating, roles, users, fetchUsers, updateUser, deleteUser }) {
 
   const { t } = useTranslation(["users_list_dialog", "general"]);
 
   const classes = useStyles();
   const fullScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
-
-  useEffect(() => {
-    console.log(isLoading, configState);
-    if (isLogged && configState == STATES.STATE_NONE) {
-      fetchConfig();
-    }
-  }, [isLogged]);
 
   useEffect(() => {
     if (isModerator) {
@@ -65,7 +46,7 @@ function UsersListDialog({ open, handleClose, isLogged, isModerator, isSuperAdmi
   }, [isModerator]);
 
   return <Dialog open={open} onClose={handleClose} scroll={"paper"} fullScreen={fullScreen} fullWidth={true} maxWidth={"sm"}>
-    <DialogTitle disableTypography={!fullScreen}>
+    <DialogTitle disableTypography={!fullScreen} className={fullScreen ? "" : "boxes"}>
       {fullScreen ?
         <>
           {t("title")}
@@ -107,7 +88,7 @@ function UsersListDialog({ open, handleClose, isLogged, isModerator, isSuperAdmi
             <RadioGroup value={lRole} onChange={(event) => updateUser(_id, event.target.value)}>
               {roles.map(({ name, role }) => {
                 if (role > userRole) return null;
-                return <FormControlLabel disabled={isUpdating} key={`${_id}:${role}`} value={role} labelPlacement="start" label={name} control={<Radio size="small" color="primary" />} />;
+                return <FormControlLabel disabled={isUpdating && updating.indexOf(_id) != -1} key={`${_id}:${role}`} value={role} labelPlacement="start" label={name} control={<Radio size="small" color="primary" />} />;
               })}
             </RadioGroup>
           </Grid>
@@ -142,18 +123,17 @@ const mapStateToProps = (state) => {
     userRole: user.isLogged && user.user.role || 0,
 
     roles,
-    configState: config.state,
-    usersState: users.state,
+    usersState: users.status,
 
-    isLoading: users.state === STATES.STATE_LOADING || config.state === STATES.STATE_LOADING,
-    isUpdating: users.state === STATES.STATE_UPDATING,
-    users: users.list.filter(({ _id }) => user.user.id !== _id)
+    isLoading: users.status === STATUSES.STATUS_PENDING || config.status === STATUSES.STATUS_PENDING,
+    isUpdating: users.status === STATUSES.STATUS_UPDATING,
+    users: users.list.filter(({ _id }) => user.user.id !== _id),
+    updating: users.updating
   };
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   fetchUsers: fetchUsersActionCreator,
-  fetchConfig: fetchConfigActionCreator,
   updateUser: updateUserActionCreator,
   deleteUser: deleteUsersActionCreator,
 }, dispatch);

@@ -123,6 +123,23 @@ export default {
       colorInherit: {
         color: "#fff"
       }
-    }
+    },
+    MuiDialogTitle: {
+      root: {
+        "&.boxes": {
+          "& > .MuiBox-root": {
+            marginTop: '-40px',
+            backgroundColor: "#2196f3",
+            background: `linear-gradient(90deg, #2196f3 0, #1976d2 100%)`,
+            borderRadius: "8px",
+            "& > .MuiTypography-root": {
+              paddingTop: "8px",
+              height: '50px',
+              color: "#fff"
+            }
+          }
+        }
+      }
+    },
   }
 };

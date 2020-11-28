@@ -6,3 +6,5 @@ export * from "./event-action";
 export * from "./user-action";
 export * from "./config-action";
 export * from "./users-action";
+
+export const STORE_INIT = "redux_store_inited";

@@ -1,9 +1,9 @@
 import {COUNTRY_LOADED, COUNTRY_UPDATE_STATE} from "../actions/country-action";
-import { STATES } from "../../enums";
+import { STATUSES } from "../../enums";
 
 const initState = {
   list: [],
-  state: STATES.STATE_NONE,
+  status: STATUSES.STATUS_NONE,
 };
 
 export function countries(state = initState, action) {
@@ -13,13 +13,13 @@ export function countries(state = initState, action) {
     case COUNTRY_LOADED:
       return {
         ...state,
-        state: payload.state,
+        status: payload.state,
         list: payload.list
       };
     case COUNTRY_UPDATE_STATE:
       return {
         ...state,
-        state: payload.state,
+        status: payload.state,
       };
     default:
       return state;
