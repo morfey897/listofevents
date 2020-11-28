@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, ButtonBase } from "@material-ui/core";
+import { makeStyles, ButtonBase, Popover, Box, Typography } from "@material-ui/core";
 import { format } from 'date-fns';
 import { capitalCaseTransform as capitalCase } from 'change-case';
 
@@ -24,21 +24,58 @@ const useStyles = makeStyles((theme) => {
       marginLeft: "auto",
       paddingLeft: theme.spacing(1),
     },
+    paper: {
+      padding: theme.spacing(1),
+    },
+    popoverBox: {
+      width: '200px'
+    }
     // ...theme.getColors()
   };
 });
 
 function ItemOfCalendar({ date, label, colorClass}) {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const openPopover = Boolean(anchorEl);
+
   return (
-    <ButtonBase className={`${colorClass || ""} ${classes.node}`}>
-      <div className={classes.time}>
-        {format(date, "HH:mm")}
-      </div>
-      <div className={classes.label}>
-        {capitalCase(label)}
-      </div>
-    </ButtonBase>
+    <>
+      <ButtonBase className={`${colorClass || ""} ${classes.node}`} onClick={handleClick}>
+        <div className={classes.time}>
+          {format(date, "HH:mm")}
+        </div>
+        <div className={classes.label}>
+          {capitalCase(label)}
+        </div>
+      </ButtonBase>
+      <Popover
+        id={date}
+        open={openPopover}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <Box className={classes.popoverBox}>
+          <Typography>Здесь будут отображатся подробности об этом событии</Typography>
+        </Box>
+      </Popover>
+    </>
+    
   );
 }
 

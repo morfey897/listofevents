@@ -92,7 +92,7 @@ function CalendarMontly({ date, events, now }) {
             <TableRow key={`row-${index}`}>
               {line.map((data, indexDay) => (
                 <TableCell key={`body-${index * 6 + indexDay}`} variant="body" className={`${classes.cellBody} ${data.nowaday ? classes.nowaday : ""}`}>
-                  <CardOfDay {...data} />
+                    <CardOfDay {...data} />
                 </TableCell>
               ))}
             </TableRow>
