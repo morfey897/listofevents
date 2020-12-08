@@ -7,8 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from "react-i18next";
-import { Box, LinearProgress, Typography } from "@material-ui/core";
-import { debounce } from 'debounce';
+import { Box, debounce, LinearProgress, Typography } from "@material-ui/core";
 
 import { connect } from "react-redux";
 import { signoutActionCreator } from "../model/actions";
@@ -18,7 +17,7 @@ import { STATUSES } from "../enums";
 let waitClose;
 function SignoutDialog({ open, handleClose, isLoading, isError, isLogged, signoutRequest }) {
 
-  const { t } = useTranslation(["signout_dialog", "general"]);
+  const { t } = useTranslation(["signout_dialog", "general", "error"]);
 
   useEffect(() => {
     if (!isLogged || isError) {
@@ -47,7 +46,7 @@ function SignoutDialog({ open, handleClose, isLoading, isError, isLogged, signou
     </DialogTitle>
     <DialogContent>
       {!isLogged && <Alert severity={"success"}>{t("success")}</Alert>}
-      {isError && <Alert security={"error"}>{t("error")}</Alert>}
+      {isError && <Alert security={"error"}>{t("error:wrong")}</Alert>}
       <DialogContentText >{t("description")}</DialogContentText>
     </DialogContent>
     <DialogActions>

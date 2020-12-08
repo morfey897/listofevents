@@ -28,7 +28,7 @@ export function config(state = initState, action) {
         ...state,
         ...payload.data,
         errorCode: 0,
-        status: STATUSES.STATUS_INITED
+        status: STATUSES.STATUS_SUCCESS
       };
     }
     default:

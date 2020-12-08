@@ -97,7 +97,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 12px",
     border: "none",
     outline: "none",
-    
+
     "&::placeholder": {
       color: theme.palette.text.disabled,
     }
@@ -111,23 +111,15 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.info.main,
     textDecoration: "underline"
   }
-  
+
 }));
 
-function RichEditor() {
+function RichEditor({ children, innerRef, ...props }) {
 
   const classes = useStyles();
   const theme = useTheme();
 
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-
-  const editor = useRef(null);
-
-  const onFocus = useCallback(() => {
-    if (editor.current) {
-      editor.current.focus();
-    }
-  }, []);
 
   const plugins = useMemo(() => ({
     linkPlugin: createLinkPlugin({
@@ -153,13 +145,14 @@ function RichEditor() {
   }
   ), [classes]);
 
-  return <div className={classes.editor} onClick={onFocus}>
+  return <div className={classes.editor}>
     <Editor
       key={`editor_${theme.palette.type}`}
       editorState={editorState}
       onChange={setEditorState}
       plugins={Object.values(plugins)}
-      ref={editor}
+      ref={innerRef}
+      {...props}
     />
     <plugins.inlineToolbarPlugin.InlineToolbar key={`inline_toolbar_${theme.palette.type}`}>
       {

@@ -6,6 +6,9 @@ import SelectDate from './select-date';
 import DropList from './drop-list';
 import Toolbar from './toolbar';
 import RichEditor from "./rich-editor";
+import TagsAutocomplete from "./tags-autocomplete";
+import CategoryAutocomplete from "./category-autocomplete";
+import CityAutocomplete from "./city-autocomplete";
 
 export {
   Header,
@@ -16,4 +19,7 @@ export {
   DropList,
   Toolbar,
   RichEditor,
+  TagsAutocomplete,
+  CategoryAutocomplete,
+  CityAutocomplete
 };

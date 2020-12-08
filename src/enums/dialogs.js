@@ -1,4 +1,5 @@
 export const ADD_EVENT = "add_event_dialog";
+export const ADD_CATEGORY = "add_category_dialog";
 export const USERS_LIST = "users_list_dialog";
 export const SIGNIN = "signin_dialog";
 export const SIGNUP = "signup_dialog";

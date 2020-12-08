@@ -1,18 +1,20 @@
 import { request } from "../../api";
-import { STATUSES } from "../../enums";
+import { ErrorEmitter } from "../../emitters";
+import { ERRORTYPES } from "../../errors";
 
-export const CITY_LOADED = "city_loaded";
-export const CITY_UPDATE_STATE = "city_update_state";
+export const CITY_PENDING = "city_pending";
+export const CITY_INITED = "city_inited";
 
 const citiesQuery = () => `query {
-  list: getCities {
-    _id,
-    country{
+  result: getCities(paginate:{limit:100}) {
+    list{
       _id,
-      iso_code,
-      name{ru, en}
+      place_id,
+      name{ru},
+      description{ru}
     },
-    name{ru,en}
+    offset,
+    total
   }
 }`;
 
@@ -20,29 +22,25 @@ function processing(data) {
   return {
     ...data,
     name: data.name.ru,
-    country: {
-      ...data.country,
-      name: data.country.name.ru,
-    }
+    description: data.description.ru
   };
 }
 
 export function fetchCitiesActionCreator() {
-  return (dispatch, getState) => {
-    const { state } = getState().cities;
-    if (state === STATUSES.STATUS_NONE) {
-      dispatch({type: CITY_UPDATE_STATE, payload: {status: STATUSES.STATUS_PENDING}});
-      return request(citiesQuery())
-              .then(({success, data}) => {
-                if (success) return data;
-                throw new Error("Can't load");
-              })
-              .then(({list}) => list.map(processing))
-              .then((list) => dispatch({ type: CITY_LOADED, payload: {list, status: STATUSES.STATUS_INITED}}))
-              .catch(() => {
-                dispatch({type: CITY_UPDATE_STATE, payload: {status: STATUSES.STATUS_ERROR}});
-              });
-    }
-    return Promise.resolve();
+  return (dispatch) => {
+    dispatch({ type: CITY_PENDING });
+    return request(citiesQuery())
+      .then(({ success, data, errorCode  }) => {
+        if (success) {
+          dispatch({ type: CITY_INITED, payload: { ...data.result, list: data.result.list.map(processing) } });
+        } else {
+          dispatch({ type: CITY_INITED });
+          ErrorEmitter.emit(ERRORTYPES.CITY_INIT_ERROR, errorCode);
+        }
+      })
+      .catch(() => {
+        dispatch({ type: CITY_INITED });
+        ErrorEmitter.emit(ERRORTYPES.CITY_INIT_ERROR);
+      });
   };
 }

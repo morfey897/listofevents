@@ -1,5 +1,5 @@
 import { config } from "../../api";
-import { ERRORCODES } from "../../enums";
+import { ERRORCODES } from "../../errors";
 
 export const CONFIG_PENDING = "config_pending";
 export const CONFIG_INITED = "config_inited";

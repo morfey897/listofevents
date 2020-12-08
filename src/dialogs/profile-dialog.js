@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,7 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from "react-i18next";
-import { Box, Grid, InputAdornment, LinearProgress, Typography } from "@material-ui/core";
+import { Box, debounce, Grid, InputAdornment, LinearProgress, Typography } from "@material-ui/core";
 import { cancelable } from 'cancelable-promise';
 
 import MuiPhoneInput from "material-ui-phone-number";
@@ -19,22 +19,27 @@ import {
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { renameActionCreator, resetUserStatusActionCreator } from "../model/actions";
+import { renameActionCreator } from "../model/actions";
 import { outhcode } from "../api";
-import { ERRORCODES, STATUSES } from "../enums";
-import { debounce } from "debounce";
+import { STATUSES } from "../enums";
+import { ERRORCODES, ERRORTYPES } from "../errors";
+import { ErrorEmitter } from "../emitters";
 
 let waitClose;
 let timerUID = 0;
 let waitCodePromise;
 
-function ProfileDialog({ open, handleClose, isLoading, isError, isUpdated, errorCode, username, name, surname, phone, email, renameUser, resetUserStatus }) {
+const ST_WAITING_CODE = "waiting_code";
+const ST_WAITING_USER = "waiting_user";
+const ST_GONE_CODE = "gone_code";
 
-  const { t } = useTranslation(["profile_dialog", "general"]);
+function ProfileDialog({ open, handleClose, isLoading, isSuccess, username, name, surname, phone, email, renameUser }) {
+
+  const { t } = useTranslation(["profile_dialog", "general", "error"]);
 
   const [lostTime, setLostTime] = useState(0);
-  const [authcode, setAuthCode] = useState({ status: STATUSES.STATUS_NONE });
-  const [localErrorCode, setLocalErrorCode] = useState(errorCode);
+
+  const [state, setState] = useState({});
 
   const [changePassword, setChangePassword] = useState(false);
   const [locName, setName] = useState(name);
@@ -45,21 +50,31 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isUpdated, error
 
   const validateCodeRef = useRef(null);
 
+  const isReady = useMemo(() => {
+    return isSuccess && state.status == ST_WAITING_USER;
+  }, [state, isSuccess]);
+
+  const onErrorHandler = useCallback(({ errorCode }) => {
+    setState((state) => ({ ...state, status: errorCode == ERRORCODES.ERROR_INCORRECT_CODE ? ST_GONE_CODE : "", errorCode }));
+  }, []);
+
   useEffect(() => {
+    ErrorEmitter.on(ERRORTYPES.USER_UPDATE_ERROR, onErrorHandler);
     return () => {
+      ErrorEmitter.off(ERRORTYPES.USER_UPDATE_ERROR, onErrorHandler);
       waitCodePromise && waitCodePromise.cancel();
     };
   }, []);
 
   useEffect(() => {
     clearInterval(timerUID);
-    if (authcode.status === STATUSES.STATUS_INITED) {
+    if (state.status === ST_GONE_CODE) {
       timerUID = setInterval(() => {
         setLostTime((lostTime) => {
-          if (lostTime > authcode.lifetime) {
+          if (lostTime > state.lifetime) {
             clearInterval(timerUID);
           }
-          return Math.min(lostTime + 1, authcode.lifetime);
+          return Math.min(lostTime + 1, state.lifetime);
         });
       },
         1000);
@@ -67,13 +82,10 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isUpdated, error
     return () => {
       clearInterval(timerUID);
     };
-  }, [authcode]);
+  }, [state]);
 
   useEffect(() => {
-    if (isError && errorCode !== ERRORCODES.ERROR_INCORRECT_CODE) {
-      setPassword("");
-    }
-    if (open && isUpdated) {
+    if (isReady) {
       waitClose && waitClose.clear();
       waitClose = debounce(handleClose, 1000);
       waitClose();
@@ -81,13 +93,7 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isUpdated, error
     return () => {
       waitClose && waitClose.clear();
     };
-  }, [open, isError, isUpdated, errorCode]);
-
-  useEffect(() => {
-    if (!open) {
-      resetUserStatus();
-    }
-  }, [open]);
+  }, [isReady, state]);
 
   const onSubmit = useCallback((event) => {
     if (event && typeof event.preventDefault === "function") {
@@ -99,8 +105,19 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isUpdated, error
     }
 
     if (locPhone || locEmail) {
-      if (authcode.status === STATUSES.STATUS_NONE || authcode.status === STATUSES.STATUS_ERROR) {
-        setAuthCode({ status: STATUSES.STATUS_PENDING });
+      if (state.status == ST_GONE_CODE) {
+        setState({ ...state, status: ST_WAITING_USER,  errorCode: 0 });
+        console.log("REQUEST", locEmail);
+        renameUser({
+          name: locName,
+          surname: locSurname,
+          phone: locPhone,
+          email: locEmail,
+          password: locPassword,
+          code: validateCodeRef.current && validateCodeRef.current.value || 0,
+        });
+      } else if (state.status != ST_WAITING_CODE) {
+        setState({ status: ST_WAITING_CODE });
         let username = "";
         if (locEmail && locEmail === email) {
           username = locEmail;
@@ -112,39 +129,26 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isUpdated, error
         waitCodePromise = cancelable(outhcode({ username }))
           .then(({ success, errorCode, data }) => {
             if (success !== true) {
-              setAuthCode({ status: STATUSES.STATUS_ERROR });
-              setLocalErrorCode(errorCode);
+              setState({ errorCode });
             } else {
-              setAuthCode({ status: STATUSES.STATUS_INITED, ...data });
-              setLocalErrorCode(0);
+              setState({ status: ST_GONE_CODE, ...data });
             }
           })
           .catch(() => {
-            setAuthCode({ status: STATUSES.STATUS_ERROR });
-            setLocalErrorCode(ERRORCODES.ERROR_WRONG);
+            setState({ errorCode: ERRORCODES.ERROR_WRONG });
           });
-      } else {
-        setLocalErrorCode(0);
-        renameUser({
-          name: locName,
-          surname: locSurname,
-          phone: locPhone,
-          email: locEmail,
-          password: locPassword,
-          code: validateCodeRef.current && validateCodeRef.current.value || 0,
-        });
       }
     } else {
-      setLocalErrorCode(ERRORCODES.ERROR_EMPTY);
+      setState({ errorCode: ERRORCODES.ERROR_EMPTY });
     }
 
-  }, [authcode, locName, locSurname, locPhone, locEmail, locPassword, name, surname, phone, email]);
+  }, [state, locName, locSurname, locPhone, locEmail, locPassword, name, surname, phone, email]);
 
   const onChangeCode = useCallback(() => {
-    if (authcode.status === STATUSES.STATUS_INITED && validateCodeRef.current && validateCodeRef.current.value.length === authcode.codeLen) {
+    if (state.status === ST_GONE_CODE && validateCodeRef.current && validateCodeRef.current.value.length === state.codeLen) {
       onSubmit();
     }
-  }, [authcode]);
+  }, [state]);
 
   return <Dialog open={open} onClose={handleClose}>
     <DialogTitle disableTypography className="boxes">
@@ -155,15 +159,17 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isUpdated, error
     </DialogTitle>
     <form onSubmit={onSubmit}>
       <DialogContent>
-        {isUpdated && <Alert severity={"success"}>{t("success", { name: username })}</Alert>}
-        {
-          !isUpdated && (authcode.status === STATUSES.STATUS_INITED || (authcode.status === STATUSES.STATUS_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
-          <Alert severity={"success"}>{t(`general:wait_validate_code_${authcode.type}`, { username: authcode.username })}</Alert>
-        }
-        {localErrorCode === ERRORCODES.ERROR_EMPTY && <Alert severity={"warning"}>{t("error_empty")}</Alert>}
-        {(errorCode === ERRORCODES.ERROR_EXIST || errorCode === ERRORCODES.ERROR_EXIST_EMAIL || errorCode === ERRORCODES.ERROR_EXIST_PHONE) && <Alert severity={"error"}>{t("error_user_esist")}</Alert>}
-        {localErrorCode === ERRORCODES.ERROR_WRONG && <Alert severity={"warning"}>{t("general:error_wrong")}</Alert>}
-
+        {isReady && <Alert severity={"success"}>{t("success", { name: username })}</Alert>}
+        {!isReady && (state.status === ST_GONE_CODE || state.status === ST_WAITING_USER) && <Alert severity={"success"}>{t(`general:wait_validate_code_${state.type}`, { username: state.username })}</Alert>}
+        {!isReady && (() => {
+          if (state.errorCode == ERRORCODES.ERROR_EMPTY) {
+            return <Alert severity={"warning"}>{t("error:empty")}</Alert>;
+          } else if (state.errorCode === ERRORCODES.ERROR_USER_EXIST || state.errorCode === ERRORCODES.ERROR_EXIST_EMAIL || state.errorCode === ERRORCODES.ERROR_EXIST_PHONE) {
+            return <Alert severity={"error"}>{t("error:user_esist")}</Alert>;
+          } else if (state.errorCode === ERRORCODES.ERROR_WRONG) {
+            return <Alert severity={"warning"}>{t("error:wrong")}</Alert>;
+          }
+        })()}
         <Grid container spacing={1}>
           <Grid item sm={6}>
             <TextField name="name" type="text" fullWidth label={t("name_label")} value={locName} margin="normal" onChange={(event) => setName(event.target.value)} />
@@ -173,9 +179,9 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isUpdated, error
           </Grid>
         </Grid>
 
-        <MuiPhoneInput fullWidth value={locPhone} onChange={(value) => setPhone(value)} defaultCountry={'ua'} error={(!locPhone && localErrorCode === ERRORCODES.ERROR_EMPTY) || (errorCode === ERRORCODES.ERROR_EXIST_PHONE)} />
+        <MuiPhoneInput fullWidth value={locPhone} onChange={(value) => setPhone(value)} defaultCountry={'ua'} error={(!locPhone && state.errorCode === ERRORCODES.ERROR_EMPTY) || (state.errorCode === ERRORCODES.ERROR_EXIST_PHONE)} />
 
-        <TextField error={(!locEmail && localErrorCode === ERRORCODES.ERROR_EMPTY) || errorCode === ERRORCODES.ERROR_EXIST_EMAIL} name="email" type="email" fullWidth label={t("email_label")} value={locEmail} margin="normal" onChange={(event) => setEmail(event.target.value)}
+        <TextField error={(!locEmail && state.errorCode === ERRORCODES.ERROR_EMPTY) || state.errorCode === ERRORCODES.ERROR_EXIST_EMAIL} name="email" type="email" fullWidth label={t("email_label")} value={locEmail} margin="normal" onChange={(event) => setEmail(event.target.value)}
           InputProps={{
             startAdornment: <InputAdornment position="start"><EmailIcon /></InputAdornment>,
           }} />
@@ -189,12 +195,12 @@ function ProfileDialog({ open, handleClose, isLoading, isError, isUpdated, error
         }
 
         {
-          (authcode.status === STATUSES.STATUS_INITED || (authcode.status === STATUSES.STATUS_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
-          <TextField disabled={isLoading || isUpdated} error={errorCode === ERRORCODES.ERROR_INCORRECT_CODE} required name="validation_code" type="number" fullWidth label={t("general:validation_code")} helperText={t("general:validation_code_timer", { seconds: authcode.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
+          (state.status === ST_GONE_CODE || state.status === ST_WAITING_USER) &&
+          <TextField disabled={isLoading || isReady} error={state.errorCode === ERRORCODES.ERROR_INCORRECT_CODE || lostTime > state.lifetime} required name="validation_code" type="number" fullWidth label={t("general:validation_code")} helperText={t("general:validation_code_timer", { seconds: state.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
         }
       </DialogContent>
       <DialogActions>
-        <Button type="submit" disabled={isLoading || isUpdated} onClick={onSubmit} color="primary" variant="contained">{t("general:button_save")}</Button>
+        <Button type="submit" disabled={isLoading || isReady} onClick={onSubmit} color="primary" variant="contained">{t("general:button_save")}</Button>
         <Button disabled={isLoading} onClick={handleClose} color="secondary" variant="contained">{t("general:button_cancel")}</Button>
       </DialogActions>
     </form>
@@ -218,15 +224,12 @@ const mapStateToProps = (state) => {
     email: user.isLogged ? user.user.email : "",
     phone: user.isLogged ? user.user.phone : "",
     isLoading: user.status === STATUSES.STATUS_PENDING,
-    isError: user.status === STATUSES.STATUS_ERROR,
-    isUpdated: user.status === STATUSES.STATUS_UPDATED,
-    errorCode: user.errorCode || 0
+    isSuccess: user.status === STATUSES.STATUS_SUCCESS
   };
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   renameUser: renameActionCreator,
-  resetUserStatus: resetUserStatusActionCreator,
 }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProfileDialog);

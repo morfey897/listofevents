@@ -2,7 +2,8 @@ import axios from 'axios';
 import { encode } from 'js-base64';
 import { logRequestInterceptor, logResponseInterceptor } from './interceptors';
 import store from "store2";
-import { ERRORCODES, STORAGEKEYS } from '../enums';
+import { STORAGEKEYS } from '../enums';
+import { ERRORCODES } from "../errors";
 
 const basicToken = encode(process.env.BASIC_AUTH);
 
@@ -35,12 +36,13 @@ function request(query) {
       }
     })
     .then(({status, data}) => {
-      if (status === 200) {
+      if (status === 200 && (!data.errors || !data.errors.length)) {
         return { data: data.data, success: true };
-      } 
-      throw new Error("Can't load");
+      } else {
+        return { success: false, data: {}, errorCode: data.errors[0].errorCode };
+      }
     })
-    .catch(() => Promise.resolve({ data: {}, success: false }));
+    .catch(() => ({ success: false, data: {}, errorCode: ERRORCODES.ERROR_WRONG }));
 }
 
 function userAction(url, data, Authorization) {

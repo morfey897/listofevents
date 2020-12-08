@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
 let waitClose;
 function SigninDialog({ open, handleClose, username, isLogged, isError, isLoading, signinRequest }) {
 
-  const { t } = useTranslation(["signin_dialog", "general"]);
+  const { t } = useTranslation(["signin_dialog", "general", "error"]);
 
   const classes = useStyles();
 
@@ -96,8 +96,8 @@ function SigninDialog({ open, handleClose, username, isLogged, isError, isLoadin
       <DialogContent>
         <DialogContentText align='center' >{t("description")}</DialogContentText>
         {isLogged && <Alert severity={"success"}>{t("success", { name: username })}</Alert>}
-        {isError && <Alert severity={"error"}>{t("error_incorrect")}</Alert>}
-        {isEmpty && <Alert severity={"warning"}>{t("error_empty")}</Alert>}
+        {isError && <Alert severity={"error"}>{t("error:incorrect_signin")}</Alert>}
+        {isEmpty && <Alert severity={"warning"}>{t("error:empty")}</Alert>}
 
         <TextField disabled={isLogged} error={isEmpty && usernameRef.current && !usernameRef.current.value} required name="username" type="text" autoFocus fullWidth label={t("username_label")} margin="normal"
           InputProps={{

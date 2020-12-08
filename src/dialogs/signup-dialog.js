@@ -23,9 +23,9 @@ import {
 import { connect } from "react-redux";
 import { signupActionCreator } from "../model/actions";
 import { bindActionCreators } from "redux";
-import { ERRORCODES, STATUSES } from "../enums";
+import { STATUSES } from "../enums";
 import { outhcode } from "../api";
-
+import { ERRORCODES } from "../errors";
 
 const useStyles = makeStyles(() => ({
   socialButtons: {
@@ -42,7 +42,7 @@ let waitCodePromise;
 
 function SignupDialog({ open, handleClose, username, isLogged, isError, isLoading, errorCode, signupRequest }) {
 
-  const { t } = useTranslation(["signin_dialog", "general"]);
+  const { t } = useTranslation(["signin_dialog", "general", "error"]);
 
   const classes = useStyles();
 
@@ -64,7 +64,7 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
 
   useEffect(() => {
     clearInterval(timerUID);
-    if (authcode.status === STATUSES.STATUS_INITED) {
+    if (authcode.status === STATUSES.STATUS_SUCCESS) {
       timerUID = setInterval(() => {
         setLostTime((lostTime) => {
           if (lostTime > authcode.lifetime) {
@@ -112,7 +112,7 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
                 setAuthCode({ status: STATUSES.STATUS_ERROR });
                 setLocalErrorCode(errorCode);
               } else {
-                setAuthCode({ status: STATUSES.STATUS_INITED, ...data });
+                setAuthCode({ status: STATUSES.STATUS_SUCCESS, ...data });
                 setLocalErrorCode(0);
               }
             })
@@ -143,7 +143,7 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
   }, []);
 
   const onChangeCode = useCallback(() => {
-    if (authcode.status === STATUSES.STATUS_INITED && validateCodeRef.current && validateCodeRef.current.value.length === authcode.codeLen) {
+    if (authcode.status === STATUSES.STATUS_SUCCESS && validateCodeRef.current && validateCodeRef.current.value.length === authcode.codeLen) {
       onSubmit();
     }
   }, [authcode]);
@@ -169,14 +169,14 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
         <DialogContentText align='center'>{t("description")}</DialogContentText>
         {isLogged && <Alert severity={"success"}>{t("success", { name: username })}</Alert>}
         {
-          !isLogged && (authcode.status === STATUSES.STATUS_INITED || (authcode.status === STATUSES.STATUS_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
+          !isLogged && (authcode.status === STATUSES.STATUS_SUCCESS || (authcode.status === STATUSES.STATUS_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
           <Alert severity={"success"}>{t(`general:wait_validate_code_${authcode.type}`, { username: authcode.username })}</Alert>
         }
-        {localErrorCode === ERRORCODES.ERROR_EMPTY && <Alert severity={"warning"}>{t("error_empty")}</Alert>}
-        {localErrorCode === ERRORCODES.ERROR_INCORRECT_PASSWORD && <Alert severity={"warning"}>{t("error_incorrect_password")}</Alert>}
-        {localErrorCode === ERRORCODES.ERROR_EXIST && <Alert severity={"error"}>{t("error_user_esist")}</Alert>}
-        {localErrorCode === ERRORCODES.ERROR_INCORRECT_USERNAME && <Alert severity={"error"}>{t("error_incorrect_username")}</Alert>}
-        {localErrorCode === ERRORCODES.ERROR_WRONG && <Alert severity={"warning"}>{t("general:error_wrong")}</Alert>}
+        {localErrorCode === ERRORCODES.ERROR_EMPTY && <Alert severity={"warning"}>{t("error:empty")}</Alert>}
+        {localErrorCode === ERRORCODES.ERROR_INCORRECT_PASSWORD && <Alert severity={"warning"}>{t("error:incorrect_password")}</Alert>}
+        {localErrorCode === ERRORCODES.ERROR_USER_EXIST && <Alert severity={"error"}>{t("error:user_esist")}</Alert>}
+        {localErrorCode === ERRORCODES.ERROR_INCORRECT_USERNAME && <Alert severity={"error"}>{t("error:incorrect_username")}</Alert>}
+        {localErrorCode === ERRORCODES.ERROR_WRONG && <Alert severity={"warning"}>{t("error:wrong")}</Alert>}
 
         <TextField disabled={isLogged || isLoading} name="name" type="text" autoFocus fullWidth label={t("name_label")} margin="normal"
           InputProps={{
@@ -197,7 +197,7 @@ function SignupDialog({ open, handleClose, username, isLogged, isError, isLoadin
         }} inputRef={confirmPasswordRef} />
 
         {
-          (authcode.status === STATUSES.STATUS_INITED || (authcode.status === STATUSES.STATUS_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
+          (authcode.status === STATUSES.STATUS_SUCCESS || (authcode.status === STATUSES.STATUS_ERROR && errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
           <TextField disabled={isLogged || isLoading} error={errorCode === ERRORCODES.ERROR_INCORRECT_CODE} required name="validation_code" type="number" fullWidth label={t("general:validation_code")} helperText={t("general:validation_code_timer", { seconds: authcode.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
         }
 

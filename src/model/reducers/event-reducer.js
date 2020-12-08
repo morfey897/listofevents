@@ -1,4 +1,4 @@
-import {EVENT_LOADED, EVENT_UPDATE_STATE} from "../actions/event-action";
+import { EVENT_PENDING, EVENT_INITED, EVENT_CREATED, EVENT_CREATING } from "../actions/event-action";
 import { STATUSES } from "../../enums";
 
 const initState = {
@@ -7,19 +7,26 @@ const initState = {
 };
 
 export function events(state = initState, action) {
-  const {type, payload} = action;
+  const { type, payload } = action;
 
   switch (type) {
-    case EVENT_LOADED:
+    case EVENT_PENDING:
+    case EVENT_CREATING:
       return {
         ...state,
-        status: payload.state,
-        list: payload.list
+        status: STATUSES.STATUS_PENDING
       };
-    case EVENT_UPDATE_STATE:
+    case EVENT_INITED:
       return {
         ...state,
-        status: payload.state,
+        status: STATUSES.STATUS_SUCCESS,
+        ...payload
+      };
+    case EVENT_CREATED:
+      return {
+        ...state,
+        status: STATUSES.STATUS_SUCCESS,
+        list: [... new Set(state.list.concat(payload.list).map(({ _id }) => _id))].map(id => payload.list.find(({ _id }) => id === _id) || state.list.find(({ _id }) => id === _id)),
       };
     default:
       return state;

@@ -1,10 +1,9 @@
-import { USER_SIGNED_IN, USER_SIGNED_OUT, USER_PENDING, USER_SIGN_IN_ERROR, USER_SIGN_OUT_ERROR, USER_RENAME_ERROR, USER_RENAMED, USER_RESET_STATUS } from "../actions/user-action";
+import { USER_SIGNED_IN, USER_SIGNED_OUT, USER_PENDING, USER_UPDATE_ERROR } from "../actions/user-action";
 import store from "store2";
 import { STATUSES, STORAGEKEYS } from "../../enums";
 
 const initState = {
   status: STATUSES.STATUS_NONE,
-  errorCode: 0,
   isLogged: false,
   user: {
     id: "",
@@ -37,7 +36,7 @@ function getUser() {
 
   return {
     ...initState,
-    status: STATUSES.STATUS_INITED,
+    status: STATUSES.STATUS_SUCCESS,
     isLogged: true,
     user
   };
@@ -51,26 +50,20 @@ export function user(state = { ...getUser() }, action) {
       return {
         ...state,
         status: STATUSES.STATUS_PENDING,
-        errorCode: 0
       };
     }
-    case USER_SIGN_IN_ERROR:
-    case USER_SIGN_OUT_ERROR:
-    case USER_RENAME_ERROR:
+    case USER_UPDATE_ERROR:
       return {
         ...state,
-        status: STATUSES.STATUS_ERROR,
-        errorCode: payload.errorCode,
+        status: STATUSES.STATUS_SUCCESS,
       };
-    case USER_RENAMED:
     case USER_SIGNED_IN: {
       store.set(STORAGEKEYS.USER_STATE, JSON.stringify(payload.user));
       store.set(STORAGEKEYS.JWT_ACCESS_TOKEN, payload.token.accessToken);
       store.set(STORAGEKEYS.JWT_EXPIRES_IN, payload.token.expiresIn);
       return {
         ...state,
-        status: type === USER_SIGNED_IN ? STATUSES.STATUS_INITED : STATUSES.STATUS_UPDATED,
-        errorCode: 0,
+        status: STATUSES.STATUS_SUCCESS,
         isLogged: true,
         user: payload.user
       };
@@ -82,14 +75,8 @@ export function user(state = { ...getUser() }, action) {
       return {
         ...state,
         status: STATUSES.STATUS_NONE,
-        errorCode: 0,
         isLogged: false,
         user: payload.user,
-      };
-    case USER_RESET_STATUS:
-      return {
-        ...state,
-        status: state.isLogged ? STATUSES.STATUS_INITED : STATUSES.STATUS_NONE,
       };
     default:
       return state;

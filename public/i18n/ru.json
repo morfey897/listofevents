@@ -10,14 +10,22 @@
     "button_signin": "Войти",
     "button_create": "Создать",
     "button_save": "Сохранить",
-
-    "error_wrong": "Упс... что то пошло не так. Попробуйте похже.",
     "validation_code": "Код подтверждения",
     "validation_code_timer": "Осталось {{seconds}} секунд",
     "wait_validate_code_email": "Вам на почту {{username}} выслан код подтверждения",
     "wait_validate_code_phone": "Вам на номер телефона {{username}} выслан код подтверждения"
   },
-  
+  "error": {
+    "wrong": "Упс... что то пошло не так. Попробуйте похже.",
+    "empty": "Заполните все необходимые поля.",
+    "incorrect_signin": "Неверный логин или пароль.",
+    "incorrect_password": "Пароль не совпадает",
+    "user_esist": "Пользователь с таким логином уже существует",
+    "incorrect_username": "Неверный логин",
+    "incorrect_url": "Некорректна ссылка",
+    "incorrect_id": "Неверный ID",
+    "access_denied": "Отказано в доступе"
+  },
   "header_block": {
     "main_menu": "Главное меню",
     "about": "О нас",
@@ -34,7 +42,6 @@
     "profile": "Личный кабинет",
     "toggle_theme": "Темная/светлая тема"
   },
-
   "footer_block": {
     "community": "Сообщество",
     "resources": "Ресурсы",
@@ -44,25 +51,40 @@
     "support": "Поддержка",
     "blog": "Блог"
   },
-
+  "tags_block": {
+    "label": "Теги",
+    "add": "Добавить \"{{tag}}\"",
+    "loading": "Загружаем..."
+  },
+  "categories_block": {
+    "label": "Категория",
+    "add": "Добавить \"{{category}}\"",
+    "loading": "Загружаем..."
+  },
+  "cities_block": {
+    "label": "Город",
+    "no_options_text": "Введите название города"
+  },
   "add_event_dialog": {
     "title": "Добавить новое событие",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
-    "name_label": "Название",
-    "name_helper": "Название не могут быть пустым",
+    "name_label": "Название события",
     "description_label": "Описание",
-    "name_description": "Описание слишком короткое",
     "location_label": "Место проведения",
+    "location_hint": "Название студии, клуба или заведения",
     "url_label": "Ссылка",
     "date_label": "Дата",
     "time_label": "Время",
-    "category_label": "Категория",
-    "city_label": "Город",
-    "tags_label": "Теги",
-    "login_title": "Внимание",
     "login_description": "Для доступа к добавлению события необходимо иметь аккаунт РЕДАКТОРА"
   },
-
+  "add_category_dialog": {
+    "title": "Добавление новой категории",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+    "url_label": "Ссылка",
+    "name_label": "Название",
+    "description_label": "Описание",
+    "success": "Вы добавили категорию \"{{category}}\""
+  },
   "signin_dialog": {
     "title": "Логин",
     "title_signup": "Создать аккаунт",
@@ -73,22 +95,13 @@
     "confirm_password_label": "Подтверждение пароля",
     "success": "Приветствуем вас {{name}}.",
     "instagram_enter": "Вход с помощью Instagram аккаунта",
-    "facebook_enter": "Вход с помощью Facebook аккаунта",
-
-    "error_incorrect": "Неверный логин или пароль.",
-    "error_empty": "Заполните все необходимые поля.",
-    "error_incorrect_password": "Пароль не совпадает",
-    "error_user_esist": "Пользователь с таким логином уже существует",
-    "error_incorrect_username": "Неверный логин"
+    "facebook_enter": "Вход с помощью Facebook аккаунта"
   },
-
   "signout_dialog": {
     "title": "Выход",
     "description": "Вы уверены что хотите выйти из аккаунты?",
-    "success": "Вы вышли из аккаунта",
-    "error": "Упс... что то пошло не так."
+    "success": "Вы вышли из аккаунта"
   },
-
   "users_list_dialog": {
     "title": "Список пользователей",
     "empty_list": "Пользователи отсутсвуют",
@@ -99,7 +112,6 @@
     "header_role": "Роль",
     "empty_field": "---"
   },
-
   "profile_dialog": {
     "title": "Профиль",
     "name_label": "Ваше имя",
@@ -108,16 +120,8 @@
     "email_label": "Электронная почта",
     "password_label": "Новый пароль",
     "button_change_password": "Сменить пароль",
-    "success": "Изменения вступили в силу.",
-
-    "error_incorrect": "Неверный логин или пароль.",
-    "error_empty": "Номер телефона и почта не могут быть пустыми",
-    "error_incorrect_password": "Пароль не совпадает",
-    "error_user_esist": "Пользователь с таким логином уже существует",
-    "error_incorrect_username": "Неверный логин"
-    
+    "success": "Изменения вступили в силу."
   },
-  
   "contacts_screen": {
     "title": "Get in touch",
     "description": "You need more information? Check what other persons are saying about progect. They are very happy with thier purchace",
@@ -129,7 +133,6 @@
     "send_message": "Send message",
     "no_robot": "I'm not a robot"
   },
-
   "about_screen": {
     "title": "We are nerd rockstars",
     "description": "This is the paragraph where you can write more details about your team. Keep you user engaged by providing meaningful information.",
@@ -144,11 +147,9 @@
     "partnership_title": "Want to work with us?",
     "partnership_description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours."
   },
-
   "list_events_screen": {
     "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours."
   },
-  
   "main_screen": {
     "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
     "sdfsa": "dfasdf",

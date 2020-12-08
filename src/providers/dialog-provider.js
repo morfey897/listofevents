@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useReducer } from "react";
 import { DialogEmitter } from "../emitters";
 
-import { AddEventDialog, SigninDialog, SignupDialog, SignoutDialog, ProfileDialog, UsersListDialog } from "../dialogs";
+import { AddEventDialog, SigninDialog, SignupDialog, SignoutDialog, ProfileDialog, UsersListDialog, AddCategoryDialog } from "../dialogs";
 import { DIALOGS, EVENTS } from "../enums";
 import { debounce, useTheme } from "@material-ui/core";
 
@@ -73,6 +73,7 @@ function DialogProvider() {
         const params = { ...data, open: isOpen === 1, handleClose: (state) => DialogEmitter.close(wnd, state) };
         switch (wnd) {
           case DIALOGS.ADD_EVENT: return <AddEventDialog key={wnd} {...params} />;
+          case DIALOGS.ADD_CATEGORY: return <AddCategoryDialog key={wnd} {...params} />;
           case DIALOGS.SIGNIN: return <SigninDialog key={wnd} {...params} />;
           case DIALOGS.SIGNUP: return <SignupDialog key={wnd} {...params} />;
           case DIALOGS.SIGNOUT: return <SignoutDialog key={wnd} {...params} />;

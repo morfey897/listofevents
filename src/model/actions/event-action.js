@@ -1,8 +1,13 @@
 import { request } from "../../api";
+import { ErrorEmitter } from "../../emitters";
 import { STATUSES } from "../../enums";
+import { ERRORTYPES } from "../../errors";
 
-export const EVENT_LOADED = "event_loaded";
-export const EVENT_UPDATE_STATE = "event_update_state";
+export const EVENT_PENDING = "event_pending";
+export const EVENT_INITED = "event_inited";
+
+export const EVENT_CREATING = "event_creating";
+export const EVENT_CREATED = "event_created";
 
 const eventsQuery = ({dateFrom, dateTo, cities_id, categories_id}) => `{
   list: getEvents(filter:{cities_id:${JSON.stringify(cities_id)}, categories_id:${JSON.stringify(categories_id)}, dateFrom:${dateFrom ? '"' + dateFrom.toISOString() + '"' : null}, dateTo:${dateTo ? '"' + dateTo.toISOString() + '"' : null}}) {
@@ -21,6 +26,21 @@ const eventsQuery = ({dateFrom, dateTo, cities_id, categories_id}) => `{
     category{
       _id,
       name{ru,en}
+    }
+  }
+}`;
+
+const createMutation = ({ url, name, location, date, category_id, city, description = "", tags = [] }) => `mutation {
+  category: createEvent(url:"${url}", name:{ru:"${name}"}, location:{ru:"${location}"}, date:"${date}", category_id:"${category_id}", city:{_id:"${city._id}", place_id:"${city.place_id}", name:{ru:"${city.name}"}, description:{ru:"${city.description}"}}, description:{ru:"${description}"}, tags:${JSON.stringify(tags)}) {
+    _id,
+    url,
+    name{ru},
+    location{ru},
+    description{ru},
+    tags,
+    images {
+      _id,
+      url
     }
   }
 }`;
@@ -44,19 +64,39 @@ function processing(data) {
 }
 
 export function fetchEventsActionCreator() {
-  return (dispatch, getState) => {
-    const { dateTo, dateFrom, categories_id, cities_id } = getState().filter;
-    dispatch({type: EVENT_UPDATE_STATE, payload: {status: STATUSES.STATUS_PENDING}});
-    const req = eventsQuery({categories_id, cities_id, dateTo, dateFrom});
-    return request(req)
-            .then(({success, data}) => {
-              if (success) return data;
-              throw new Error("Can't loaded");
-            })
-            .then(({list}) => list.map(processing))
-            .then((list) => dispatch({ type: EVENT_LOADED, payload: {list, status: STATUSES.STATUS_INITED} }))
-            .catch(() => {
-              dispatch({ type: EVENT_UPDATE_STATE, payload: {status: STATUSES.STATUS_ERROR} });
-            });
+  // return (dispatch, getState) => {
+  //   const { dateTo, dateFrom, categories_id, cities_id } = getState().filter;
+  //   dispatch({type: EVENT_UPDATE_STATE, payload: {status: STATUSES.STATUS_PENDING}});
+  //   const req = eventsQuery({categories_id, cities_id, dateTo, dateFrom});
+  //   return request(req)
+  //           .then(({success, data}) => {
+  //             if (success) return data;
+  //             throw new Error("Can't loaded");
+  //           })
+  //           .then(({list}) => list.map(processing))
+  //           .then((list) => dispatch({ type: EVENT_LOADED, payload: {list, status: STATUSES.STATUS_SUCCESS} }))
+  //           .catch(() => {
+  //             dispatch({ type: EVENT_UPDATE_STATE, payload: {status: STATUSES.STATUS_ERROR} });
+  //           });
+  // };
+}
+
+export function createEventActionCreator(inputData) {
+  return (dispatch) => {
+    dispatch({ type: EVENT_CREATING });
+    return request(createMutation({ ...inputData }))
+      .then(({ success, data, errorCode }) => {
+        if (success && data.category) {
+          let category = {...data.category};
+          dispatch({ type: EVENT_CREATED, payload: { list: [category].map(processing) } });
+        } else {
+          dispatch({ type: EVENT_CREATED, payload: { list: [] } });
+          ErrorEmitter.emit(ERRORTYPES.EVENT_CREATE_ERROR, errorCode);
+        }
+      })
+      .catch(() => {
+        dispatch({ type: EVENT_CREATED, payload: { list: [] } });
+        ErrorEmitter.emit(ERRORTYPES.EVENT_CREATE_ERROR);
+      });
   };
 }

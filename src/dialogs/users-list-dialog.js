@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -17,7 +17,7 @@ import {
   Delete as DeleteIcon,
 } from '@material-ui/icons';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   grid: {
     overflowWrap: "anywhere",
     borderBottom: "1px solid rgba(0, 0, 0, 0.12)"
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function UsersListDialog({ open, handleClose, isModerator, isSuperAdmin, userRole, isLoading, isUpdating, updating, roles, users, fetchUsers, updateUser, deleteUser }) {
+function UsersListDialog({ open, handleClose, isModerator, isSuperAdmin, userRole, isLoading, updating, roles, users, fetchUsers, updateUser, deleteUser }) {
 
   const { t } = useTranslation(["users_list_dialog", "general"]);
 
@@ -50,11 +50,11 @@ function UsersListDialog({ open, handleClose, isModerator, isSuperAdmin, userRol
       {fullScreen ?
         <>
           {t("title")}
-          {(isLoading || isUpdating) && <LinearProgress />}
+          {(isLoading) && <LinearProgress />}
         </> :
         <Box className={classes.dialogTitle} >
           <Typography align='center' variant="h6" >{t("title")}</Typography>
-          {(isLoading || isUpdating) && <LinearProgress />}
+          {(isLoading) && <LinearProgress />}
         </Box>
       }
     </DialogTitle>
@@ -88,7 +88,7 @@ function UsersListDialog({ open, handleClose, isModerator, isSuperAdmin, userRol
             <RadioGroup value={lRole} onChange={(event) => updateUser(_id, event.target.value)}>
               {roles.map(({ name, role }) => {
                 if (role > userRole) return null;
-                return <FormControlLabel disabled={isUpdating && updating.indexOf(_id) != -1} key={`${_id}:${role}`} value={role} labelPlacement="start" label={name} control={<Radio size="small" color="primary" />} />;
+                return <FormControlLabel disabled={isLoading && updating.indexOf(_id) != -1} key={`${_id}:${role}`} value={role} labelPlacement="start" label={name} control={<Radio size="small" color="primary" />} />;
               })}
             </RadioGroup>
           </Grid>
@@ -122,13 +122,11 @@ const mapStateToProps = (state) => {
     isSuperAdmin: user.isLogged && (user.user.role & config.roles.super_admin) === config.roles.super_admin,
     userRole: user.isLogged && user.user.role || 0,
 
-    roles,
-    usersState: users.status,
-
     isLoading: users.status === STATUSES.STATUS_PENDING || config.status === STATUSES.STATUS_PENDING,
-    isUpdating: users.status === STATUSES.STATUS_UPDATING,
     users: users.list.filter(({ _id }) => user.user.id !== _id),
-    updating: users.updating
+    updating: users.updating,
+
+    roles,
   };
 };
 

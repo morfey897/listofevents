@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-function ListEventsScreen({ cities, categories, events, filter, fetchCities, fetchCategories, citiesReady, categoriesReady, fetchEvents, loading }) {
+function ListEventsScreen({ isLoading, cities, categories, events, filter, fetchCities, fetchCategories, citiesReady, categoriesReady, fetchEvents }) {
 
   const classes = useStyles();
 
@@ -89,7 +89,7 @@ function ListEventsScreen({ cities, categories, events, filter, fetchCities, fet
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            {loading ? <LinearProgress /> : <div className={classes.line} />}
+            {isLoading ? <LinearProgress /> : <div className={classes.line} />}
             <Paper className={classes.calendar}>
               <Hidden mdUp>
                 <MuiToolbar variant={"dense"}>
@@ -110,23 +110,23 @@ const mapStateToProps = (state) => {
   const { cities: s_cities, categories: s_categories, events: s_events, filter } = state;
   const { now } = filter;
 
-  const cities = s_cities.list.map(({ _id, name, country }) => {
-    return { _id, name, country: country.name, checked: state.filter.cities_id.indexOf(_id) != -1 };
+  const cities = s_cities.list.map(({ _id, name, description }) => {
+    return { _id, name, description, checked: state.filter.cities_id.indexOf(_id) != -1 };
   });
   const categories = s_categories.list.map(({ _id, name }, index) => {
     return { _id, name, checked: state.filter.categories_id.indexOf(_id) != -1, colorClass: generateColorClass({ tense: TENSE.FUTURE, colorIndex: getColorIndex(index) }) };
   });
-  const events = s_events.status === STATUSES.STATUS_INITED ? s_events.list.map(({ _id, date, city, category }) => {
+  const events = s_events.status === STATUSES.STATUS_SUCCESS ? s_events.list.map(({ _id, date, city, category }) => {
     const tense = isSameDay(date, now) ? TENSE.PRESENT : (compareAsc(now, date) == 1 ? TENSE.PAST : TENSE.FUTURE);
     const colorClass = generateColorClass({ tense, colorIndex: getColorIndex(categories.findIndex(({ _id }) => _id == category._id)) });
     return { _id, date, label: city.name, tense, colorClass };
   }) : [];
 
   return {
-    loading: [s_events.status, s_cities.status, s_categories.status].some(state => state === STATUSES.STATUS_PENDING),
-    citiesReady: s_cities.status === STATUSES.STATUS_INITED,
-    categoriesReady: s_categories.status === STATUSES.STATUS_INITED,
-    events,
+    isLoading: [s_events.status, s_cities.status, s_categories.status].some(state => state === STATUSES.STATUS_PENDING),
+    citiesReady: s_cities.status === STATUSES.STATUS_SUCCESS,
+    categoriesReady: s_categories.status === STATUSES.STATUS_SUCCESS,
+    events: [],
     cities,
     categories,
     filter,

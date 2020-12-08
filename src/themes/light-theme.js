@@ -135,5 +135,11 @@ export default {
         }
       }
     },
+    MuiAutocomplete: {
+      tag: {
+        color: "#1976d2",
+        textDecoration: "underline"
+      }
+    },
   }
 };

@@ -16,7 +16,7 @@ function reducer(state, action) {
     case "inited":
       return {
         ...state,
-        status: STATUSES.STATUS_INITED
+        status: STATUSES.STATUS_SUCCESS
       };
     case "runned":
       return {
