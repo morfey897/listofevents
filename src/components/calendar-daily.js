@@ -3,14 +3,11 @@ import { makeStyles, TableContainer, Typography, Table, TableBody, TableHead, Ta
 import { addDays, compareAsc, differenceInDays, format, isSameDay } from 'date-fns';
 import { indigo } from '@material-ui/core/colors';
 
-import ruLocale from 'date-fns/locale/ru';
-import enLocale from 'date-fns/locale/en-US';
-
 import { capitalCaseTransform } from "capital-case";
 import { CardOfTime } from "./cards";
 import { connect } from "react-redux";
-import { useTranslation } from "react-i18next";
-import { LANGS } from "../enums";
+import { withTranslation } from "react-i18next";
+import { useLocale } from "../hooks";
 
 const useTableStyles = makeStyles((theme) => ({
   tableContainer: {
@@ -40,25 +37,20 @@ const useTableStyles = makeStyles((theme) => ({
   },
 }));
 
-function CalendarDaily({ dates, events, now }) {
+function CalendarDaily({ i18n, dates, events, now }) {
 
   const classes = useTableStyles();
 
-  const { i18n } = useTranslation();
+  const locale = useLocale(i18n);
 
   const calendarHeaderData = useMemo(() => {
-    let locale = enLocale;
-    if (i18n.language === LANGS.RU) {
-      locale = ruLocale;
-    }
-
     const list = dates.map((d) => ({
       label: format(d, 'eee dd.MM', { weekStartsOn: 1, locale }),
       disabled: compareAsc(now, d) === 1 && !isSameDay(d, now),
       nowaday: isSameDay(d, now)
     }));
     return [{ label: "" }].concat(list).map((data) => ({ ...data, label: capitalCaseTransform(data.label) }));
-  }, [dates, i18n.language]);
+  }, [dates, locale]);
 
   const calendarBodyData = useMemo(() => {
     const grid = [];
@@ -135,4 +127,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(CalendarDaily);
+export default connect(mapStateToProps)(withTranslation()(CalendarDaily));

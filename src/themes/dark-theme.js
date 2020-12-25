@@ -101,7 +101,16 @@ export default {
   overrides: {
     MuiCssBaseline: {
       "@global": {
-        ...Object.keys(globalColors).reduce((prev, name) => Object.assign({}, prev, { [`.${name}`]: { color: `${globalColors[name].contrastText} !important`, backgroundColor: `${globalColors[name].main} !important` } }), {})
+        ...Object.keys(globalColors).reduce((prev, name) => Object.assign({}, prev, { [`.${name}`]: { color: `${globalColors[name].contrastText} !important`, backgroundColor: `${globalColors[name].main} !important` } }), {}),
+        html: {
+          margin: 0,
+        },
+        body: {
+          margin: 0,
+        },
+        p: {
+          margin: 0,
+        }
       }
     },
     MuiDialog:{
@@ -145,6 +154,14 @@ export default {
       tag: {
         color: "#90caf9",
         textDecoration: "underline"
+      }
+    },
+    MuiPagination: {
+      "root": {
+        textAlign: "center"
+      },
+      "ul": {
+        display: "inline-flex"
       }
     }
   }

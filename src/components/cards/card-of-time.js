@@ -37,8 +37,8 @@ function CardOfTime({ disabled, events }) {
   const classes = useCardStyles();
   return (
     <Box className={classes.cardContent}>
-      {events.map(({_id, ...rest}) => (
-        <ItemOfCalendar key={_id} disabled={disabled} {...rest} />
+      {events.map((data) => (
+        <ItemOfCalendar key={data._id} disabled={disabled} {...data} />
       ))}
     </Box>
   );

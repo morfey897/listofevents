@@ -25,7 +25,7 @@ const POPOSER_POS = {
 };
 
 const categoryGenerator = ({ name }) => ({ primary: capitalCase(name) });
-const locationGenerator = ({ name, country }) => ({ primary: capitalCase(name), secondary: capitalCase(country) });
+const cityGenerator = ({ name, description }) => ({ primary: capitalCase(name), secondary: capitalCase(description) });
 
 const useStyles = makeStyles(() => ({
   popoverDate: {
@@ -49,11 +49,11 @@ function Filters({ variant, categories, cities, toggleCityId, toggleCategoryId }
   const [locationOpen, setLocationOpen] = useState(null);
 
   const handleOpenCategory = useCallback((event) => {
-    setCategoryOpen(event.currentTarget);
+    setCategoryOpen((pos) => pos ? null : event.currentTarget);
   }, []);
 
-  const handleOpenLocation = useCallback((event) => {
-    setLocationOpen(locationOpen ? null : event.currentTarget);
+  const handleOpenCity = useCallback((event) => {
+    setLocationOpen((pos) => pos ? null : event.currentTarget);
   }, []);
 
   const handleCloseCategory = useCallback(() => {
@@ -96,7 +96,7 @@ function Filters({ variant, categories, cities, toggleCityId, toggleCategoryId }
         <DropList
           showItems={2}
           list={cities}
-          generator={locationGenerator}
+          generator={cityGenerator}
           onToggle={toggleCityId}
         />
         <Divider />
@@ -111,7 +111,7 @@ function Filters({ variant, categories, cities, toggleCityId, toggleCategoryId }
             <CategoryIcon />
           </Badge>
         </IconButton>
-        <IconButton aria-label="locations list" onClick={handleOpenLocation}>
+        <IconButton aria-label="locations list" onClick={handleOpenCity}>
         <Badge color="secondary" badgeContent={5}>
           <LocationIcon />
           </Badge>
@@ -141,7 +141,7 @@ function Filters({ variant, categories, cities, toggleCityId, toggleCategoryId }
           <List className={classes.popoverContent} disablePadding>
             <DropList
               list={cities}
-              generator={locationGenerator}
+              generator={cityGenerator}
               onToggle={toggleCityId}
             />
           </List>

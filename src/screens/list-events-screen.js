@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
-import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress, Box } from '@material-ui/core';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress, debounce } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { CalendarMontly, CalendarDaily, Filters, Toolbar } from '../components';
 import { VIEWS, TENSE, STATUSES } from '../enums';
 import { connect } from 'react-redux';
-import { compareAsc, isSameDay } from 'date-fns';
+import { compareAsc, formatISO, isSameDay } from 'date-fns';
 import { getColorIndex } from '../themes/colors';
 import { bindActionCreators } from 'redux';
 import { fetchEventsActionCreator, fetchCitiesActionCreator, fetchCategoriesActionCreator } from "../model/actions";
@@ -42,27 +42,44 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-function ListEventsScreen({ isLoading, cities, categories, events, filter, fetchCities, fetchCategories, citiesReady, categoriesReady, fetchEvents }) {
+function ListEventsScreen({ isLoading, citiesLoading, categoriesLoading, cities, categories, events, filter, fetchCities, fetchCategories, fetchEvents }) {
 
   const classes = useStyles();
 
   const { t } = useTranslation("list_events_screen");
 
+  const [citiesLoaded, setCitiesLoaded] = useState(false);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+  
+  const fetch = useMemo(() => debounce((request) => {
+    fetchEvents(request);
+  }, 200), []);
+  
   useEffect(() => {
-    if (!citiesReady) {
+    if (citiesLoading) {
+      setCitiesLoaded(true);
+    } else if (!citiesLoaded) {
+      setCitiesLoaded(true);
       fetchCities();
     }
-  }, [citiesReady]);
+  }, [citiesLoading, citiesLoaded]);
 
   useEffect(() => {
-    if (!categoriesReady) {
+    if (categoriesLoading) {
+      setCategoriesLoaded(true);
+    } else if (!categoriesLoaded) {
+      setCategoriesLoaded(true);
       fetchCategories();
     }
-  }, [categoriesReady]);
+  }, [categoriesLoading, categoriesLoaded]);
 
   useEffect(() => {
-    fetchEvents();
-  }, [filter.view, filter.dateFrom, filter.dateTo, filter.categories_id, filter.cities_id]);
+    fetch({ 
+      dateFrom: filter.dateFrom ? formatISO(filter.dateFrom, { representation: 'date' }) : null,
+      dateTo: filter.dateTo ? formatISO(filter.dateTo, { representation: 'date' }) : null, 
+      cities_id: filter.cities_id, 
+      categories_id: filter.categories_id });
+  }, [fetch, filter.view, filter.dateFrom, filter.dateTo, filter.categories_id, filter.cities_id]);
 
   return (
     <Container className={classes.container}>
@@ -116,17 +133,17 @@ const mapStateToProps = (state) => {
   const categories = s_categories.list.map(({ _id, name }, index) => {
     return { _id, name, checked: state.filter.categories_id.indexOf(_id) != -1, colorClass: generateColorClass({ tense: TENSE.FUTURE, colorIndex: getColorIndex(index) }) };
   });
-  const events = s_events.status === STATUSES.STATUS_SUCCESS ? s_events.list.map(({ _id, date, city, category }) => {
+  const events = s_events.list.map(({ _id, date, city, category }) => {
     const tense = isSameDay(date, now) ? TENSE.PRESENT : (compareAsc(now, date) == 1 ? TENSE.PAST : TENSE.FUTURE);
     const colorClass = generateColorClass({ tense, colorIndex: getColorIndex(categories.findIndex(({ _id }) => _id == category._id)) });
     return { _id, date, label: city.name, tense, colorClass };
-  }) : [];
+  });
 
   return {
     isLoading: [s_events.status, s_cities.status, s_categories.status].some(state => state === STATUSES.STATUS_PENDING),
-    citiesReady: s_cities.status === STATUSES.STATUS_SUCCESS,
-    categoriesReady: s_categories.status === STATUSES.STATUS_SUCCESS,
-    events: [],
+    citiesLoading: s_cities.status === STATUSES.STATUS_PENDING,
+    categoriesLoading: s_categories.status === STATUSES.STATUS_PENDING,
+    events,
     cities,
     categories,
     filter,

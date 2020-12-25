@@ -33,13 +33,6 @@ function CityAutocomplete({ options, value, onChange, isLoading, fetchCities, er
   const [variables, setVariables] = useState([]);
   const [googleMapStatus, setGoogleMapStatus] = useState(STATUSES.STATUS_NONE);
 
-  // useEffect(() => {
-  //   if (window.google || googleMapStatus != STATUSES.STATUS_NONE) return;
-  //   setGoogleMapStatus(STATUSES.STATUS_PENDING);
-  //   
-  // }, [i18n.language]);
-
-
   const fetch = useMemo(() => debounce((request, callback) => {
     autocompleteService.current.getPlacePredictions(request, callback);
   }, 200), []);

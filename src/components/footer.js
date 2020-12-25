@@ -1,28 +1,47 @@
-import { Button, Container, Grid, Typography, Box, makeStyles } from '@material-ui/core';
+import { Container, Grid, List, makeStyles, ListItem, ListItemIcon, ListItemText, Hidden } from '@material-ui/core';
 import React, { useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Accessibility } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
 import { SCREENS } from "../enums";
 
+import {
+  Instagram as InstagramIcon,
+  Facebook as FacebookIcon,
+  TableChart as TableIcon,
+  ViewDay as PageIcon,
+  LabelImportant as AboutIcon,
+  Forum as ContactsIcon,
+} from '@material-ui/icons';
 
-const useStyles = makeStyles(() => ({
-  linksStyle: {
-    color: 'gray',
-    paddingTop: '5px',
+
+const useStyles = makeStyles((theme) => ({
+  item1: {
+    order: 1,
+    [theme.breakpoints.down('sm')]: {
+      order: 3,
+    },
   },
-  buttonStyle: {
-    textTransform: 'none',
-    justifyContent: 'start'
+  item2: {
+    order: 2,
+    [theme.breakpoints.down('sm')]: {
+      order: 1,
+    },
   },
-  column: {
-    display: 'flex',
-    flexDirection: 'column'
-  }
+  item3: {
+    order: 3,
+    [theme.breakpoints.down('sm')]: {
+      order: 2,
+    },
+  },
+  item4: {
+    order: 4,
+  },
 }));
 
+
 const Footer = () => {
-  const {t} = useTranslation("footer_block");
+  const { t } = useTranslation("footer_block");
+
   const classes = useStyles();
 
   const onClickFacebookLink = useCallback(() => {
@@ -35,42 +54,77 @@ const Footer = () => {
 
   return (
     <Container>
-      <Box mt={5} mb={4} mx={6}>
-        <Grid container spacing={1}>
-          <Grid item xs={6} md={3}>
-            <Box m={2}>
-              <Button startIcon={<Accessibility/>} color="primary">Dance school</Button>
-            </Box>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Box m={2} className={classes.column}>
-              <Box ml={1}>
-                <Typography>{t("community")}</Typography>
-              </Box>
-              <Button onClick={onClickFacebookLink} className={classes.buttonStyle}>FaceBook</Button>
-              <Button onClick={onClickInstaLink} className={classes.buttonStyle}>Instagram</Button>
-            </Box>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Box m={2}>
-              <Typography>{t("resources")}</Typography>
-              <Typography className={classes.linksStyle}>{t("support")}</Typography>
-              <Typography className={classes.linksStyle}>{t("blog")}</Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Box m={2}>
-              <Typography>{t("company")}</Typography>
-              <RouterLink to={SCREENS.ABOUT}>
-                <Typography className={classes.linksStyle}>{t("about")}</Typography>
-              </RouterLink>
-              <RouterLink to={SCREENS.CONTACTS}>
-                <Typography className={classes.linksStyle}>{t("contact_us")}</Typography>
-              </RouterLink>
-            </Box>
-          </Grid>
+      <Grid container spacing={1}>
+        <Grid item xs={6} md={3} className={classes.item1}>
+          {/* <List>
+            <ListItem button dense component={RouterLink} to={SCREENS.MAIN}>
+              <ListItemIcon>
+                <EventIcon />
+              </ListItemIcon>
+              <ListItemText primary={process.env.APP_NAME} />
+            </ListItem>
+          </List> */}
         </Grid>
-      </Box>
+        <Grid item xs={6} md={3} className={classes.item2}>
+          <List>
+            <ListItem>
+              <ListItemText primary={t("company")} />
+            </ListItem>
+            <ListItem button dense component={RouterLink} to={SCREENS.ABOUT}>
+              <ListItemIcon>
+                <AboutIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("about")} />
+            </ListItem>
+            <ListItem button dense component={RouterLink} to={SCREENS.CONTACTS}>
+              <ListItemIcon>
+                <ContactsIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("contact_us")} />
+            </ListItem>
+          </List>
+        </Grid>
+        <Grid item xs={6} md={3} className={classes.item3}>
+          <List>
+            <ListItem>
+              <ListItemText primary={t("events")} />
+            </ListItem>
+            <ListItem button dense component={RouterLink} to={SCREENS.LIST_EVENTS}>
+              <ListItemIcon>
+                <TableIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("list_events")} />
+            </ListItem>
+            <ListItem button dense component={RouterLink} to={SCREENS.PAGE_EVENTS}>
+              <ListItemIcon>
+                <PageIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("page_events")} />
+            </ListItem>
+          </List>
+        </Grid>
+        <Grid item xs={6} md={3} className={classes.item4}>
+          <List>
+            <Hidden smDown>
+              <ListItem>
+                <ListItemText primary={t("community")} />
+              </ListItem>
+            </Hidden>
+            <ListItem button dense onClick={onClickFacebookLink}>
+              <ListItemIcon>
+                <FacebookIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("facebook")} />
+            </ListItem>
+            <ListItem button dense onClick={onClickInstaLink}>
+              <ListItemIcon>
+                <InstagramIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("instagram")} />
+            </ListItem>
+          </List>
+        </Grid>
+      </Grid>
     </Container>
   );
 };

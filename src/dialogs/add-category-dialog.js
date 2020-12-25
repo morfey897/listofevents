@@ -52,9 +52,9 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
   }, [state, isSuccess]);
 
   useEffect(() => {
-    ErrorEmitter.on(ERRORTYPES.CATEGORY_CREATE_ERROR, setState);
+    ErrorEmitter.on(ERRORTYPES.EVENT_CREATE_ERROR, setState);
     return () => {
-      ErrorEmitter.off(ERRORTYPES.CATEGORY_CREATE_ERROR, setState);
+      ErrorEmitter.off(ERRORTYPES.EVENT_CREATE_ERROR, setState);
     };
   }, []);
 

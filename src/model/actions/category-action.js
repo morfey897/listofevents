@@ -9,16 +9,20 @@ export const CATEGORY_CREATING = "category_creating";
 export const CATEGORY_CREATED = "category_created";
 
 const categoriesQuery = () => `query {
-  list: getCategories{
-    _id,
-    url,
-    name{ru},
-    tags,
-    description{ru},
-    images {
+  result: getCategories(paginate:{limit:100}){
+    list{
       _id,
-      url
-    }
+      url,
+      name{ru},
+      tags,
+      description{ru},
+      images {
+        _id,
+        url
+      }
+    },
+    offset,
+    total
   } 
 }`;
 
@@ -50,15 +54,14 @@ export function fetchCategoriesActionCreator() {
     return request(categoriesQuery())
       .then(({ success, data, errorCode }) => {
         if (success) {
-          dispatch({ type: CATEGORY_INITED, payload: { list: data.list.map(processing) } });
-          return data;
+          dispatch({ type: CATEGORY_INITED, payload: { ...data.result, list: data.result.list.map(processing) } });
         } else {
-          dispatch({ type: CATEGORY_INITED, payload: { list: [] } });
+          dispatch({ type: CATEGORY_INITED });
           ErrorEmitter.emit(ERRORTYPES.CATEGORY_INIT_ERROR, errorCode);
         }
       })
       .catch(() => {
-        dispatch({ type: CATEGORY_INITED, payload: { list: [] } });
+        dispatch({ type: CATEGORY_INITED });
         ErrorEmitter.emit(ERRORTYPES.CATEGORY_INIT_ERROR);
       });
   };
@@ -70,7 +73,7 @@ export function createCategoryActionCreator(inputData, secretKey) {
     return request(createMutation({ ...inputData }))
       .then(({ success, data, errorCode }) => {
         if (success && data.category) {
-          let category = {...data.category};
+          let category = { ...data.category };
           if (secretKey) {
             category.secretKey = secretKey;
           }

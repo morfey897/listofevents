@@ -11,14 +11,13 @@ import {
 } from '@material-ui/icons';
 
 import { addDays, format, startOfWeek, startOfMonth } from 'date-fns';
-import ruLocale from 'date-fns/locale/ru';
-import enLocale from 'date-fns/locale/en-US';
 
-import { VIEWS, LANGS } from "../enums";
+import { VIEWS } from "../enums";
 import { bindActionCreators } from "redux";
 import { filterDatesActionCreator, filterViewActionCreator } from "../model/actions/filter-action";
 import { connect } from "react-redux";
-import { useTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next";
+import { useLocale } from "../hooks";
 
 const useStyles = makeStyles(({ palette }) => ({
   selectedButton: {
@@ -33,18 +32,15 @@ const useStyles = makeStyles(({ palette }) => ({
   }
 }));
 
-function Toolbar({ view, date, filterView, filterDates }) {
+function Toolbar({ i18n, view, date, filterView, filterDates }) {
 
   const classes = useStyles();
-  const {i18n} = useTranslation();
 
   const mobileSize = useMediaQuery(theme => theme.breakpoints.down('xs'));
 
+  const locale = useLocale(i18n);
+
   const stateLabel = useMemo(() => {
-    let locale = enLocale;
-    if (i18n.language === LANGS.RU) {
-      locale = ruLocale;
-    }
 
     if (view === VIEWS.MONTH) {
       return format(startOfMonth(date), 'MMM yyyy', { weekStartsOn: 1, locale });
@@ -54,7 +50,7 @@ function Toolbar({ view, date, filterView, filterDates }) {
       return format(startWeek, 'dd MMM', { weekStartsOn: 1, locale }) + ' - ' + format(endWeek, 'dd MMM, yyyy', { weekStartsOn: 1, locale });
     }
     return format(date, 'dd MMM yyyy', { weekStartsOn: 1, locale });
-  }, [view, date, i18n.language]);
+  }, [view, date, locale]);
 
   return (
     <>
@@ -128,4 +124,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   filterDates: filterDatesActionCreator,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation()(Toolbar));

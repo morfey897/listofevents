@@ -18,13 +18,15 @@
   "error": {
     "wrong": "Упс... что то пошло не так. Попробуйте похже.",
     "empty": "Заполните все необходимые поля.",
+    "access_denied": "Отказано в доступе",
     "incorrect_signin": "Неверный логин или пароль.",
     "incorrect_password": "Пароль не совпадает",
     "user_esist": "Пользователь с таким логином уже существует",
     "incorrect_username": "Неверный логин",
     "incorrect_url": "Некорректна ссылка",
     "incorrect_id": "Неверный ID",
-    "access_denied": "Отказано в доступе"
+    "incorrect_category": "Невозможно добавить в данную категорию",
+    "incorrect_city": "Невозможно добавить в данный город"
   },
   "header_block": {
     "main_menu": "Главное меню",
@@ -44,12 +46,14 @@
   },
   "footer_block": {
     "community": "Сообщество",
-    "resources": "Ресурсы",
+    "events": "События",
+    "list_events": "Список событий",
+    "page_events": "Страничка событий",
     "company": "Компания",
     "about": "О нас",
     "contact_us": "Связатся с нами",
-    "support": "Поддержка",
-    "blog": "Блог"
+    "facebook": "Facebook",
+    "instagram": "Instagram"
   },
   "tags_block": {
     "label": "Теги",
@@ -65,6 +69,12 @@
     "label": "Город",
     "no_options_text": "Введите название города"
   },
+  "item_calendar_block": {
+    "duration_label": "Дительность:",
+    "category_label": "Категория:",
+    "city_label": "Город:",
+    "start_label": "Начало:"
+  },
   "add_event_dialog": {
     "title": "Добавить новое событие",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
@@ -73,9 +83,10 @@
     "location_label": "Место проведения",
     "location_hint": "Название студии, клуба или заведения",
     "url_label": "Ссылка",
-    "date_label": "Дата",
-    "time_label": "Время",
-    "login_description": "Для доступа к добавлению события необходимо иметь аккаунт РЕДАКТОРА"
+    "date_label": "Дата и время",
+    "duration_label": "Длительность",
+    "login_description": "Для доступа к добавлению события необходимо иметь аккаунт РЕДАКТОРА",
+    "success": "Вы добавили событие \"{{event}}\""
   },
   "add_category_dialog": {
     "title": "Добавление новой категории",
@@ -148,6 +159,9 @@
     "partnership_description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours."
   },
   "list_events_screen": {
+    "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours."
+  },
+  "page_events_screen": {
     "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours."
   },
   "main_screen": {

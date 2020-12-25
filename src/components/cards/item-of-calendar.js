@@ -1,11 +1,17 @@
-import React from 'react';
-import { makeStyles, ButtonBase, Popover, Box, Typography } from "@material-ui/core";
-import { format } from 'date-fns';
+import React, { useCallback, useState } from 'react';
+import { makeStyles, ButtonBase, Popover, Box, Typography, Grid, Link } from "@material-ui/core";
+import { format, formatDuration } from 'date-fns';
 import { capitalCaseTransform as capitalCase } from 'change-case';
+import { connect } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
+import urljoin from "url-join";
 
+import { useTranslation } from 'react-i18next';
+import { SCREENS, TENSE } from '../../enums';
+import { useLocale } from '../../hooks';
 
 const useStyles = makeStyles((theme) => {
-  return  {
+  return {
     node: {
       display: "flex",
       justifyContent: "flex-start",
@@ -24,31 +30,38 @@ const useStyles = makeStyles((theme) => {
       marginLeft: "auto",
       paddingLeft: theme.spacing(1),
     },
-    paper: {
-      padding: theme.spacing(1),
-    },
     popoverBox: {
-      width: '200px'
+      maxWidth: "500px"
+    },
+    descriptionBox: {
+      textOverflow: "ellipsis",
+      overflow: "hidden",
+      maxHeight: "60px"
+    },
+    tag: {
+      marginRight: theme.spacing(1),
     }
-    // ...theme.getColors()
   };
 });
 
-function ItemOfCalendar({ date, label, colorClass}) {
+function ItemOfCalendar({ _id, date, tense, label, colorClass, name, category, city, description, duration, tags }) {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = (event) => {
+  const { t, i18n } = useTranslation("item_calendar_block");
+  const locale = useLocale(i18n);
+
+  const onOpen = useCallback((event) => {
     setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
+  }, []);
+
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
-  const openPopover = Boolean(anchorEl);
+  }, []);
 
   return (
     <>
-      <ButtonBase className={`${colorClass || ""} ${classes.node}`} onClick={handleClick}>
+      <ButtonBase className={`${colorClass || ""} ${classes.node}`} onClick={onOpen}>
         <div className={classes.time}>
           {format(date, "HH:mm")}
         </div>
@@ -57,26 +70,94 @@ function ItemOfCalendar({ date, label, colorClass}) {
         </div>
       </ButtonBase>
       <Popover
-        id={date}
-        open={openPopover}
+        id={_id}
+        open={Boolean(anchorEl)}
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
+          vertical: 'top',
+          horizontal: 'center',
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: 'bottom',
+          horizontal: 'center',
         }}
       >
-        <Box className={classes.popoverBox}>
-          <Typography>Здесь будут отображатся подробности об этом событии</Typography>
+        <Box p={2} className={classes.popoverBox}>
+          <Typography variant={"h5"}>{name}</Typography>
+          {description && <Box component="div" mt={1} className={classes.descriptionBox}>
+            <div dangerouslySetInnerHTML={{ __html: description }} ></div>
+          </Box>}
+          <Box mt={1}>
+            <Grid container spacing={1}>
+              {city && <>
+                <Grid item xs={6}>
+                  <Typography variant="body2">{t("city_label")}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography align="right" variant="body2">{city.name}</Typography>
+                </Grid>
+              </>}
+              {category && <>
+                <Grid item xs={6}>
+                  <Typography variant="body2">{t("category_label")}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+
+                  <Typography align="right" variant="body2">
+                    <Link to={urljoin(SCREENS.CATEGORY_SCREEN, category.url)} component={RouterLink} color="primary" >
+                      {category.name}
+                    </Link>
+                  </Typography>
+
+                </Grid>
+              </>}
+              {date && <>
+                <Grid item xs={6}>
+                  <Typography variant="body2">{t("start_label")}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography color={tense === TENSE.PAST ? "secondary" : "primary"} align="right" variant="body2">{format(date, 'dd MMM HH:mm', { weekStartsOn: 1, locale })}</Typography>
+                </Grid>
+              </>}
+              {duration > 0 && <>
+                <Grid item xs={6}>
+                  <Typography variant="body2">{t("duration_label")}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography align="right" variant="body2">{formatDuration({
+                    hours: duration > 60 ? parseInt(duration / 60) : 0,
+                    minutes: duration > 60 ? duration % 60 : duration
+                  }, { format: ['hours', 'minutes'], locale })}</Typography>
+                </Grid>
+              </>}
+              {tags.length > 0 && <Grid item xs={12}>
+                {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH_SCREEN, `?tag=${tag}`)} component={RouterLink}>{tag}</Link>)}
+              </Grid>}
+            </Grid>
+          </Box>
         </Box>
       </Popover>
     </>
-    
+
   );
 }
 
-export default ItemOfCalendar;
+
+const mapStateToProps = (state, { _id }) => {
+  const { events } = state;
+
+  let event = events.list.find((data) => data._id === _id);
+
+  const description = event && event.description || "";
+  return {
+    name: event && event.name || "",
+    description: />\s*[^<\s]+/.test(description) ? description : false,
+    category: event && event.category,
+    // city: event && event.city,
+    tags: event && event.tags || [],
+    duration: event && event.duration || 0
+  };
+};
+
+export default connect(mapStateToProps)(ItemOfCalendar);

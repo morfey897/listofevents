@@ -3,6 +3,8 @@ import { STATUSES } from "../../enums";
 
 const initState = {
   list: [],
+  offset: 0,
+  total: 0,
   status: STATUSES.STATUS_NONE,
 };
 

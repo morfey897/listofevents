@@ -20,7 +20,7 @@ import {
   Brightness5 as DarkThemeIcon,
   People as UsersIcon,
   PeopleAlt as PeopleIcon,
-  ViewDay,
+  ViewDay as PageIcon,
 } from '@material-ui/icons';
 
 import { SCREENS, DIALOGS, EVENTS, STATUSES } from "../enums";
@@ -158,7 +158,7 @@ function Header({ isLogged, isModerator }) {
             </Tooltip>
 
             {/* Main menu buttons */}
-            <Hidden xsDown implementation="css">
+            <Hidden xsDown>
               <Tooltip title={t("list_events")}>
                 <IconButton color="inherit" component={RouterLink} to={SCREENS.LIST_EVENTS}>
                   <TableIcon />
@@ -166,14 +166,14 @@ function Header({ isLogged, isModerator }) {
               </Tooltip>
               <Tooltip title={t("page_events")}>
                 <IconButton color="inherit" component={RouterLink} to={SCREENS.PAGE_EVENTS}>
-                  <ViewDay />
+                  <PageIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title={t("event_map")}>
+              {/* <Tooltip title={t("event_map")}>
                 <IconButton color="inherit" component={RouterLink} to={SCREENS.EVENT_MAP}>
                   <MapIcon />
                 </IconButton>
-              </Tooltip>
+              </Tooltip> */}
               <Tooltip title={t("create_event")}>
                 <IconButton color="inherit" onClick={handleCreateEvent}>
                   <AddEventIcon />
@@ -269,16 +269,16 @@ function Header({ isLogged, isModerator }) {
             </ListItem>
             <ListItem button component={RouterLink} to={SCREENS.PAGE_EVENTS} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
-                <ViewDay />
+                <PageIcon />
               </ListItemIcon>
               <ListItemText primary={t("page_events")} />
             </ListItem>
-            <ListItem button component={RouterLink} to={SCREENS.EVENT_MAP} dense onClick={handleMainMenuClose}>
+            {/* <ListItem button component={RouterLink} to={SCREENS.EVENT_MAP} dense onClick={handleMainMenuClose}>
               <ListItemIcon className={classes.menuItemIcon}>
                 <MapIcon />
               </ListItemIcon>
               <ListItemText primary={t("event_map")} />
-            </ListItem>
+            </ListItem> */}
             <ListItem button onClick={handleCreateEvent} dense>
               <ListItemIcon className={classes.menuItemIcon}>
                 <AddEventIcon />
