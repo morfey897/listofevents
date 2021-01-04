@@ -85,7 +85,7 @@ function UsersListDialog({ open, handleClose, isModerator, isSuperAdmin, userRol
           <Grid item xs={3} className={classes.center}>{phone || t("empty_field")}</Grid>
           <Grid item xs={3} className={classes.center}>{email || t("empty_field")}</Grid>
           <Grid item xs={3} className={classes.right}>
-            <RadioGroup value={lRole} onChange={(event) => updateUser(_id, event.target.value)}>
+            <RadioGroup value={lRole} onChange={(event) => updateUser(_id, parseInt(event.target.value))}>
               {roles.map(({ name, role }) => {
                 if (role > userRole) return null;
                 return <FormControlLabel disabled={isLoading && updating.indexOf(_id) != -1} key={`${_id}:${role}`} value={role} labelPlacement="start" label={name} control={<Radio size="small" color="primary" />} />;
@@ -116,6 +116,7 @@ const mapStateToProps = (state) => {
     }
   });
 
+  let usersList = users.list.filter(({ _id }) => user.user.id !== _id);
   return {
     isLogged: user.isLogged,
     isModerator: user.isLogged && (user.user.role & config.roles.moderator) === config.roles.moderator,
@@ -123,7 +124,7 @@ const mapStateToProps = (state) => {
     userRole: user.isLogged && user.user.role || 0,
 
     isLoading: users.status === STATUSES.STATUS_PENDING || config.status === STATUSES.STATUS_PENDING,
-    users: users.list.filter(({ _id }) => user.user.id !== _id),
+    users: usersList,
     updating: users.updating,
 
     roles,

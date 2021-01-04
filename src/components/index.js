@@ -9,6 +9,7 @@ import RichEditor from "./rich-editor";
 import TagsAutocomplete from "./tags-autocomplete";
 import CategoryAutocomplete from "./category-autocomplete";
 import CityAutocomplete from "./city-autocomplete";
+import UploadImages from "./upload-images";
 
 export {
   Header,
@@ -21,5 +22,6 @@ export {
   RichEditor,
   TagsAutocomplete,
   CategoryAutocomplete,
-  CityAutocomplete
+  CityAutocomplete,
+  UploadImages
 };

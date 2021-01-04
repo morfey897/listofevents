@@ -9,10 +9,13 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 class StoreService extends Service {
 
+  constructor(name, preload) {
+    super(name);
+    this.preloadedState = preload;
+  }
+
   run() {
     return new Promise((resolve, reject) => {
-      const preloadedState = undefined; //TODO can change
-
       const rootReducer = combineReducers(reducers);
 
       const middlewares = [thunkMiddleware, preloadMiddleware];
@@ -21,8 +24,8 @@ class StoreService extends Service {
       const enhancers = [middlewareEnhancer];
       const composedEnhancers = composeEnhancers(...enhancers);
 
-      const store = createStore(rootReducer, preloadedState, composedEnhancers);
-      resolve({ store });
+      const store = createStore(rootReducer, this.preloadedState, composedEnhancers);
+      resolve({ [this.name]: store });
     });
   }
 }

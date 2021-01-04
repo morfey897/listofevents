@@ -43,7 +43,7 @@ class I18nService extends Service {
           }
           */
         }).then(() => {
-          resolve({i18n});
+          resolve({ [this.name]: i18n });
         });
     });
   }

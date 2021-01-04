@@ -1,15 +1,19 @@
 import I18nService from "./i18n-service";
+import UrlCheckService from "./urlcheck-service";
 import StoreService from "./store-service";
 
-const microServices = [
-  new I18nService(),  
-  new StoreService()
-];
-
-export const initServices = () => {
-  return Promise.all([].concat(microServices).map(s => s.init()));
-};
+const collectData = (list) => list.reduce((prev, obj) => {
+  for (let name in obj) {
+    prev[name] = obj[name];
+  }
+  return prev;
+}, {});
 
 export const runServices = () => {
-  return Promise.all([].concat(microServices).map(s => s.run()));
+  return Promise.all([new UrlCheckService("checkData")].map(s => s.run()))
+    .then(result => {
+      const data = collectData(result);
+      return Promise.all([new I18nService("i18n"), new StoreService("store", data["checkData"])].map(s => s.run()));
+    })
+    .then(result => Promise.resolve(collectData(result)));
 };

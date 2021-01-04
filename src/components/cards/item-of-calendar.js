@@ -105,7 +105,7 @@ function ItemOfCalendar({ _id, date, tense, label, colorClass, name, category, c
                 <Grid item xs={6}>
 
                   <Typography align="right" variant="body2">
-                    <Link to={urljoin(SCREENS.CATEGORY_SCREEN, category.url)} component={RouterLink} color="primary" >
+                    <Link to={urljoin(SCREENS.CATEGORY, category.url)} component={RouterLink} color="primary" >
                       {category.name}
                     </Link>
                   </Typography>
@@ -132,7 +132,7 @@ function ItemOfCalendar({ _id, date, tense, label, colorClass, name, category, c
                 </Grid>
               </>}
               {tags.length > 0 && <Grid item xs={12}>
-                {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH_SCREEN, `?tag=${tag}`)} component={RouterLink}>{tag}</Link>)}
+                {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH, `?tag=${tag}`)} component={RouterLink}>{tag}</Link>)}
               </Grid>}
             </Grid>
           </Box>

@@ -6,6 +6,7 @@ import { Header } from '../components';
 import { SCREENS } from '../enums';
 import Footer from '../components/footer';
 import LineSeparator from '../components/line-separator';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function ScreenProvider({ location }) {
+function ScreenProvider({ location, events }) {
 
   const classes = useStyles();
 
@@ -35,7 +36,9 @@ function ScreenProvider({ location }) {
             <Route exact path={SCREENS.ABOUT} component={AboutScreen} />
             <Route exact path={SCREENS.CONTACTS} component={ContactsScreen} />
             {/* <Route exact path={SCREENS.EVENT_MAP} component={EventMapScreen} /> */}
-            <Route exact path={SCREENS.EVENT_SCREEN} component={EventScreen} />
+            {
+              events.map(({ _id, url }) => <Route key={_id} exact path={url} render={() => <EventScreen _id={_id} />} />)
+            }
             <Route exact path={SCREENS.LIST_EVENTS} component={ListEventsScreen} />
             <Route exact path={SCREENS.PAGE_EVENTS} component={PageEventsScreen} />
             <Route path="*">
@@ -49,5 +52,11 @@ function ScreenProvider({ location }) {
     </div>
   );
 }
+const mapStateToProps = (state) => {
+  const { events } = state;
+  return {
+    events: events.list,
+  };
+};
 
-export default withRouter(ScreenProvider);
+export default connect(mapStateToProps)(withRouter(ScreenProvider));

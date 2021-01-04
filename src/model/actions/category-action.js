@@ -8,35 +8,40 @@ export const CATEGORY_INITED = "category_inited";
 export const CATEGORY_CREATING = "category_creating";
 export const CATEGORY_CREATED = "category_created";
 
-const categoriesQuery = () => `query {
-  result: getCategories(paginate:{limit:100}){
+const _body = `
+  _id,
+  url,
+  name{ru},
+  tags,
+  description{ru},
+  images {
+    _id,
+    url
+  }
+`;
+
+const categoriesQuery = `
+query($limit: Int) {
+  result: getCategories(paginate:{limit: $limit}){
     list{
-      _id,
-      url,
-      name{ru},
-      tags,
-      description{ru},
-      images {
-        _id,
-        url
-      }
+      ${_body}
     },
     offset,
     total
   } 
 }`;
 
-const createMutation = ({ url, name, description = "", tags = [] }) => `mutation {
-  category: createCategory(url:"${url}", name:{ru:"${name}"}, description:{ru:"${description}"}, tags:${JSON.stringify(tags)}) {
-    _id,
-    url,
-    name{ru},
-    tags,
-    description{ru},
-    images {
-      _id,
-      url
-    }
+const categoryQuery = `
+query($id: String, $url: String) {
+  category: getCategory(id:$id, url:$url) {
+    ${_body}
+  }
+}`;
+
+const createCategoryMutation = `
+mutation($url: String!, $name: String!, $description: String!, $tags: [String], $images: [Upload]) {
+  category: createCategory(url: $url, name:{ru: $name}, description:{ru: $description}, tags: $tags, images: $images) {
+    ${_body}
   }
 }`;
 
@@ -51,7 +56,7 @@ function processing(data) {
 export function fetchCategoriesActionCreator() {
   return (dispatch) => {
     dispatch({ type: CATEGORY_PENDING });
-    return request(categoriesQuery())
+    return request(categoriesQuery, { limit: 100 })
       .then(({ success, data, errorCode }) => {
         if (success) {
           dispatch({ type: CATEGORY_INITED, payload: { ...data.result, list: data.result.list.map(processing) } });
@@ -70,7 +75,7 @@ export function fetchCategoriesActionCreator() {
 export function createCategoryActionCreator(inputData, secretKey) {
   return (dispatch) => {
     dispatch({ type: CATEGORY_CREATING });
-    return request(createMutation({ ...inputData }))
+    return request(createCategoryMutation, { ...inputData })
       .then(({ success, data, errorCode }) => {
         if (success && data.category) {
           let category = { ...data.category };
@@ -88,4 +93,19 @@ export function createCategoryActionCreator(inputData, secretKey) {
         ErrorEmitter.emit(ERRORTYPES.CATEGORY_CREATE_ERROR);
       });
   };
+}
+
+export function fetchCategory(inputDAta) {
+  return request(categoryQuery, { ...inputDAta })
+    .then(({ success, data }) => {
+      if (success && data.category) {
+        let category = { ...data.category };
+        return Promise.resolve({ categories: { list: [category].map(processing) } });
+      } else {
+        return Promise.resolve({});
+      }
+    })
+    .catch(() => {
+      return Promise.resolve({});
+    });
 }

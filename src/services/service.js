@@ -1,7 +1,7 @@
 class Service {
-
-  init() {
-    return Promise.resolve();
+  
+  constructor(name) {
+    this.name = name;
   }
 
   run() {

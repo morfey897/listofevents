@@ -25,27 +25,23 @@ export function users(state = initState, action) {
     case USERS_UPDATED:
       return {
         ...state,
-        status: STATUSES.STATUS_SUCCESS,
         list: state.list.map(user => payload.list.find(({ _id }) => user._id === _id) || user),
         updating: state.updating.filter(id => !payload.list.some(({_id}) => _id != id)),
       };
     case USERS_DELETED:
       return {
         ...state,
-        status: STATUSES.STATUS_SUCCESS,
         list: state.list.filter(user => payload.list.indexOf(user._id) == -1),
         updating: state.updating.filter(id => !payload.list.some(({_id}) => _id != id)),
       };
     case USERS_UPDATING:
       return {
         ...state,
-        status: STATUSES.STATUS_PENDING,
         updating: state.updating.concat(payload.list).filter((v, i, a) => a.indexOf(v) === i),
       };
     case USERS_UPDATE_ERROR:
       return {
         ...state,
-        status: STATUSES.STATUS_SUCCESS,
         updating: state.updating.filter(id => payload.list.indexOf(id) == -1),
       };
     default:

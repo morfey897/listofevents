@@ -32,11 +32,10 @@ function PageEventsScreen({ events, total, isLoading, fetchEvents }) {
     fetchEvents({}, {
       limit: LIMIT_ON_PAGE,
       offset: (page - 1) * LIMIT_ON_PAGE,
-    },
-      {
-        field: "date",
-        sort: 1
-      });
+    }, {
+      sortBy: "date",
+      sort: 1
+    });
   }, [page]);
 
   const pages = useMemo(() => {
@@ -89,7 +88,7 @@ const mapStateToProps = (state) => {
         city,
         category,
         tense: compareAsc(now, date) == 1 ? TENSE.PAST : TENSE.FUTURE,
-        description: (new Array(20).fill("<p>A lot of texts</p>").join(""))
+        description
       }
     )),
     total: events.total,

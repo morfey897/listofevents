@@ -5,8 +5,9 @@ import { ERRORTYPES } from "../../errors";
 export const TAG_PENDING = "tag_pending";
 export const TAG_INITED = "tag_inited";
 
-const tagsQuery = () => `query {
-  result: getTags(paginate:{limit:100}) {
+const tagsQuery = `
+query($limit: Int) {
+  result: getTags(paginate:{limit: $limit}) {
     offset,
     total,
     list
@@ -16,7 +17,7 @@ const tagsQuery = () => `query {
 export function fetchTagsActionCreator() {
   return (dispatch) => {
     dispatch({ type: TAG_PENDING });
-    return request(tagsQuery())
+    return request(tagsQuery, { limit: 100 })
       .then(({ success, data, errorCode }) => {
         if (success) {
           dispatch({ type: TAG_INITED, payload: { ...data.result } });

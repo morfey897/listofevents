@@ -5,7 +5,7 @@ import { createBrowserHistory } from 'history';
 import React, { useEffect, useReducer } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Router } from 'react-router-dom';
-import { initServices, runServices } from "../services";
+import { runServices } from "../services";
 import DateFnsUtils from '@date-io/date-fns';
 import ThemeWrapper from './theme-wrapper';
 import { STORE_INIT } from "../model/actions";
@@ -22,12 +22,7 @@ function reducer(state, action) {
       return {
         ...state,
         status: STATUSES.STATUS_UPDATED,
-        results: action.payload.reduce((prev, obj) => {
-          for (let name in obj) {
-            prev[name] = obj[name];
-          }
-          return prev;
-        }, {})
+        results: action.payload
       };
     default:
       return {
@@ -42,11 +37,8 @@ function Root() {
 
   useEffect(() => {
     if (state.status !== STATUSES.STATUS_NONE) return;
-    initServices()
-      .then(() => {
-        dispatch({ type: "inited" });
-        return runServices();
-      })
+    dispatch({ type: "inited" });
+    runServices()
       .then((results) => {
         dispatch({ type: "runned", payload: results });
       });

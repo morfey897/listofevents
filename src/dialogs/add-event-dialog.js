@@ -20,7 +20,7 @@ import { DIALOGS, STATUSES } from "../enums";
 import { ERRORCODES, ERRORTYPES } from "../errors";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { RichEditor, TagsAutocomplete, CategoryAutocomplete, CityAutocomplete } from "../components";
+import { RichEditor, TagsAutocomplete, CategoryAutocomplete, CityAutocomplete, UploadImages } from "../components";
 import { DialogEmitter, ErrorEmitter } from "../emitters";
 import { normalizeURL } from "../helpers";
 import { Alert } from "@material-ui/lab";
@@ -45,20 +45,17 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
   const fullScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
   const [state, setState] = useState({});
-
   const [showUrl, setShowUrl] = useState(false);
-
   const [url, setUrl] = useState("");
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [selectedDate, handleDateChange] = useState(null);
   const [duration, setDuration] = useState("01:00");
   const [tags, setTags] = useState([]);
+  const [images, setImages] = useState([]);
   const [category, setCategory] = useState(null);
   const [city, setCity] = useState(null);
-
   const [secretKeyCategory, setSecretKeyCategory] = useState(null);
-
   const descriptionRef = useRef(null);
 
   const locale = useLocale(i18n);
@@ -131,7 +128,6 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
     if (event && typeof event.preventDefault === "function") {
       event.preventDefault();
     }
-
     if (url && name && location && selectedDate && category && city) {
       setState({ waiting: true });
       addEvent({
@@ -142,14 +138,18 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
         duration: duration.split(":").map(a => parseInt(a)).reduce((prev, cur, index) => prev + (cur * (index == 0 ? 60 : (index == 1 ? 1 : 0))), 0),
         category_id: category._id,
         description: stateToHTML(descriptionRef.current.getEditorState().getCurrentContent()),
-        city: { ...city },
-        tags
+        city_id: city._id,
+        place_id: city.place_id,
+        city_name: city.name,
+        city_description: city.description,
+        tags,
+        images
       });
     } else {
       setState({ errorCode: ERRORCODES.ERROR_EMPTY });
     }
 
-  }, [url, name, location, city, selectedDate, category, tags, duration]);
+  }, [url, name, location, city, selectedDate, category, tags, duration, images]);
 
   return <Dialog open={open} onClose={handleClose} scroll={"paper"} fullScreen={fullScreen} fullWidth={true} maxWidth={"sm"}>
     <DialogTitle disableTypography={!fullScreen} className={fullScreen ? "" : "boxes"}>
@@ -164,9 +164,9 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
         </Box>
       }
     </DialogTitle>
-    {
-      isEditor ? <form onSubmit={onSubmit}>
-        <DialogContent>
+    {isEditor ? <>
+      <DialogContent dividers={true}>
+        <form onSubmit={onSubmit}>
           <DialogContentText>{t("description")}</DialogContentText>
           {(() => {
             if (state.errorCode === ERRORCODES.ERROR_EMPTY) {
@@ -268,20 +268,25 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
           <Box className={classes.marginDense}>
             <TagsAutocomplete values={tags} onChange={setTags} />
           </Box>
+          {/* Upload images */}
+          <Box className={classes.marginDense}>
+            <UploadImages maxFiles={5} showItems={fullScreen ? 2 : 3} images={images} onChange={setImages} />
+          </Box>
+        </form>
+      </DialogContent>
+      <DialogActions>
+        <Button disabled={isLoading || isReady} type="submit" onClick={onSubmit} color="primary">{t("general:button_create")}</Button>
+        <Button onClick={handleClose} color="primary">{t("general:button_cancel")}</Button>
+      </DialogActions>
+    </> : <>
+        <DialogContent dividers={true}>
+          <DialogContentText>{t("login_description")}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button disabled={isLoading || isReady} type="submit" onClick={onSubmit} color="primary">{t("general:button_create")}</Button>
+          <Button onClick={onSignin} color="primary">{t("general:button_signin")}</Button>
           <Button onClick={handleClose} color="primary">{t("general:button_cancel")}</Button>
         </DialogActions>
-      </form> : <>
-          <DialogContent>
-            <DialogContentText>{t("login_description")}</DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={onSignin} color="primary">{t("general:button_signin")}</Button>
-            <Button onClick={handleClose} color="primary">{t("general:button_cancel")}</Button>
-          </DialogActions>
-        </>
+      </>
     }
   </Dialog>;
 }

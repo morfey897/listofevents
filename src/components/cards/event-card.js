@@ -12,11 +12,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center'
   },
-  cardMedia: {
-    // width: '370px',
-    // height: '250px',
-    // borderRadius: '8px'
-  },
   descriptionBox: {
     textOverflow: "ellipsis",
     overflow: "hidden",
@@ -39,7 +34,7 @@ function EventCard({ images, url, tags, description, tense, date, duration, name
   const locale = useLocale(i18n);
 
   const ImgBlock = <RouterLink to={url}>
-    <CardMedia component="img" width={370} height={280} className={classes.cardMedia} image={Array.isArray(images) ? images[0].url : images.url} />
+    <CardMedia component="img" width={370} height={280} image={Array.isArray(images) ? images[0].url : images.url} />
   </RouterLink>;
 
   return (
@@ -62,7 +57,7 @@ function EventCard({ images, url, tags, description, tense, date, duration, name
         <Box>
           <Typography display="inline" variant="body2" className={classes.label}>{t("category_label")}</Typography>
           <Typography display="inline" variant="body2">
-            <Link to={urljoin(SCREENS.CATEGORY_SCREEN, category.url)} component={RouterLink} color="primary" >
+            <Link to={urljoin(SCREENS.CATEGORY, category.url)} component={RouterLink} color="primary" >
               {category.name}
             </Link>
           </Typography>
@@ -85,7 +80,7 @@ function EventCard({ images, url, tags, description, tense, date, duration, name
         </Box>
 
         <Box>
-          {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH_SCREEN, `?tag=${tag}`)} component={RouterLink}>{tag}</Link>)}
+          {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH, `?tag=${tag}`)} component={RouterLink}>{tag}</Link>)}
         </Box>
       </Grid>
     </Grid>

@@ -15,7 +15,7 @@ import { DIALOGS, STATUSES } from "../enums";
 import { ERRORCODES, ERRORTYPES } from "../errors";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { RichEditor, TagsAutocomplete } from "../components";
+import { RichEditor, TagsAutocomplete, UploadImages } from "../components";
 import { DialogEmitter, ErrorEmitter } from "../emitters";
 import { normalizeURL } from "../helpers";
 import { createCategoryActionCreator, fetchTagsActionCreator } from "../model/actions";
@@ -44,6 +44,7 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
   const [url, setUrl] = useState(categoryName ? normalizeURL(categoryName) : "");
   const [name, setName] = useState(categoryName ? categoryName.replace(/^\s+/g, "") : "");
   const [tags, setTags] = useState([]);
+  const [images, setImages] = useState([]);
 
   const descriptionRef = useRef(null);
 
@@ -93,13 +94,14 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
         url: `/${url}`,
         name,
         tags,
-        description: stateToHTML(descriptionRef.current.getEditorState().getCurrentContent())
+        description: stateToHTML(descriptionRef.current.getEditorState().getCurrentContent()),
+        images
       }, secretKey);
     } else {
       setState({ errorCode: ERRORCODES.ERROR_EMPTY });
     }
 
-  }, [url, name, tags, secretKey]);
+  }, [url, name, tags, images, secretKey]);
 
   return <Dialog open={open} onClose={handleClose} scroll={"paper"} fullScreen={fullScreen} fullWidth={true} maxWidth={"sm"}>
     <DialogTitle disableTypography={!fullScreen} className={fullScreen ? "" : "boxes"}>
@@ -115,56 +117,61 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
       }
     </DialogTitle>
     {
-      isModerator ? <form onSubmit={onSubmit}>
-        <DialogContent>
-          <DialogContentText>{t("description")}</DialogContentText>
-          {(() => {
-            if (state.errorCode === ERRORCODES.ERROR_EMPTY) {
-              return <Alert severity={"error"}>{t('error:empty')}</Alert>;
-            } else if (state.errorCode === ERRORCODES.ERROR_ACCESS_DENIED) {
-              return <Alert severity={"error"}>{t('error:access_denied')}</Alert>;
-            } else if (state.errorCode === ERRORCODES.ERROR_INCORRECT_URL) {
-              return <Alert severity={"error"}>{t('error:incorrect_url')}</Alert>;
-            } else if (state.errorCode) {
-              return <Alert severity={"error"}>{t('error:wrong')}</Alert>;
-            }
-          })()}
-          {isReady && <Alert severity={"success"}>{t('success', { category: name })}</Alert>}
-          {/* URL */}
-          <TextField required name="url" fullWidth label={t("url_label")} value={url} margin="dense"
-            disabled={!showUrl}
-            InputProps={{
-              startAdornment: <InputAdornment position="start">{process.env.HOST + "/"}</InputAdornment>,
-              endAdornment: <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowUrl(true)}
-                  onMouseDown={(event) => {
-                    event.preventDefault();
-                  }}
-                >
-                  {!showUrl && <LockIcon />}
-                </IconButton>
-              </InputAdornment>
-            }}
-            onChange={onChangeUrl} />
-          {/* Name */}
-          <TextField required error={state.errorCode === ERRORCODES.ERROR_EMPTY && !url} name="name" autoFocus fullWidth label={t("name_label")} value={name} margin="dense" onChange={onChangeName} />
-          {/* Description */}
-          <Box className={classes.marginDense}>
-            <RichEditor placeholder={t("description_label")} innerRef={descriptionRef} />
-          </Box>
-          {/* Tags */}
-          <Box className={classes.marginDense}>
-            <TagsAutocomplete values={tags} onChange={setTags} />
-          </Box>
-
+      isModerator ? <>
+        <DialogContent dividers={true}>
+          <form onSubmit={onSubmit}>
+            <DialogContentText>{t("description")}</DialogContentText>
+            {(() => {
+              if (state.errorCode === ERRORCODES.ERROR_EMPTY) {
+                return <Alert severity={"error"}>{t('error:empty')}</Alert>;
+              } else if (state.errorCode === ERRORCODES.ERROR_ACCESS_DENIED) {
+                return <Alert severity={"error"}>{t('error:access_denied')}</Alert>;
+              } else if (state.errorCode === ERRORCODES.ERROR_INCORRECT_URL) {
+                return <Alert severity={"error"}>{t('error:incorrect_url')}</Alert>;
+              } else if (state.errorCode) {
+                return <Alert severity={"error"}>{t('error:wrong')}</Alert>;
+              }
+            })()}
+            {isReady && <Alert severity={"success"}>{t('success', { category: name })}</Alert>}
+            {/* URL */}
+            <TextField required name="url" fullWidth label={t("url_label")} value={url} margin="dense"
+              disabled={!showUrl}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">{process.env.HOST + "/"}</InputAdornment>,
+                endAdornment: <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowUrl(true)}
+                    onMouseDown={(event) => {
+                      event.preventDefault();
+                    }}
+                  >
+                    {!showUrl && <LockIcon />}
+                  </IconButton>
+                </InputAdornment>
+              }}
+              onChange={onChangeUrl} />
+            {/* Name */}
+            <TextField required error={state.errorCode === ERRORCODES.ERROR_EMPTY && !url} name="name" autoFocus fullWidth label={t("name_label")} value={name} margin="dense" onChange={onChangeName} />
+            {/* Description */}
+            <Box className={classes.marginDense}>
+              <RichEditor placeholder={t("description_label")} innerRef={descriptionRef} />
+            </Box>
+            {/* Tags */}
+            <Box className={classes.marginDense}>
+              <TagsAutocomplete values={tags} onChange={setTags} />
+            </Box>
+            {/* Upload images */}
+            <Box className={classes.marginDense}>
+              <UploadImages maxFiles={1} showItems={1} images={images} onChange={setImages} />
+            </Box>
+          </form>
         </DialogContent>
         <DialogActions>
           <Button disabled={isLoading || isReady} type="submit" onClick={onSubmit} color="primary">{t("general:button_create")}</Button>
           <Button onClick={handleClose} color="primary">{t("general:button_cancel")}</Button>
         </DialogActions>
-      </form> : <>
+      </> : <>
           <DialogContent>
             <DialogContentText>{t("login_description")}</DialogContentText>
           </DialogContent>

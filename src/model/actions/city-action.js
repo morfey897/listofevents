@@ -5,8 +5,9 @@ import { ERRORTYPES } from "../../errors";
 export const CITY_PENDING = "city_pending";
 export const CITY_INITED = "city_inited";
 
-const citiesQuery = () => `query {
-  result: getCities(paginate:{limit:100}) {
+const citiesQuery = `
+query($limit: Int) {
+  result: getCities(paginate:{limit: $limit}) {
     list{
       _id,
       place_id,
@@ -29,8 +30,8 @@ function processing(data) {
 export function fetchCitiesActionCreator() {
   return (dispatch) => {
     dispatch({ type: CITY_PENDING });
-    return request(citiesQuery())
-      .then(({ success, data, errorCode  }) => {
+    return request(citiesQuery, { limit: 100 })
+      .then(({ success, data, errorCode }) => {
         if (success) {
           dispatch({ type: CITY_INITED, payload: { ...data.result, list: data.result.list.map(processing) } });
         } else {

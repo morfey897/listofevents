@@ -14,28 +14,48 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(logRequestInterceptor);
 axiosInstance.interceptors.response.use(logResponseInterceptor);
 
-function request(query) {
+function request(query, variables) {
+  const files = [];
+  for (let n in variables) {
+    let v = variables[n];
+    if (v instanceof File) {
+      files.push({ name: `variables.${n}`, file: v });
+      variables[n] = null;
+    } else if (Array.isArray(v)) {
+      for (let i = 0; i < v.length; i++) {
+        let f = v[i];
+        if (f instanceof File) {
+          files.push({ name: [`variables.${n}.${i}`], file: f });
+          v[i] = null;
+        }
+      }
+    }
+  }
+
+  let contentType = "application/json";
+  let data = { query, variables };
+  if (files.length) {
+    contentType = "multipart/form-data";
+    data = new FormData();
+    data.append("operations", JSON.stringify({ query, variables }));
+    data.append("map", JSON.stringify(files.reduce((prev, { name }, index) => {
+      prev[index] = name;
+      return prev;
+    }, {})));
+    files.forEach(({ file }, i) => {
+      data.append(String(i), file);
+    });
+  }
 
   let expiresIn = parseInt(store.get(STORAGEKEYS.JWT_EXPIRES_IN));
-  // if (isNaN(expiresIn)) {
-  //   expiresIn = 0;
-  // } else if (parseInt(Date.now() / 1000) >= expiresIn) {
-  //   expiresIn = 0;
-  //   if (typeof dispatch === "function") {
-  //     dispatch({ type: USER_TIME_OUT });
-  //   }
-  //   if (/^mutation/.test(query)) {
-  //     //todo need open wnd login
-  //   }
-  // }
-
   return axiosInstance
-    .post('api/graphql', { query }, {
+    .post('api/graphql', data, {
       headers: {
+        'Content-Type': contentType,
         Authorization: expiresIn > 0 ? `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}` : `Basic ${basicToken}`
       }
     })
-    .then(({status, data}) => {
+    .then(({ status, data }) => {
       if (status === 200 && (!data.errors || !data.errors.length)) {
         return { data: data.data, success: true };
       } else {
@@ -84,19 +104,19 @@ function outhcode({ username }) {
 
 function config() {
   return axiosInstance
-  .get("api/config", {
-    headers: {
-      Authorization: `Basic ${basicToken}`
-    }
-  })
-  .then(result => {
-    if (result.data.success) {
-      return { success: true, data: result.data.data };
-    } else {
-      return { success: false, data: {}, errorCode: result.data.errorCode };
-    }
-  })
-  .catch(() => ({ success: false, data: {}, errorCode: ERRORCODES.ERROR_WRONG }));
+    .get("api/config", {
+      headers: {
+        Authorization: `Basic ${basicToken}`,
+      }
+    })
+    .then(result => {
+      if (result.data.success) {
+        return { success: true, data: result.data.data };
+      } else {
+        return { success: false, data: {}, errorCode: result.data.errorCode };
+      }
+    })
+    .catch(() => ({ success: false, data: {}, errorCode: ERRORCODES.ERROR_WRONG }));
 }
 
 export {

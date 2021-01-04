@@ -1,6 +1,14 @@
-import { Box, Container, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Box, Container, Grid, makeStyles, Typography, Link, CardMedia } from '@material-ui/core';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { ImgCard, LatestCard } from '../components/cards';
+import { useLocale } from '../hooks';
+import { format, formatDuration } from "date-fns";
+import { Link as RouterLink } from 'react-router-dom';
+import urljoin from "url-join";
+import { SCREENS } from '../enums';
 
 const latestBlogs = [
   {
@@ -22,8 +30,6 @@ const latestBlogs = [
     text: 'Like so many organizations these days, Autodesk is a company in transition. It was until recently a traditional boxed software company selling licenses. Read More'
   }
 ];
-const eventTitle = 'The Castle Looks Different at Night...';
-const eventText = `This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information. Remember that by this time, the user is curious, otherwise he wouldn\'t scroll to get here. Add a button if you want the user to see more. We are here to make life better.And now I look and look around and there’s so many Kanyes I\'ve been trying to figure out the bed design for the master bedroom at our Hidden Hills compound... and thank you for turning my personal jean jacket into a couture piece. /n This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information. Remember that by this time, the user is curious, otherwise he wouldn\'t scroll to get here. Add a button if you want the user to see more. We are here to make life better.And now I look and look around and there’s so many Kanyes I\'ve been trying to figure out the bed design for the master bedroom at our Hidden Hills compound... and thank you for turning my personal jean jacket into a couture piece.`;
 const photoArr = [
   {
     id: 1,
@@ -44,47 +50,67 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(6)
   },
-  justifyCenter: {
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  textBox: {
-    maxWidth: '950px'
-  },
-  text: {
-    fontSize: '22px',
-    lineHeight: '30px'
-  }
 }));
 
-function EventScreen() {
+function EventScreen({ name, description, date, duration, city, category, images }) {
+
   const classes = useStyles();
+  const { t, i18n } = useTranslation("item_calendar_block");
+  const locale = useLocale(i18n);
 
   return (
     <Container className={classes.container}>
-      <Box className={classes.justifyCenter}>
-        <Box className={classes.textBox}>
-          <Typography variant="h4" gutterBottom>{eventTitle}</Typography>
-          <Typography className={classes.text}>{eventText}</Typography>
-        </Box>
-      </Box>
-      <Box>
-        <Grid container justify='center'>
-          {
-            photoArr.map((item, i) => (
-              <Grid key={i} item xs={12} md={6} lg={4}>
-                <ImgCard {...item} />
-              </Grid>
-            ))
-          }
+      <Typography variant="h1" align="center" gutterBottom>{name}</Typography>
+      <Grid container>
+        <Grid item xs={12} sm={6} md={6} lg={3}>
+          <Typography display="inline" variant="h6">{t("category_label")}</Typography>
+          <Typography display="inline" variant="body2">&nbsp;&nbsp;</Typography>
+          <Typography display="inline" variant="body1" align="right">
+            <Link to={urljoin(SCREENS.CATEGORY, category.url)} component={RouterLink} color="primary" >
+              {category.name}
+            </Link>
+          </Typography>
         </Grid>
+
+        <Grid item xs={12} sm={6} md={6} lg={3}>
+          <Typography display="inline" variant="h6">{t("city_label")}</Typography>
+          <Typography display="inline" variant="body2">&nbsp;&nbsp;</Typography>
+          <Typography display="inline" variant="body1" align="right">{city.name}</Typography>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={6} lg={3}>
+          <Typography display="inline" variant="h6">{t("start_label")}</Typography>
+          <Typography display="inline" variant="body2">&nbsp;&nbsp;</Typography>
+          <Typography display="inline" variant="body1" align="right">{format(date, 'dd MMM HH:mm', { weekStartsOn: 1, locale })}</Typography>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={6} lg={3}>
+          <Typography display="inline" variant="h6">{t("duration_label")}</Typography>
+          <Typography display="inline" variant="body2">&nbsp;&nbsp;</Typography>
+          <Typography display="inline" variant="body1" align="right">{formatDuration({
+            hours: duration > 60 ? parseInt(duration / 60) : 0,
+            minutes: duration > 60 ? duration % 60 : duration
+          }, { format: ['hours', 'minutes'], locale })}</Typography>
+        </Grid>
+      </Grid>
+      <Box component="div" mt={1}>
+        <div dangerouslySetInnerHTML={{ __html: description }} ></div>
       </Box>
-      <Box className={classes.justifyCenter}>
+      <Grid container justify='center'>
+        {
+          images.map((item) => (
+            <Grid key={item._id} item xs={12} md={6} lg={4}>
+              <CardMedia component="img" width={370} height={280} image={item.url} />
+            </Grid>
+          ))
+        }
+      </Grid>
+      {/* <Box className={classes.justifyCenter}>
         <Box mt={4} className={classes.textBox}>
           <Typography variant="h4" gutterBottom>{eventTitle}</Typography>
           <Typography className={classes.text}>{eventText}</Typography>
         </Box>
-      </Box>
+      </Box> */}
       <Box mt={6}>
         <Grid container justify='center'>
           {
@@ -100,4 +126,25 @@ function EventScreen() {
   );
 }
 
-export default EventScreen;
+const mapStateToProps = (state, { _id }) => {
+  const { events } = state;
+
+  let event = events.list.find((data) => data._id === _id);
+
+  return {
+    name: event && event.name || "",
+    description: (new Array(20).fill("<p>A lot of texts</p>").join("")), //event && event.description || "",
+    category: event && event.category,
+    city: event && event.city,
+    tags: event && event.tags || [],
+    duration: event && event.duration || 0,
+    date: event.date,
+    images: []
+  };
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  // fetchEvents: fetchEventsActionCreator,
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventScreen);
