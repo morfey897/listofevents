@@ -55,8 +55,13 @@ function UploadImages({ images, maxFiles, showItems = 1, onChange }) {
   }, []);
 
   const items = useMemo(() => {
-    let result = images.map(file => ({ title: file.name.replace(/\.\w+$/, ""), file, type: "file" }));
-    console.log(maxFiles, result);
+    let result = images.map(data => {
+      if (data instanceof File) {
+        return { title: data.name.replace(/\.\w+$/, ""), file: data, type: "file" };
+      } else {
+        return { title: data.url.split("/").slice(-1)[0], file: {url: data.url, name: data._id}, type: "url" };
+      }
+    });
     if (maxFiles != undefined && result.length < maxFiles) {
       result = result.concat({ title: "plus", type: "add" });
     }
@@ -67,7 +72,6 @@ function UploadImages({ images, maxFiles, showItems = 1, onChange }) {
   return <>
     <div className={classes.root}>
       <GridList className={classes.gridList} cols={showItems}>
-        {console.log(items)}
         {items.map(({ title, type, file }) => (
           <GridListTile key={title}>
             {type == "add" &&
@@ -78,6 +82,21 @@ function UploadImages({ images, maxFiles, showItems = 1, onChange }) {
                 </IconButton>
               </label>
             }
+            {type == "url" && <>
+              <img src={file.url} alt={title} />
+              <GridListTileBar
+                title={title}
+                classes={{
+                  root: classes.titleBar,
+                  title: classes.title,
+                }}
+                actionIcon={
+                  <IconButton color="secondary" aria-label={`star ${title}`} onClick={() => onDeleteImage(file.name)}>
+                    <DeleteIcon />
+                  </IconButton>
+                }
+              />
+            </>}
             {type == "file" && <>
               <img src={URL.createObjectURL(file)} alt={title} />
               <GridListTileBar

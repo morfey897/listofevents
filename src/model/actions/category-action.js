@@ -21,8 +21,8 @@ const _body = `
 `;
 
 const categoriesQuery = `
-query($limit: Int) {
-  result: getCategories(paginate:{limit: $limit}){
+query($ids: [String], $limit: Int) {
+  result: getCategories(ids: $ids, paginate:{limit: $limit}){
     list{
       ${_body}
     },
@@ -53,10 +53,10 @@ function processing(data) {
   };
 }
 
-export function fetchCategoriesActionCreator() {
+export function fetchCategoriesActionCreator(inputData) {
   return (dispatch) => {
     dispatch({ type: CATEGORY_PENDING });
-    return request(categoriesQuery, { limit: 100 })
+    return request(categoriesQuery, { ...inputData })
       .then(({ success, data, errorCode }) => {
         if (success) {
           dispatch({ type: CATEGORY_INITED, payload: { ...data.result, list: data.result.list.map(processing) } });

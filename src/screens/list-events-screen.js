@@ -50,11 +50,11 @@ function ListEventsScreen({ isLoading, citiesLoading, categoriesLoading, cities,
 
   const [citiesLoaded, setCitiesLoaded] = useState(false);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
-  
+
   const fetch = useMemo(() => debounce((request) => {
     fetchEvents(request);
   }, 200), []);
-  
+
   useEffect(() => {
     if (citiesLoading) {
       setCitiesLoaded(true);
@@ -69,16 +69,17 @@ function ListEventsScreen({ isLoading, citiesLoading, categoriesLoading, cities,
       setCategoriesLoaded(true);
     } else if (!categoriesLoaded) {
       setCategoriesLoaded(true);
-      fetchCategories();
+      fetchCategories({ limit: 100 });
     }
   }, [categoriesLoading, categoriesLoaded]);
 
   useEffect(() => {
-    fetch({ 
+    fetch({
       dateFrom: filter.dateFrom ? formatISO(filter.dateFrom, { representation: 'date' }) : null,
-      dateTo: filter.dateTo ? formatISO(filter.dateTo, { representation: 'date' }) : null, 
-      cities_id: filter.cities_id, 
-      categories_id: filter.categories_id });
+      dateTo: filter.dateTo ? formatISO(filter.dateTo, { representation: 'date' }) : null,
+      cities_id: filter.cities_id,
+      categories_id: filter.categories_id
+    });
   }, [fetch, filter.view, filter.dateFrom, filter.dateTo, filter.categories_id, filter.cities_id]);
 
   return (

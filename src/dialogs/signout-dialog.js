@@ -50,8 +50,8 @@ function SignoutDialog({ open, handleClose, isLoading, isError, isLogged, signou
       <DialogContentText >{t("description")}</DialogContentText>
     </DialogContent>
     <DialogActions>
-      <Button type="submit" onClick={onSubmit} color="primary" variant="contained">{t("general:button_ok")}</Button>
-      <Button onClick={handleClose} color="secondary" variant="contained">{t("general:button_cancel")}</Button>
+      <Button type="submit" onClick={onSubmit} color="primary">{t("general:button_ok")}</Button>
+      <Button onClick={handleClose} color="primary">{t("general:button_cancel")}</Button>
     </DialogActions>
   </Dialog>;
 }

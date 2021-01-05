@@ -32,7 +32,7 @@ function CategoryAutocomplete({ value, options, isLoading, isModerator, onChange
       setLoaded(true);
     } else if (!isLoaded) {
       setLoaded(true);
-      fetchCategories();
+      fetchCategories({ limit: 100 });
     }
   }, [isLoading, isLoaded]);
 

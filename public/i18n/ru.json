@@ -10,6 +10,7 @@
     "button_signin": "Войти",
     "button_create": "Создать",
     "button_save": "Сохранить",
+    "button_delete": "Удалить",
     "validation_code": "Код подтверждения",
     "validation_code_timer": "Осталось {{seconds}} секунд",
     "wait_validate_code_email": "Вам на почту {{username}} выслан код подтверждения",
@@ -78,6 +79,10 @@
   "add_event_dialog": {
     "title": "Добавить новое событие",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+
+    "title_edit": "Обновить событие",
+    "description_edit": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+
     "name_label": "Название события",
     "description_label": "Описание",
     "location_label": "Место проведения",
@@ -133,6 +138,11 @@
     "button_change_password": "Сменить пароль",
     "success": "Изменения вступили в силу."
   },
+  "confirm_delete_dialog": {
+    "title": "Подтверждение удаления",
+    "description": "Для подтверждения удаления введите DELETE",
+    "success": "Удалено"
+  },
   "contacts_screen": {
     "title": "Get in touch",
     "description": "You need more information? Check what other persons are saying about progect. They are very happy with thier purchace",
@@ -166,8 +176,11 @@
   },
   "main_screen": {
     "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
-    "sdfsa": "dfasdf",
     "left_block_title": "Basic Components",
     "left_block_text": "We re-styled every Bootstrap element to make it resemble Material Design and also fit with each other. All the Bootstrap components that you need in a development have been re-design with the new look. Besides the numerous basic elements, we have also created additional classes. All these items will help you take your project to the next level."
+  },
+  "search_screen": {
+    "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
+    "empty": "К сожалению по вашему запросу ничего не было найдено"
   }
 }

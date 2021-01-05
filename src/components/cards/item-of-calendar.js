@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { makeStyles, ButtonBase, Popover, Box, Typography, Grid, Link } from "@material-ui/core";
+import { makeStyles, ButtonBase, Popover, Box, Typography, Grid, Link, CardMedia } from "@material-ui/core";
 import { format, formatDuration } from 'date-fns';
 import { capitalCaseTransform as capitalCase } from 'change-case';
 import { connect } from 'react-redux';
@@ -9,6 +9,7 @@ import urljoin from "url-join";
 import { useTranslation } from 'react-i18next';
 import { SCREENS, TENSE } from '../../enums';
 import { useLocale } from '../../hooks';
+import queryString from "query-string";
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => {
   };
 });
 
-function ItemOfCalendar({ _id, date, tense, label, colorClass, name, category, city, description, duration, tags }) {
+function ItemOfCalendar({ _id, date, tense, label, colorClass, name, url, category, city, description, duration, tags, image }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -84,7 +85,14 @@ function ItemOfCalendar({ _id, date, tense, label, colorClass, name, category, c
         }}
       >
         <Box p={2} className={classes.popoverBox}>
-          <Typography variant={"h5"}>{name}</Typography>
+          <Typography variant={"h5"}>
+            <Link component={RouterLink} to={url}>
+              {name}
+            </Link>
+          </Typography>
+          {image && <RouterLink to={url}>
+            <CardMedia component="img" height={280} image={image} />
+          </RouterLink>}
           {description && <Box component="div" mt={1} className={classes.descriptionBox}>
             <div dangerouslySetInnerHTML={{ __html: description }} ></div>
           </Box>}
@@ -105,7 +113,7 @@ function ItemOfCalendar({ _id, date, tense, label, colorClass, name, category, c
                 <Grid item xs={6}>
 
                   <Typography align="right" variant="body2">
-                    <Link to={urljoin(SCREENS.CATEGORY, category.url)} component={RouterLink} color="primary" >
+                    <Link to={urljoin(SCREENS.CATEGORY, category.url)} component={RouterLink} color={"primary"}>
                       {category.name}
                     </Link>
                   </Typography>
@@ -132,7 +140,7 @@ function ItemOfCalendar({ _id, date, tense, label, colorClass, name, category, c
                 </Grid>
               </>}
               {tags.length > 0 && <Grid item xs={12}>
-                {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH, `?tag=${tag}`)} component={RouterLink}>{tag}</Link>)}
+                {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH, `?${queryString.stringify({ tag })}`)} component={RouterLink}>{tag}</Link>)}
               </Grid>}
             </Grid>
           </Box>
@@ -150,13 +158,16 @@ const mapStateToProps = (state, { _id }) => {
   let event = events.list.find((data) => data._id === _id);
 
   const description = event && event.description || "";
+  let imgObject = (Array.isArray(event.images) ? event.images[0] : event.images);
   return {
     name: event && event.name || "",
+    url: event && event.url || "",
     description: />\s*[^<\s]+/.test(description) ? description : false,
     category: event && event.category,
     // city: event && event.city,
     tags: event && event.tags || [],
-    duration: event && event.duration || 0
+    duration: event && event.duration || 0,
+    image: imgObject && imgObject.url || process.env.PLACEHOLDER
   };
 };
 

@@ -4,6 +4,7 @@ import { EditorState } from 'draft-js';
 import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';
 import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
 import createLinkPlugin from 'draft-js-anchor-plugin';
+import { stateFromHTML } from "draft-js-import-html";
 
 import {
   ItalicButton,
@@ -114,12 +115,12 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-function RichEditor({ children, innerRef, ...props }) {
+function RichEditor({ children, innerRef, content, ...props }) {
 
   const classes = useStyles();
   const theme = useTheme();
 
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(content ? EditorState.createWithContent(stateFromHTML(content)) : EditorState.createEmpty());
 
   const plugins = useMemo(() => ({
     linkPlugin: createLinkPlugin({

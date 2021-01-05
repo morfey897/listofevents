@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 
 import { Box, debounce, IconButton, InputAdornment, LinearProgress, makeStyles, Typography, useMediaQuery } from "@material-ui/core";
 
-import { DIALOGS, STATUSES } from "../enums";
+import { DIALOGS, STATUSES, SCREENS } from "../enums";
 import { ERRORCODES, ERRORTYPES } from "../errors";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -22,6 +22,7 @@ import { createCategoryActionCreator, fetchTagsActionCreator } from "../model/ac
 import { Alert } from "@material-ui/lab";
 import { stateToHTML } from 'draft-js-export-html';
 import { Lock as LockIcon } from "@material-ui/icons";
+import urljoin from "url-join";
 
 const useStyles = makeStyles((theme) => ({
   marginDense: {
@@ -71,13 +72,13 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
   }, [isReady]);
 
   const onChangeUrl = useCallback((event) => {
-    setUrl(normalizeURL(event.target.value));
+    setUrl("/" + normalizeURL(event.target.value));
   }, []);
 
   const onChangeName = useCallback((event) => {
     let name = event.target.value.replace(/^\s+/g, "");
     setName(name);
-    setUrl(normalizeURL(name));
+    setUrl("/" + normalizeURL(name));
   }, []);
 
   const onSignin = useCallback(() => {
@@ -91,7 +92,7 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
     if (url && name) {
       setState({ waiting: true });
       createCategory({
-        url: `/${url}`,
+        url,
         name,
         tags,
         description: stateToHTML(descriptionRef.current.getEditorState().getCurrentContent()),
@@ -137,7 +138,7 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
             <TextField required name="url" fullWidth label={t("url_label")} value={url} margin="dense"
               disabled={!showUrl}
               InputProps={{
-                startAdornment: <InputAdornment position="start">{process.env.HOST + "/"}</InputAdornment>,
+                startAdornment: <InputAdornment position="start">{urljoin(process.env.HOST, SCREENS.CATEGORY)}</InputAdornment>,
                 endAdornment: <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
@@ -163,7 +164,7 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
             </Box>
             {/* Upload images */}
             <Box className={classes.marginDense}>
-              <UploadImages maxFiles={1} showItems={1} images={images} onChange={setImages} />
+              <UploadImages maxFiles={3} showItems={1} images={images} onChange={setImages} />
             </Box>
           </form>
         </DialogContent>

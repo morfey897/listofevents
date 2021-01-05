@@ -6,7 +6,11 @@ export const EVENT_PENDING = "event_pending";
 export const EVENT_INITED = "event_inited";
 
 export const EVENT_CREATING = "event_creating";
+export const EVENT_UPDATING = "event_updating";
+
+export const EVENT_UPDATED = "event_updated";
 export const EVENT_CREATED = "event_created";
+export const EVENT_DELETED = "event_deleted";
 
 const _body = `
   _id,
@@ -16,6 +20,9 @@ const _body = `
   name{ru},
   description{ru},
   location{ru},
+  author{
+    _id
+  },
   images {
     _id,
     url
@@ -23,6 +30,7 @@ const _body = `
   tags,
   city{
     _id,
+    place_id,
     name{ru},
     description{ru}
   },
@@ -51,10 +59,22 @@ query($id: String, $url: String) {
 }`;
 
 const createEventMutation = `
-mutation($url: String!, $name: String!, $location: String!, $date: DateTime!, $duration: Int!, $category_id: String!, $description: String!, $tags: [String], $city_id: String!, $place_id: String!, $city_name: String!, $city_description: String!, $images: [Upload]) {
+mutation($url: String!, $name: String!, $location: String!, $date: DateTime!, $duration: Int!, $category_id: String!, $description: String!, $tags: [String], $city_id: String, $place_id: String, $city_name: String!, $city_description: String!, $images: [Upload]) {
   event: createEvent(url: $url, name:{ru: $name}, location:{ru: $location}, date: $date, duration: $duration, category_id: $category_id, city:{_id: $city_id, place_id: $place_id, name:{ru: $city_name}, description:{ru: $city_description}}, description:{ru: $description}, tags: $tags, images: $images) {
     ${_body}
   }
+}`;
+
+const updateEventMutation = `
+mutation($_id: String!, $url: String!, $name: String!, $location: String!, $date: DateTime!, $duration: Int!, $category_id: String!, $description: String!, $tags: [String], $city_id: String, $place_id: String, $city_name: String!, $city_description: String!, $images: [String], $add_images: [Upload]) {
+  event: updateEvent(_id: $_id, url: $url, name:{ru: $name}, location:{ru: $location}, date: $date, duration: $duration, category_id: $category_id, city:{_id: $city_id, place_id: $place_id, name:{ru: $city_name}, description:{ru: $city_description}}, description:{ru: $description}, tags: $tags, images: $images, add_images: $add_images) {
+    ${_body}
+  }
+}`;
+
+const deleteEventMutation = `
+mutation($ids: [String]) {
+  count: deleteEvent(ids: $ids)
 }`;
 
 function processing(data) {
@@ -76,7 +96,7 @@ function processing(data) {
   };
 }
 
-export function fetchEventsActionCreator(filter, paginate = { limit: 0, offset: 0 }, sortBy = { sortBy: "date", sort: 1 }) {
+export function fetchEventsActionCreator(filter, paginate = { limit: 0, offset: 0 }, sortBy = { sortBy: "date", sort: -1 }) {
   return (dispatch) => {
     dispatch({ type: EVENT_PENDING });
     return request(eventsQuery, { ...filter, ...paginate, ...sortBy })
@@ -111,6 +131,48 @@ export function createEventActionCreator(inputData) {
       .catch(() => {
         dispatch({ type: EVENT_CREATED, payload: { list: [] } });
         ErrorEmitter.emit(ERRORTYPES.EVENT_CREATE_ERROR);
+      });
+  };
+}
+
+export function updateEventActionCreator(inputData) {
+  return (dispatch) => {
+    dispatch({ type: EVENT_UPDATING });
+    return request(updateEventMutation, { ...inputData })
+      .then(({ success, data, errorCode }) => {
+        if (success && data.event) {
+          let event = { ...data.event };
+          dispatch({ type: EVENT_UPDATED, payload: { list: [event].map(processing) } });
+        } else {
+          dispatch({ type: EVENT_UPDATED, payload: { list: [] } });
+          ErrorEmitter.emit(ERRORTYPES.EVENT_UPDATE_ERROR, errorCode);
+        }
+      })
+      .catch(() => {
+        dispatch({ type: EVENT_UPDATED, payload: { list: [] } });
+        ErrorEmitter.emit(ERRORTYPES.EVENT_UPDATE_ERROR);
+      });
+  };
+}
+
+export function deleteEventActionCreator(ids) {
+  return (dispatch) => {
+    if (!Array.isArray(ids)) {
+      ids = [ids];
+    }
+    dispatch({ type: EVENT_UPDATING, payload: { list: ids } });
+    return request(deleteEventMutation, { ids })
+      .then(({ success, data, errorCode }) => {
+        if (success) {
+          dispatch({ type: EVENT_DELETED, payload: { list: data.count > 0 ? ids : [] } });
+        } else {
+          dispatch({ type: EVENT_UPDATED, payload: { list: [] } });
+          ErrorEmitter.emit(ERRORTYPES.EVENT_DELETE_ERROR, errorCode);
+        }
+      })
+      .catch(() => {
+        dispatch({ type: EVENT_UPDATED, payload: { list: [] } });
+        ErrorEmitter.emit(ERRORTYPES.EVENT_DELETE_ERROR);
       });
   };
 }

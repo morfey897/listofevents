@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState, useCallback, useMemo } from 'react';
+import { Link as RouterLink, withRouter } from 'react-router-dom';
 import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Container, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button, Drawer, List, ListItem, useTheme, Tooltip } from '@material-ui/core';
 
 import {
@@ -21,9 +21,10 @@ import {
   People as UsersIcon,
   PeopleAlt as PeopleIcon,
   ViewDay as PageIcon,
+  ArrowBack as BackIcon
 } from '@material-ui/icons';
 
-import { SCREENS, DIALOGS, EVENTS, STATUSES } from "../enums";
+import { SCREENS, DIALOGS, EVENTS } from "../enums";
 
 import { DialogEmitter, ThemeEmitter } from '../emitters';
 import { useTranslation } from 'react-i18next';
@@ -41,9 +42,9 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
+  // menuButton: {
+  //   marginRight: theme.spacing(2),
+  // },
   menuItemIcon: {
     minWidth: theme.spacing(4)
   },
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Header({ isLogged, isModerator }) {
+function Header({ location, history, isLogged, isModerator }) {
   const theme = useTheme();
   const classes = useStyles();
 
@@ -129,6 +130,18 @@ function Header({ isLogged, isModerator }) {
     DialogEmitter.open(DIALOGS.USERS_LIST);
   }, []);
 
+  const onGoBackClick = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
+  const hasBack = useMemo(() => {
+    return !Object.values(SCREENS).some((url) => url == location.pathname);
+  }, [location]);
+
+  const hasHome = useMemo(() => {
+    return location.pathname != SCREENS.MAIN;
+  }, [location]);
+
   return (
     <>
       <AppBar position="fixed" className={classes.appBar}>
@@ -146,7 +159,12 @@ function Header({ isLogged, isModerator }) {
               </IconButton>
             </Tooltip>
 
-            <Button variant="text" color="inherit" component={RouterLink} to={SCREENS.MAIN}>
+            {
+              hasBack ? <IconButton onClick={onGoBackClick} color="inherit">
+                <BackIcon />
+              </IconButton> : <div style={{ width: 48, height: 48 }} />
+            }
+            <Button variant="text" color="inherit" component={RouterLink} to={SCREENS.MAIN} onClick={!hasHome ? e => e.preventDefault() : null}>
               {process.env.APP_NAME}
             </Button>
             <div className={classes.grow} />
@@ -319,7 +337,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  
+
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));

@@ -6,6 +6,10 @@ import { Link as RouterLink } from 'react-router-dom';
 import urljoin from "url-join";
 import { SCREENS, TENSE } from '../../enums';
 import { useLocale } from '../../hooks';
+import { compareAsc } from 'date-fns';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import queryString from "query-string";
 
 const useStyles = makeStyles((theme) => ({
   justifyCenter: {
@@ -27,14 +31,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function EventCard({ images, url, tags, description, tense, date, duration, name, city, category }) {
+function EventCard({ image, url, tags, description, date, duration, name, city, category, tense }) {
   const classes = useStyles();
 
   const { t, i18n } = useTranslation("item_calendar_block");
   const locale = useLocale(i18n);
 
   const ImgBlock = <RouterLink to={url}>
-    <CardMedia component="img" width={370} height={280} image={Array.isArray(images) ? images[0].url : images.url} />
+    <CardMedia component="img" width={370} height={280} image={image} />
   </RouterLink>;
 
   return (
@@ -55,12 +59,12 @@ function EventCard({ images, url, tags, description, tense, date, duration, name
         </Hidden>
         <div className={classes.descriptionBox} dangerouslySetInnerHTML={{ __html: description }} ></div>
         <Box>
-          <Typography display="inline" variant="body2" className={classes.label}>{t("category_label")}</Typography>
-          <Typography display="inline" variant="body2">
-            <Link to={urljoin(SCREENS.CATEGORY, category.url)} component={RouterLink} color="primary" >
+          {category && <Typography display="inline" variant="body2" className={classes.label}>{t("category_label")}</Typography>}
+          {category && <Typography display="inline" variant="body2">
+            <Link to={urljoin(SCREENS.CATEGORY, category.url)} component={RouterLink} color={"primary"}>
               {category.name}
             </Link>
-          </Typography>
+          </Typography>}
           <Typography display="inline" variant="body1" >&nbsp;&nbsp;{"/"}&nbsp;&nbsp;</Typography>
           <Typography display="inline" variant="body2" className={classes.label}>{t("city_label")}</Typography>
           <Typography display="inline" variant="body2">{city.name}</Typography>
@@ -80,11 +84,37 @@ function EventCard({ images, url, tags, description, tense, date, duration, name
         </Box>
 
         <Box>
-          {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH, `?tag=${tag}`)} component={RouterLink}>{tag}</Link>)}
+          {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH, `?${queryString.stringify({ tag })}`)} component={RouterLink}>{tag}</Link>)}
         </Box>
       </Grid>
     </Grid>
   );
 }
 
-export default EventCard;
+const mapStateToProps = (state, { _id }) => {
+  const { events, filter } = state;
+  const { now } = filter;
+
+  let event = events.list.find((data) => data._id === _id);
+
+  let imgObject = (Array.isArray(event.images) ? event.images[0] : event.images);
+
+  return {
+    name: event && event.name || "",
+    url: event.url,
+    description: event && event.description || "",
+    category: event && event.category,
+    city: event && event.city,
+    tags: event && event.tags || [],
+    duration: event && event.duration || 0,
+    date: event.date,
+    tense: compareAsc(now, event.date) == 1 ? TENSE.PAST : TENSE.FUTURE,
+    image: imgObject && imgObject.url || process.env.PLACEHOLDER
+  };
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+
+}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventCard);

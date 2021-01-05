@@ -67,12 +67,12 @@ export function updateUserActionCreator(id, role) {
           dispatch({ type: USERS_UPDATED, payload: { list: data.user ? [data.user] : [] } });
         } else {
           dispatch({ type: USERS_UPDATE_ERROR, payload: { list: [id] } });
-          ErrorEmitter.emit(ERRORTYPES.USERS_UPDATE_ERROR, errorCode);
+          ErrorEmitter.emit(ERRORTYPES.USERS_DELETE_ERROR, errorCode);
         }
       })
       .catch(() => {
         dispatch({ type: USERS_UPDATE_ERROR, payload: { list: [id] } });
-        ErrorEmitter.emit(ERRORTYPES.USERS_UPDATE_ERROR);
+        ErrorEmitter.emit(ERRORTYPES.USERS_DELETE_ERROR);
       });
   };
 }

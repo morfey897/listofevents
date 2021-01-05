@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useReducer } from "react";
 import { DialogEmitter } from "../emitters";
 
-import { AddEventDialog, SigninDialog, SignupDialog, SignoutDialog, ProfileDialog, UsersListDialog, AddCategoryDialog } from "../dialogs";
+import { AddEventDialog, SigninDialog, SignupDialog, SignoutDialog, ProfileDialog, UsersListDialog, AddCategoryDialog, ConfirmDeleteDialog } from "../dialogs";
 import { DIALOGS, EVENTS } from "../enums";
 import { debounce, useTheme } from "@material-ui/core";
 
@@ -52,6 +52,7 @@ function DialogProvider() {
   }, []);
 
   const onClose = useCallback(({ wnd, ...data }) => {
+    console.log("ON_CLOSE", wnd);
     clears[wnd] && clears[wnd].clear();
     dispatch({ type: 'close', payload: { wnd, data } });
     clears[wnd] = debounce(() => dispatch({ type: 'clear', payload: { wnd } }), theme.props.MuiDialog.transitionDuration.exit);
@@ -79,6 +80,7 @@ function DialogProvider() {
           case DIALOGS.SIGNOUT: return <SignoutDialog key={wnd} {...params} />;
           case DIALOGS.PROFILE: return <ProfileDialog key={wnd} {...params} />;
           case DIALOGS.USERS_LIST: return <UsersListDialog key={wnd} {...params} />;
+          case DIALOGS.CONFIRM_DELETE: return <ConfirmDeleteDialog key={wnd} {...params} />;
           default: return null;
         }
       })

@@ -15,5 +15,5 @@ export const ERROR_USER_NOT_EXIST = 104;
 export const ERROR_INCORRECT_USERNAME = 105;
 
 export function normalizeURL(val) {
-  return transliterate(val || "").replace(/^[^A-Za-z]+/g, "").replace(/[\s-]+/g, "-").replace(/[^A-Za-z0-9-]+/g, "").toLowerCase();
+  return transliterate(val || "").replace(/^[^A-Za-z]+/g, "").replace(/[\s-]+/g, "-").replace(/[^A-Za-z0-9-]+/g, "");
 }

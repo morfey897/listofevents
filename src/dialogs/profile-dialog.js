@@ -200,8 +200,8 @@ function ProfileDialog({ open, handleClose, isLoading, isSuccess, username, name
         }
       </DialogContent>
       <DialogActions>
-        <Button type="submit" disabled={isLoading || isReady} onClick={onSubmit} color="primary" variant="contained">{t("general:button_save")}</Button>
-        <Button disabled={isLoading} onClick={handleClose} color="secondary" variant="contained">{t("general:button_cancel")}</Button>
+        <Button type="submit" disabled={isLoading || isReady} onClick={onSubmit} color="primary" >{t("general:button_save")}</Button>
+        <Button disabled={isLoading} onClick={handleClose} color="primary">{t("general:button_cancel")}</Button>
       </DialogActions>
     </form>
   </Dialog>;

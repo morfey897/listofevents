@@ -96,7 +96,7 @@ function UsersListDialog({ open, handleClose, isModerator, isSuperAdmin, userRol
       })}
     </DialogContent>
     <DialogActions>
-      <Button onClick={handleClose} color="primary" variant="contained">{t("general:button_close")}</Button>
+      <Button onClick={handleClose} color="primary">{t("general:button_close")}</Button>
     </DialogActions>
   </Dialog>;
 }

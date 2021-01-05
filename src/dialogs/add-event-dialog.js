@@ -16,7 +16,7 @@ import { addDays, format, formatISO } from "date-fns";
 import {
   KeyboardDateTimePicker,
 } from '@material-ui/pickers';
-import { DIALOGS, STATUSES } from "../enums";
+import { DIALOGS, SCREENS, STATUSES } from "../enums";
 import { ERRORCODES, ERRORTYPES } from "../errors";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -26,8 +26,9 @@ import { normalizeURL } from "../helpers";
 import { Alert } from "@material-ui/lab";
 import { stateToHTML } from 'draft-js-export-html';
 import { Lock as LockIcon } from "@material-ui/icons";
-import { createEventActionCreator } from "../model/actions";
+import { createEventActionCreator, updateEventActionCreator } from "../model/actions";
 import { useLocale } from "../hooks";
+import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   marginDense: {
@@ -35,26 +36,34 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+function minToStr(min) {
+  return ("0" + parseInt(min / 60)).slice(-2) + ":" + ("0" + (min % 60)).slice(-2);
+}
+
+function strToMin(str) {
+  return str.split(":").map(a => parseInt(a)).reduce((prev, cur, index) => prev + (cur * (index == 0 ? 60 : (index == 1 ? 1 : 0))), 0);
+}
+
 const NOW = addDays(new Date(), 1);
 let waitClose;
-function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, categories, addEvent }) {
+function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDelete, isLoading, categories, event, addEvent, updateEvent }) {
 
-  const { t, i18n } = useTranslation(["add_event_dialog", "general"]);
+  const { t, i18n } = useTranslation(["add_event_dialog", "general", "error"]);
 
   const classes = useStyles();
   const fullScreen = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
   const [state, setState] = useState({});
   const [showUrl, setShowUrl] = useState(false);
-  const [url, setUrl] = useState("");
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [selectedDate, handleDateChange] = useState(null);
-  const [duration, setDuration] = useState("01:00");
-  const [tags, setTags] = useState([]);
-  const [images, setImages] = useState([]);
-  const [category, setCategory] = useState(null);
-  const [city, setCity] = useState(null);
+  const [url, setUrl] = useState(event && event.url || "");
+  const [name, setName] = useState(event && event.name || "");
+  const [location, setLocation] = useState(event && event.location || "");
+  const [selectedDate, handleDateChange] = useState(event && event.date || null);
+  const [duration, setDuration] = useState(event && event.duration ? minToStr(event.duration) : "01:00");
+  const [tags, setTags] = useState(event && event.tags && [...event.tags] || []);
+  const [images, setImages] = useState(event && event.images && [...event.images] || []);
+  const [category, setCategory] = useState(event && event.category && { ...event.category } || null);
+  const [city, setCity] = useState(event && event.city && { ...event.city } || null);
   const [secretKeyCategory, setSecretKeyCategory] = useState(null);
   const descriptionRef = useRef(null);
 
@@ -65,22 +74,29 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
   }, [state, isSuccess]);
 
   useEffect(() => {
-    ErrorEmitter.on(ERRORTYPES.CATEGORY_CREATE_ERROR, setState);
+    ErrorEmitter.on(ERRORTYPES.EVENT_CREATE_ERROR, setState);
+    ErrorEmitter.on(ERRORTYPES.EVENT_UPDATE_ERROR, setState);
+    ErrorEmitter.on(ERRORTYPES.EVENT_DELETE_ERROR, setState);
     return () => {
-      ErrorEmitter.off(ERRORTYPES.CATEGORY_CREATE_ERROR, setState);
+      ErrorEmitter.off(ERRORTYPES.EVENT_CREATE_ERROR, setState);
+      ErrorEmitter.off(ERRORTYPES.EVENT_UPDATE_ERROR, setState);
+      ErrorEmitter.off(ERRORTYPES.EVENT_DELETE_ERROR, setState);
     };
   }, []);
 
   useEffect(() => {
     if (isReady) {
       waitClose && waitClose.clear();
-      waitClose = debounce(handleClose, 1000);
+      waitClose = debounce(() => {
+        handleClose();
+        history.push(SCREENS.PAGE_EVENTS);
+      }, 1000);
       waitClose();
     }
     return () => {
       waitClose && waitClose.clear();
     };
-  }, [isReady]);
+  }, [isReady, history]);
 
   useEffect(() => {
     if (secretKeyCategory) {
@@ -92,22 +108,24 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
     }
   }, [secretKeyCategory, categories]);
 
-  const onChangeUrl = useCallback((event) => {
-    setUrl(normalizeURL(event.target.value));
+  const onChangeUrl = useCallback((e) => {
+    setUrl("/" + normalizeURL(e.target.value));
   }, []);
 
-  const onChangeDuration = useCallback((event) => {
-    setDuration(event.target.value);
+  const onChangeDuration = useCallback((e) => {
+    setDuration(e.target.value);
   }, []);
 
-  const onChangeName = useCallback((event) => {
-    let name = event.target.value.replace(/^\s+/g, "");
+  const onChangeName = useCallback((e) => {
+    let name = e.target.value.replace(/^\s+/g, "");
     setName(name);
-    setUrl(normalizeURL(name));
-  }, []);
+    if (!event) {
+      setUrl("/" + normalizeURL(name));
+    }
+  }, [event]);
 
-  const onChangePlace = useCallback((event) => {
-    let place = event.target.value.replace(/^\s+/g, "");
+  const onChangePlace = useCallback((e) => {
+    let place = e.target.value.replace(/^\s+/g, "");
     setLocation(place);
   }, []);
 
@@ -124,18 +142,18 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
     DialogEmitter.open(DIALOGS.SIGNIN);
   }, []);
 
-  const onSubmit = useCallback((event) => {
-    if (event && typeof event.preventDefault === "function") {
-      event.preventDefault();
+  const onSubmit = useCallback((e) => {
+    if (e && typeof e.preventDefault === "function") {
+      e.preventDefault();
     }
     if (url && name && location && selectedDate && category && city) {
       setState({ waiting: true });
-      addEvent({
-        url: `/${url}`,
+      const data = {
+        url,
         name,
         location,
         date: formatISO(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60 * 1000),
-        duration: duration.split(":").map(a => parseInt(a)).reduce((prev, cur, index) => prev + (cur * (index == 0 ? 60 : (index == 1 ? 1 : 0))), 0),
+        duration: strToMin(duration),
         category_id: category._id,
         description: stateToHTML(descriptionRef.current.getEditorState().getCurrentContent()),
         city_id: city._id,
@@ -143,23 +161,43 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
         city_name: city.name,
         city_description: city.description,
         tags,
-        images
-      });
+      };
+
+      if (event) {
+        updateEvent({
+          _id: event._id,
+          ...data,
+          url: data.url == event.url ? "" : data.url,
+          images: images.filter(f => !(f instanceof File)).map(({ _id }) => _id),
+          add_images: images.filter(f => (f instanceof File))
+        });
+      } else {
+        addEvent({
+          ...data,
+          images
+        });
+      }
     } else {
       setState({ errorCode: ERRORCODES.ERROR_EMPTY });
     }
 
-  }, [url, name, location, city, selectedDate, category, tags, duration, images]);
+  }, [url, name, location, city, selectedDate, category, tags, duration, images, event]);
+
+  const onDelete = useCallback(() => {
+    if (canDelete) {
+      DialogEmitter.open(DIALOGS.CONFIRM_DELETE, { event_id: event._id });
+    }
+  }, [canDelete, event]);
 
   return <Dialog open={open} onClose={handleClose} scroll={"paper"} fullScreen={fullScreen} fullWidth={true} maxWidth={"sm"}>
     <DialogTitle disableTypography={!fullScreen} className={fullScreen ? "" : "boxes"}>
       {fullScreen ?
         <>
-          {t("title")}
+          {event ? t("title_edit") : t("title")}
           {(isLoading) && <LinearProgress />}
         </> :
         <Box className={classes.dialogTitle} >
-          <Typography align='center' variant="h6" >{t("title")}</Typography>
+          <Typography align='center' variant="h6" >{event ? t("title_edit") : t("title")}</Typography>
           {(isLoading) && <LinearProgress />}
         </Box>
       }
@@ -167,7 +205,7 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
     {isEditor ? <>
       <DialogContent dividers={true}>
         <form onSubmit={onSubmit}>
-          <DialogContentText>{t("description")}</DialogContentText>
+          <DialogContentText>{event ? t("description_edit") : t("description")}</DialogContentText>
           {(() => {
             if (state.errorCode === ERRORCODES.ERROR_EMPTY) {
               return <Alert severity={"error"}>{t('error:empty')}</Alert>;
@@ -188,7 +226,7 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
           <TextField required name="url" fullWidth label={t("url_label")} value={url} margin="dense"
             disabled={!showUrl}
             InputProps={{
-              startAdornment: <InputAdornment position="start">{process.env.HOST + "/"}</InputAdornment>,
+              startAdornment: <InputAdornment position="start">{process.env.HOST}</InputAdornment>,
               endAdornment: <InputAdornment position="end">
                 <IconButton
                   aria-label="toggle password visibility"
@@ -262,7 +300,7 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
           </Box>
           {/* Description */}
           <Box className={classes.marginDense}>
-            <RichEditor placeholder={t("description_label")} innerRef={descriptionRef} />
+            <RichEditor placeholder={t("description_label")} innerRef={descriptionRef} content={event && event.description || ""} />
           </Box>
           {/* Tags */}
           <Box className={classes.marginDense}>
@@ -275,7 +313,8 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
         </form>
       </DialogContent>
       <DialogActions>
-        <Button disabled={isLoading || isReady} type="submit" onClick={onSubmit} color="primary">{t("general:button_create")}</Button>
+        {canDelete && <Button onClick={onDelete} color="secondary">{t("general:button_delete")}</Button>}
+        <Button disabled={isLoading || isReady} type="submit" onClick={onSubmit} color="primary">{event ? t("general:button_save") : t("general:button_create")}</Button>
         <Button onClick={handleClose} color="primary">{t("general:button_cancel")}</Button>
       </DialogActions>
     </> : <>
@@ -291,20 +330,26 @@ function AddEventDialog({ open, handleClose, isSuccess, isEditor, isLoading, cat
   </Dialog>;
 }
 
-const mapStateToProps = (state) => {
-  const { user, config, categories } = state;
+const mapStateToProps = (state, { _id }) => {
+  const { user, config, categories, events } = state;
+
+  let event = _id && events.list.find(data => data._id == _id);
   return {
     isLogged: user.isLogged,
     isEditor: user.isLogged && (user.user.role & config.roles.editor) === config.roles.editor,
+    canDelete: user.isLogged && ((user.user.role & config.roles.admin) === config.roles.admin || (event && event.author && event.author._id == user.user.id)),
 
-    isLoading: categories.status === STATUSES.STATUS_PENDING,
-    isSuccess: categories.status === STATUSES.STATUS_SUCCESS,
-    categories: categories.list
+    isLoading: events.status === STATUSES.STATUS_PENDING,
+    isSuccess: events.status === STATUSES.STATUS_SUCCESS,
+    categories: categories.list,
+
+    event
   };
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-  addEvent: createEventActionCreator
+  addEvent: createEventActionCreator,
+  updateEvent: updateEventActionCreator
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddEventDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AddEventDialog));

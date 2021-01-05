@@ -8,6 +8,8 @@ import { bindActionCreators } from 'redux';
 import { STATUSES } from '../enums';
 import { fetchEventsActionCreator } from '../model/actions';
 import { EventCard } from "../components/cards";
+import { withRouter } from 'react-router-dom';
+import queryString from "query-string";
 
 const useStyles = makeStyles((theme) => ({
 
@@ -20,15 +22,16 @@ const useStyles = makeStyles((theme) => ({
 
 const LIMIT_ON_PAGE = 10;
 
-function PageEventsScreen({ eventIds, total, isLoading, fetchEvents }) {
+function SearchScreen({ location, eventIds, total, isLoading, fetchEvents }) {
 
   const classes = useStyles();
-  const { t } = useTranslation("page_events_screen");
+  const { t } = useTranslation("search_screen");
 
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    fetchEvents({}, {
+    const { tag } = queryString.parse(location.search);
+    fetchEvents(tag ? { tags: [tag] } : {}, {
       limit: LIMIT_ON_PAGE,
       offset: (page - 1) * LIMIT_ON_PAGE,
     }, {
@@ -54,16 +57,23 @@ function PageEventsScreen({ eventIds, total, isLoading, fetchEvents }) {
             {t("description")}
           </Typography>
         </Box>
-        <Grid container spacing={5}>
-          {
-            eventIds.map((id) => (
-              <EventCard key={id} _id={id} />
-            ))
-          }
-        </Grid>
-        <Box my={4}>
-          <Pagination count={pages} variant="outlined" shape="rounded" page={page} onChange={handleChangePage} disabled={isLoading} />
-        </Box>
+        {eventIds.length > 0 ? <>
+          <Grid container spacing={5}>
+            {
+              eventIds.map((id) => (
+                <EventCard key={id} _id={id} />
+              ))
+            }
+          </Grid>
+          <Box my={4}>
+            <Pagination count={pages} variant="outlined" shape="rounded" page={page} onChange={handleChangePage} disabled={isLoading} />
+          </Box></> :
+          <Box my={4}>
+            <Typography paragraph>
+              {t("empty")}
+            </Typography>
+          </Box>}
+
       </Container>
     </>
   );
@@ -83,4 +93,4 @@ const mapDispatchToProps = dispatch => bindActionCreators({
   fetchEvents: fetchEventsActionCreator,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(PageEventsScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SearchScreen));
