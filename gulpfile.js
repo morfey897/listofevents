@@ -1,28 +1,53 @@
 const gulp = require('gulp');
 const fs = require('fs');
+const argv = require('yargs').argv;
 
-/* Create config from .env */
-gulp.task('build:environment', (done) => {
-  let defEnv = fs.readFileSync("./.env.defaults", "utf8").split('\n');
-  let devEnv = fs.readFileSync("./.env.development", "utf8").split('\n');
-  let prodEnv = fs.readFileSync("./.env.production", "utf8").split('\n');
-
-  let list = defEnv.concat(devEnv).concat(prodEnv)
-    .map(el => el.split(/\s*=\s*/)[0].trim())
-    .filter(a => !!a);
-  let distentSet = [...new Set(list)];
-
-  let out = ["/*Automation create*/"];
-  for (let i = 0; i < distentSet.length; i++) {
-    let n = distentSet[i];
-    out.push(`export const ${n} = process.env.${n};`);
+/*
+* Function to increase version
+*/
+function createVersion(release, version) {
+  const parts = version.split(".");
+  let index = parts.length - 1;
+  switch (release) {
+    case "major":
+      index = 0;
+      break;
+    case "minor":
+      index = 1;
+      break;
+    case "patch":
+      index = 2;
+      break;
   }
 
-  out.push(`export default {${distentSet.join(',')}};`)
+  parts[index] = parseInt(parts[index]) + 1;
+  for (let i = index + 1; i < parts.length; i++) {
+    parts[i] = 0;
+  }
+  return parts.join(".");
+}
+
+/*
+* Build version 
+* version=major|minor|patch
+* target - name of variable fron .env
+*/
+gulp.task('build:version', (done) => {
+  const VER_REG = new RegExp(`^\\s*${argv.target}\\s*=['"]([\\.\\d]+)['"]$`);
+  let env = fs.readFileSync("./.env", "utf8").split('\n');
+
+  for (let i = 0; i < env.length; i++) {
+    let str = env[i];
+    let match = str.match(VER_REG);
+    if (match && match.length) {
+      env[i] = str.replace(match[1], createVersion(argv.release, match[1]));
+      break;
+    }
+  }
 
   fs.writeFile(
-    `./src/Config.js`,
-    out.join("\n"),
+    "./.env",
+    env.join("\n"),
     done
   );
 });
