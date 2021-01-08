@@ -10,7 +10,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const RobotstxtPlugin = require("robotstxt-webpack-plugin");
 const Dotenv = require('dotenv');
 
-
+const PREFIX = [""];
+const DISALOW_LINKS = [];
 module.exports = (env, argv) => {
 
   const { parsed: DOTENV } = Dotenv.config();
