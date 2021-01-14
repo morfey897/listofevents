@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
-import { AboutScreen, ContactsScreen, ListEventsScreen, MainScreen, EventScreen, PageEventsScreen, CategoryScreen, SearchScreen } from '../screens';
+import { AboutScreen, ContactsScreen, PrivacyPolicyScreen, ListEventsScreen, MainScreen, EventScreen, PageEventsScreen, CategoryScreen, SearchScreen } from '../screens';
 import { makeStyles } from '@material-ui/core';
 import urljoin from "url-join";
 import { Header } from '../components';
@@ -36,6 +36,7 @@ function ScreenProvider({ location, events, categories }) {
             <Route exact path={SCREENS.MAIN} component={MainScreen} />
             <Route exact path={SCREENS.ABOUT} component={AboutScreen} />
             <Route exact path={SCREENS.CONTACTS} component={ContactsScreen} />
+            <Route exact path={SCREENS.PRIVACY_POLICY} component={PrivacyPolicyScreen} />
             <Route exact path={SCREENS.LIST_EVENTS} component={ListEventsScreen} />
             <Route exact path={SCREENS.PAGE_EVENTS} component={PageEventsScreen} />
             <Route exact path={SCREENS.SEARCH} component={SearchScreen} />

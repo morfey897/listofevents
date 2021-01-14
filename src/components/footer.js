@@ -11,6 +11,7 @@ import {
   ViewDay as PageIcon,
   LabelImportant as AboutIcon,
   Forum as ContactsIcon,
+  Policy as PolicyIcon
 } from '@material-ui/icons';
 
 
@@ -81,6 +82,12 @@ const Footer = () => {
                 <ContactsIcon />
               </ListItemIcon>
               <ListItemText primary={t("contact_us")} />
+            </ListItem>
+            <ListItem button dense component={RouterLink} to={SCREENS.PRIVACY_POLICY}>
+              <ListItemIcon>
+                <PolicyIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("privacy_policy")} />
             </ListItem>
           </List>
         </Grid>

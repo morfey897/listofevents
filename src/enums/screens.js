@@ -2,6 +2,7 @@ export const MAIN = "/";
 
 export const ABOUT = "/about";
 export const CONTACTS = "/contacts";
+export const PRIVACY_POLICY = "/privacy-policy";
 
 export const LIST_EVENTS = "/list-events";
 export const PAGE_EVENTS = "/page-events";
