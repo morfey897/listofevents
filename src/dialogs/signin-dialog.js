@@ -74,14 +74,8 @@ function SigninDialog({ open, handleClose, username, defaultUsername = "", isLog
     }
   }, []);
 
-  const onFacebookEnter = useCallback((data) => {
-    setSocialEnter(data);
-    if (data.status === "logged" && data.me) {
-      signupSocialRequest({
-        ...data.me,
-        type: "facebook",
-      });
-    }
+  const onFacebookEnter = useCallback((state) => {
+    signupSocialRequest({ type: "facebook", state });
   }, []);
 
   return <Dialog open={open} onClose={handleClose}>
@@ -95,7 +89,7 @@ function SigninDialog({ open, handleClose, username, defaultUsername = "", isLog
       {/* <Tooltip title={t("instagram_enter")}>
         <IconButton onClick={onInstagramEnter}><InstagramIcon style={{ color: "#FF8948" }} /></IconButton>
       </Tooltip> */}
-      <FacebookEnter title={t("facebook_enter")} onChange={onFacebookEnter} disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} />
+      <FacebookEnter title={t("facebook_enter")} onClick={onFacebookEnter} disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} />
     </DialogActions>
     <form className={classes.form} onSubmit={onSubmit} autoComplete="on">
       <DialogContent>

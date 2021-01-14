@@ -171,7 +171,7 @@ function SignupDialog({ open, handleClose, username, isLogged, isLoading, signup
       {/* <Tooltip title={t("instagram_enter")}>
         <IconButton><InstagramIcon style={{ color: "#FF8948" }} /></IconButton>
       </Tooltip> */}
-      <FacebookEnter title={t("facebook_enter")} onChange={onFacebookEnter} disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} />
+      <FacebookEnter title={t("facebook_enter")} onClick={onFacebookEnter} disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} />
 
     </DialogActions>
     <form className={classes.form} onSubmit={onSubmit}>
