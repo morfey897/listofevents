@@ -5,7 +5,7 @@ import { ERRORTYPES } from "../../errors";
 export const USER_PENDING = "user_pending";
 export const USER_SIGNED_IN = "user_signed_in";
 export const USER_SIGNED_OUT = "user_signed_out";
-export const USER_UPDATE_ERROR = "user_update_error";
+export const USER_ACTION_ERROR = "user_action_error";
 
 function actionCreator(params, successType, apiMethod) {
   return (dispatch) => {
@@ -15,13 +15,13 @@ function actionCreator(params, successType, apiMethod) {
         if (success) {
           dispatch({ type: successType, payload: { ...data } });
         } else {
-          dispatch({ type: USER_UPDATE_ERROR });
-          ErrorEmitter.emit(ERRORTYPES.USER_UPDATE_ERROR, errorCode);
+          dispatch({ type: USER_ACTION_ERROR });
+          ErrorEmitter.emit(ERRORTYPES.USER_ACTION_ERROR, errorCode);
         }
       })
       .catch(() => {
-        dispatch({ type: USER_UPDATE_ERROR });
-        ErrorEmitter.emit(ERRORTYPES.USER_UPDATE_ERROR);
+        dispatch({ type: USER_ACTION_ERROR });
+        ErrorEmitter.emit(ERRORTYPES.USER_ACTION_ERROR);
       });
   };
 }
@@ -32,6 +32,10 @@ export function signinActionCreator({ username, password }) {
 
 export function signupActionCreator({ username, name, code, password }) {
   return actionCreator({ username, name, code, password }, USER_SIGNED_IN, signup);
+}
+
+export function signupSocialActionCreator({ id, link, access_token, type, name, email, phone }) {
+  return actionCreator({ id, link, access_token, type, name, email, phone }, USER_SIGNED_IN, signup);
 }
 
 export function renameActionCreator({ name, surname, phone, email, code, password }) {

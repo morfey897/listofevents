@@ -11,6 +11,8 @@ import CategoryAutocomplete from "./category-autocomplete";
 import CityAutocomplete from "./city-autocomplete";
 import UploadImages from "./upload-images";
 
+import FacebookEnter from "./facebook-enter";
+
 export {
   Header,
   Filters,
@@ -23,5 +25,7 @@ export {
   TagsAutocomplete,
   CategoryAutocomplete,
   CityAutocomplete,
-  UploadImages
+  UploadImages,
+
+  FacebookEnter
 };

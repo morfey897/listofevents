@@ -109,7 +109,7 @@ const mapStateToProps = (state, { _id }) => {
     duration: event && event.duration || 0,
     date: event.date,
     tense: compareAsc(now, event.date) == 1 ? TENSE.PAST : TENSE.FUTURE,
-    image: imgObject && imgObject.url || process.env.PLACEHOLDER
+    image: imgObject && imgObject.url || process.env.EMPTY_IMAGE
   };
 };
 

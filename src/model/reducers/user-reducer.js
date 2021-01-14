@@ -1,4 +1,4 @@
-import { USER_SIGNED_IN, USER_SIGNED_OUT, USER_PENDING, USER_UPDATE_ERROR } from "../actions/user-action";
+import { USER_SIGNED_IN, USER_SIGNED_OUT, USER_PENDING, USER_ACTION_ERROR } from "../actions/user-action";
 import store from "store2";
 import { STATUSES, STORAGEKEYS } from "../../enums";
 
@@ -6,11 +6,13 @@ const initState = {
   status: STATUSES.STATUS_NONE,
   isLogged: false,
   user: {
-    id: "",
+    _id: "",
     name: "",
     surname: "",
     email: "",
     phone: "",
+    facebook: {},
+    instagram: {},
     role: 0,
   }
 };
@@ -52,7 +54,7 @@ export function user(state = { ...getUser() }, action) {
         status: STATUSES.STATUS_PENDING,
       };
     }
-    case USER_UPDATE_ERROR:
+    case USER_ACTION_ERROR:
       return {
         ...state,
         status: STATUSES.STATUS_SUCCESS,

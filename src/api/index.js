@@ -65,6 +65,23 @@ function request(query, variables) {
     .catch(() => ({ success: false, data: {}, errorCode: ERRORCODES.ERROR_WRONG }));
 }
 
+function config() {
+  return axiosInstance
+    .get("api/config", {
+      headers: {
+        Authorization: `Basic ${basicToken}`,
+      }
+    })
+    .then(result => {
+      if (result.data.success) {
+        return { success: true, data: result.data.data };
+      } else {
+        return { success: false, data: {}, errorCode: result.data.errorCode };
+      }
+    })
+    .catch(() => ({ success: false, data: {}, errorCode: ERRORCODES.ERROR_WRONG }));
+}
+
 function userAction(url, data, Authorization) {
   return axiosInstance
     .post(`oauth/${url}`, data, {
@@ -82,41 +99,24 @@ function userAction(url, data, Authorization) {
     .catch(() => ({ success: false, data: {}, errorCode: ERRORCODES.ERROR_WRONG }));
 }
 
-function signin({ username, password }) {
-  return userAction('signin', { username, password }, `Basic ${basicToken}`);
+function signin(data) {
+  return userAction('signin', data, `Basic ${basicToken}`);
 }
 
-function signup({ username, name, code, password }) {
-  return userAction('signup', { name, username, code, password }, `Basic ${basicToken}`);
+function signup(data) {
+  return userAction('signup', data, `Basic ${basicToken}`);
 }
 
-function signout() {
-  return userAction('signout', {}, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
+function signout(data) {
+  return userAction('signout', data, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
 }
 
-function rename({ surname, name, phone, email, code, password }) {
-  return userAction('rename', { surname, name, phone, email, code, password }, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
+function rename(data) {
+  return userAction('rename', data, `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}`);
 }
 
-function outhcode({ username }) {
-  return userAction('outhcode', { username }, `Basic ${basicToken}`);
-}
-
-function config() {
-  return axiosInstance
-    .get("api/config", {
-      headers: {
-        Authorization: `Basic ${basicToken}`,
-      }
-    })
-    .then(result => {
-      if (result.data.success) {
-        return { success: true, data: result.data.data };
-      } else {
-        return { success: false, data: {}, errorCode: result.data.errorCode };
-      }
-    })
-    .catch(() => ({ success: false, data: {}, errorCode: ERRORCODES.ERROR_WRONG }));
+function outhcode(data) {
+  return userAction('outhcode', data, `Basic ${basicToken}`);
 }
 
 export {

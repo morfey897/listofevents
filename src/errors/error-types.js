@@ -13,7 +13,7 @@ export const USERS_UPDATE_ERROR = "users_update_error";
 export const USERS_CREATE_ERROR = "users_create_error";
 export const USERS_DELETE_ERROR = "users_delete_error";
 
-export const USER_UPDATE_ERROR = "user_update_error";
+export const USER_ACTION_ERROR = "user_action_error";
 
 export const TAG_INIT_ERROR = "tag_update_error";
 

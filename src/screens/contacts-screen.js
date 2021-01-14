@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 const useStyles = makeStyles((theme) => ({
 
   imgContainer: {
-    backgroundImage: 'url(http://source.unsplash.com/random)',
-    minHeight: '700px'
+    backgroundImage: `url(${process.env.CONTACT_US})`,
+    minHeight: '900px'
   },
   leftBlock: {
     maxWidth: '450px'

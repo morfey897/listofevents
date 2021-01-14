@@ -59,9 +59,9 @@ function ProfileDialog({ open, handleClose, isLoading, isSuccess, username, name
   }, []);
 
   useEffect(() => {
-    ErrorEmitter.on(ERRORTYPES.USER_UPDATE_ERROR, onErrorHandler);
+    ErrorEmitter.on(ERRORTYPES.USER_ACTION_ERROR, onErrorHandler);
     return () => {
-      ErrorEmitter.off(ERRORTYPES.USER_UPDATE_ERROR, onErrorHandler);
+      ErrorEmitter.off(ERRORTYPES.USER_ACTION_ERROR, onErrorHandler);
       waitCodePromise && waitCodePromise.cancel();
     };
   }, []);

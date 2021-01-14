@@ -20,9 +20,10 @@
     "wrong": "Упс... что то пошло не так. Попробуйте похже.",
     "empty": "Заполните все необходимые поля.",
     "access_denied": "Отказано в доступе",
-    "incorrect_signin": "Неверный логин или пароль.",
     "incorrect_password": "Пароль не совпадает",
-    "user_esist": "Пользователь с таким логином уже существует",
+    "user_esist": "Пользователь с таким логином уже зарегестрирован",
+    "user_not_esist": "Неверный логин или пароль.",
+    "can_not_connect_social": "Нет доступа к социальной сети.",
     "incorrect_username": "Неверный логин",
     "incorrect_url": "Некорректна ссылка",
     "incorrect_id": "Неверный ID",
@@ -111,7 +112,8 @@
     "confirm_password_label": "Подтверждение пароля",
     "success": "Приветствуем вас {{name}}.",
     "instagram_enter": "Вход с помощью Instagram аккаунта",
-    "facebook_enter": "Вход с помощью Facebook аккаунта"
+    "facebook_enter": "Вход с помощью Facebook аккаунта",
+    "enter_user": "Войти"
   },
   "signout_dialog": {
     "title": "Выход",

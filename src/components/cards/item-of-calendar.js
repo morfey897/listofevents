@@ -167,7 +167,7 @@ const mapStateToProps = (state, { _id }) => {
     // city: event && event.city,
     tags: event && event.tags || [],
     duration: event && event.duration || 0,
-    image: imgObject && imgObject.url || process.env.PLACEHOLDER
+    image: imgObject && imgObject.url || process.env.EMPTY_IMAGE
   };
 };
 
