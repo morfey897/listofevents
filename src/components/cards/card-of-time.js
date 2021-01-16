@@ -1,4 +1,3 @@
-import React from "react";
 import { makeStyles, Box } from "@material-ui/core";
 
 import ItemOfCalendar from "./item-of-calendar";

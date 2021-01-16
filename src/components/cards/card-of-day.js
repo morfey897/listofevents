@@ -1,4 +1,3 @@
-import React from "react";
 import { makeStyles, Typography, Card, CardContent } from "@material-ui/core";
 import { format } from 'date-fns';
 import { indigo } from '@material-ui/core/colors';

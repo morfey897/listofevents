@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import Editor from 'draft-js-plugins-editor';
 import { EditorState } from 'draft-js';
 import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';

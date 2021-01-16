@@ -1,5 +1,5 @@
 import { Container, makeStyles, Typography, Box, Link } from "@material-ui/core";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import urljoin from "url-join";
 import { SCREENS } from "../enums";
@@ -34,7 +34,6 @@ function PrivacyPolicyScreen({ location }) {
       if (element) {
         const top = window.pageYOffset + element.getBoundingClientRect().top - 64;
         if (top !== undefined) {
-          console.log("SCREOLL_TOP", top);
           window.scroll({
             top,
             left: 0,

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 
 import DateFnsUtils from '@date-io/date-fns';

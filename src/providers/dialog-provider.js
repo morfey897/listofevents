@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { DialogEmitter } from "../emitters";
 
 import { AddEventDialog, SigninDialog, SignupDialog, SignoutDialog, ProfileDialog, UsersListDialog, AddCategoryDialog, ConfirmDeleteDialog } from "../dialogs";

@@ -1,5 +1,4 @@
 import { Box, IconButton, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
 import { ViewComfy, ViewDay, ViewCarousel } from '@material-ui/icons';
 
 const useStyles = makeStyles(() => ({

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { Autocomplete, createFilterOptions } from "@material-ui/lab";
 import { CircularProgress, TextField } from "@material-ui/core";
 import { useTranslation } from "react-i18next";

@@ -1,5 +1,5 @@
 import { Box, Container, Grid, makeStyles, Typography, Link, GridList, GridListTile, IconButton } from '@material-ui/core';
-import React, { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

@@ -1,5 +1,5 @@
 import { Box, Container, Grid, makeStyles, Typography, Link, GridList, GridListTile, LinearProgress, IconButton } from '@material-ui/core';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link as RouterLink } from 'react-router-dom';

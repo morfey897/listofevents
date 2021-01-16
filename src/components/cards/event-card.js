@@ -1,6 +1,5 @@
 import { Box, CardMedia, Grid, makeStyles, Typography, Link, Hidden } from '@material-ui/core';
 import { format, formatDuration } from 'date-fns';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
 import urljoin from "url-join";

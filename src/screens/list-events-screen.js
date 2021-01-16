@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress, debounce } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { CalendarMontly, CalendarDaily, Filters, Toolbar } from '../components';

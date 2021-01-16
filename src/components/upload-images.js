@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { GridList, GridListTile, GridListTileBar, IconButton, makeStyles } from "@material-ui/core";
 import { AddAPhoto as ImageIcon, InsertPhoto as BlankIcon, Delete as DeleteIcon } from "@material-ui/icons";
 

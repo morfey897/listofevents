@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { ListItemText, ListItem, ListItemIcon, Checkbox, Collapse, Badge } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';

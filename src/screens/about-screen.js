@@ -1,6 +1,5 @@
 import { Box, Button, Container, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
 import { Build, Create, Gesture } from '@material-ui/icons';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { PersonCard } from '../components/cards';
 

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { makeStyles, TableContainer, Typography, Table, TableBody, TableHead, TableRow, TableCell } from "@material-ui/core";
 import { addDays, compareAsc, differenceInDays, format, isSameDay } from 'date-fns';
 import { indigo } from '@material-ui/core/colors';

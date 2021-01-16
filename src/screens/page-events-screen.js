@@ -1,7 +1,7 @@
 import { Box, Container, makeStyles, Typography, LinearProgress, Grid } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

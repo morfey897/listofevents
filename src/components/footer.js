@@ -1,5 +1,5 @@
 import { Container, Grid, List, makeStyles, ListItem, ListItemIcon, ListItemText, Hidden } from '@material-ui/core';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SCREENS } from "../enums";

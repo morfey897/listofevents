@@ -1,5 +1,4 @@
 import { Box, CardMedia, Container, Grid, makeStyles, Typography } from '@material-ui/core';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { InfoCard, LatestCard } from '../components/cards';
 

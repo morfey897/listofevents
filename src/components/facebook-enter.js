@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { IconButton, Tooltip } from "@material-ui/core";
 import {
   Facebook as FacebookIcon,
@@ -38,14 +38,14 @@ function FacebookEnter({ title, onClick, disabled, settings, fetchConfig }) {
   }, [settings]);
 
   const onPress = useCallback(() => {
-    if (fbLink) {
+    if (!disabled && fbLink) {
       window.open(fbLink, "_blank");
       onClick(state);
     }
-  }, [fbLink, settings]);
+  }, [fbLink, settings, disabled]);
 
   return <Tooltip title={title}>
-    <IconButton onClick={onPress} disabled={!fbLink || disabled}>
+    <IconButton onClick={onPress}>
       <FacebookIcon style={{ color: "#485993" }} />
     </IconButton>
   </Tooltip>;

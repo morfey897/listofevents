@@ -1,6 +1,5 @@
 import { Box, Button, Checkbox, Container, FormControlLabel, Grid, makeStyles, Paper, TextareaAutosize, TextField, Typography, useMediaQuery } from '@material-ui/core';
 import { PhoneTwoTone, PinDrop } from '@material-ui/icons';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { makeStyles, ButtonBase, Popover, Box, Typography, Grid, Link, CardMedia } from "@material-ui/core";
 import { format, formatDuration } from 'date-fns';
 import { capitalCaseTransform as capitalCase } from 'change-case';

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, debounce, InputAdornment, LinearProgress, makeStyles, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useTranslation } from "react-i18next";
@@ -30,7 +30,6 @@ function SigninDialog({ open, handleClose, username, defaultUsername = "", isLog
 
   const classes = useStyles();
 
-  const [socialEnter, setSocialEnter] = useState({});
   const [state, setState] = useState(0);
   const usernameRef = useRef(null);
   const passwordRef = useRef(null);
@@ -82,14 +81,14 @@ function SigninDialog({ open, handleClose, username, defaultUsername = "", isLog
     <DialogTitle disableTypography className={"boxes"}>
       <Box>
         <Typography align='center' variant="h6">{t("title")}</Typography>
-        {(isLoading || socialEnter.status === "loading") && <LinearProgress />}
+        {(isLoading) && <LinearProgress />}
       </Box>
     </DialogTitle>
     <DialogActions className={classes.socialButtons}>
       {/* <Tooltip title={t("instagram_enter")}>
         <IconButton onClick={onInstagramEnter}><InstagramIcon style={{ color: "#FF8948" }} /></IconButton>
       </Tooltip> */}
-      <FacebookEnter title={t("facebook_enter")} onClick={onFacebookEnter} disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} />
+      <FacebookEnter title={t("facebook_enter")} onClick={onFacebookEnter} disabled={isLogged || isLoading} />
     </DialogActions>
     <form className={classes.form} onSubmit={onSubmit} autoComplete="on">
       <DialogContent>
@@ -108,18 +107,18 @@ function SigninDialog({ open, handleClose, username, defaultUsername = "", isLog
           }
         })()}
 
-        <TextField disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} error={state.errorCode === ERRORCODES.ERROR_EMPTY && usernameRef.current && !usernameRef.current.value} defaultValue={defaultUsername || ""} required name="username" type="text" autoFocus fullWidth label={t("username_label")} margin="normal"
+        <TextField disabled={isLogged || isLoading} error={state.errorCode === ERRORCODES.ERROR_EMPTY && usernameRef.current && !usernameRef.current.value} defaultValue={defaultUsername || ""} required name="username" type="text" autoFocus fullWidth label={t("username_label")} margin="normal"
           InputProps={{
             startAdornment: <InputAdornment position="start"><NameIcon /></InputAdornment>,
           }} inputRef={usernameRef} onChange={debounce(onChange, 300)} autoComplete="on" />
 
-        <TextField disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} required error={state.errorCode === ERRORCODES.ERROR_EMPTY && passwordRef.current && !passwordRef.current.value} name="password" type="password" fullWidth label={t("password_label")} margin="normal" InputProps={{
+        <TextField disabled={isLogged || isLoading} required error={state.errorCode === ERRORCODES.ERROR_EMPTY && passwordRef.current && !passwordRef.current.value} name="password" type="password" fullWidth label={t("password_label")} margin="normal" InputProps={{
           startAdornment: <InputAdornment position="start"><PasswordIcon /></InputAdornment>,
         }} inputRef={passwordRef} onChange={debounce(onChange, 300)} autoComplete="on" />
 
       </DialogContent>
       <DialogActions>
-        <Button type="submit" disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} onClick={onSubmit} color="primary">{t("general:button_signin")}</Button>
+        <Button type="submit" disabled={isLogged || isLoading} onClick={onSubmit} color="primary">{t("general:button_signin")}</Button>
         <Button onClick={handleClose} color="primary">{t("general:button_close")}</Button>
       </DialogActions>
     </form>
