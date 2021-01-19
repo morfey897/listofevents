@@ -52,7 +52,6 @@ function DialogProvider() {
   }, []);
 
   const onClose = useCallback(({ wnd, ...data }) => {
-    console.log("ON_CLOSE", wnd);
     clears[wnd] && clears[wnd].clear();
     dispatch({ type: 'close', payload: { wnd, data } });
     clears[wnd] = debounce(() => dispatch({ type: 'clear', payload: { wnd } }), theme.props.MuiDialog.transitionDuration.exit);

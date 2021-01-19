@@ -11,7 +11,7 @@ const filter = createFilterOptions();
 
 function CategoryAutocomplete({ value, options, isLoading, isModerator, onChange, error, fetchCategories }) {
 
-  const { t } = useTranslation("categories_block");
+  const { t, i18n } = useTranslation("categories_block");
 
   const [isLoaded, setLoaded] = useState(false);
 

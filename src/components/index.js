@@ -12,6 +12,8 @@ import CityAutocomplete from "./city-autocomplete";
 import UploadImages from "./upload-images";
 
 import FacebookEnter from "./facebook-enter";
+import InstagramEnter from "./instagram-enter";
+import GoogleEnter from "./google-enter";
 
 export {
   Header,
@@ -27,5 +29,7 @@ export {
   CityAutocomplete,
   UploadImages,
 
-  FacebookEnter
+  FacebookEnter,
+  InstagramEnter,
+  GoogleEnter
 };

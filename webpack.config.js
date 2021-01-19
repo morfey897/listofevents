@@ -20,7 +20,6 @@ module.exports = (env, argv) => {
   const CSS_VERSION = `v${DOTENV.VERSION.split(".").slice(0, 2).join("_")}`;
   const VERSION = `v${DOTENV.VERSION.split(".").join("_")}`;
 
-  console.log("MODE", MODE);
   let config = {
     mode: MODE,
     entry: {

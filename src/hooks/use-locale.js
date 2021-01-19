@@ -1,16 +1,17 @@
 
 import ruLocale from 'date-fns/locale/ru';
+import ukLocale from 'date-fns/locale/uk';
 import enLocale from 'date-fns/locale/en-US';
 
 import { LANGS } from '../enums';
 import { useEffect, useState } from 'react';
 
 function getLocale(lang) {
-  let loc = enLocale;
-  if (lang === LANGS.RU) {
-    loc = ruLocale;
+  switch(lang) {
+    case LANGS.UK: return ukLocale;
+    case LANGS.RU: return ruLocale;
+    default: return enLocale;
   }
-  return loc;
 }
 
 function useLocale(i18n) {

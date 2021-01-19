@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { encode } from 'js-base64';
+import i18n from 'i18next';
+
 import { logRequestInterceptor, logResponseInterceptor } from './interceptors';
 import store from "store2";
 import { STORAGEKEYS } from '../enums';
@@ -53,6 +55,9 @@ function request(query, variables) {
       headers: {
         'Content-Type': contentType,
         Authorization: expiresIn > 0 ? `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}` : `Basic ${basicToken}`
+      },
+      params: {
+        locale: i18n.language
       }
     })
     .then(({ status, data }) => {
@@ -67,9 +72,12 @@ function request(query, variables) {
 
 function config() {
   return axiosInstance
-    .get("api/config", {
+    .post("api/config", {}, {
       headers: {
         Authorization: `Basic ${basicToken}`,
+      },
+      params: {
+        locale: i18n.language
       }
     })
     .then(result => {
@@ -87,6 +95,9 @@ function userAction(url, data, Authorization) {
     .post(`oauth/${url}`, data, {
       headers: {
         Authorization
+      },
+      params: {
+        locale: i18n.language
       }
     })
     .then(result => {

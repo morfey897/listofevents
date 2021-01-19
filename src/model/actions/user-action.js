@@ -34,8 +34,8 @@ export function signupActionCreator({ username, name, code, password }) {
   return actionCreator({ username, name, code, password }, USER_SIGNED_IN, signup);
 }
 
-export function signupSocialActionCreator({ type, state }) {
-  return actionCreator({ type, state }, USER_SIGNED_IN, signup);
+export function signupSocialActionCreator({ type, state, token }) {
+  return actionCreator({ type, state, token }, USER_SIGNED_IN, signup);
 }
 
 export function renameActionCreator({ name, surname, phone, email, code, password }) {

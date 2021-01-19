@@ -33,7 +33,6 @@ function createVersion(release, version) {
 * target - name of variable fron .env
 */
 gulp.task('build:version', (done) => {
-  console.log(argv);
   const VER_REG = new RegExp(`^\\s*${argv.target}\\s*=['"]([\\.\\d]+)['"]$`);
   let env = fs.readFileSync("./.env", "utf8").split('\n');
 

@@ -7,10 +7,12 @@ import {
   Lock as PasswordIcon,
 } from '@material-ui/icons';
 import { connect } from "react-redux";
+import { GoogleLogin } from 'react-google-login';
+
 import { signinActionCreator, signupSocialActionCreator } from "../model/actions";
 import { bindActionCreators } from "redux";
 import { STATUSES } from "../enums";
-import { FacebookEnter } from "../components";
+import { FacebookEnter, InstagramEnter, GoogleEnter } from "../components";
 import { ERRORCODES, ERRORTYPES } from "../errors";
 import { ErrorEmitter } from "../emitters";
 
@@ -73,8 +75,8 @@ function SigninDialog({ open, handleClose, username, defaultUsername = "", isLog
     }
   }, []);
 
-  const onFacebookEnter = useCallback((state) => {
-    signupSocialRequest({ type: "facebook", state });
+  const onSocialEnter = useCallback((data) => {
+    signupSocialRequest({ ...data });
   }, []);
 
   return <Dialog open={open} onClose={handleClose}>
@@ -85,10 +87,9 @@ function SigninDialog({ open, handleClose, username, defaultUsername = "", isLog
       </Box>
     </DialogTitle>
     <DialogActions className={classes.socialButtons}>
-      {/* <Tooltip title={t("instagram_enter")}>
-        <IconButton onClick={onInstagramEnter}><InstagramIcon style={{ color: "#FF8948" }} /></IconButton>
-      </Tooltip> */}
-      <FacebookEnter title={t("facebook_enter")} onClick={onFacebookEnter} disabled={isLogged || isLoading} />
+      {/* <InstagramEnter title={t("instagram_enter")} onClick={onSocialEnter} disabled={isLogged || isLoading} /> */}
+      {/* <FacebookEnter title={t("facebook_enter")} onClick={onSocialEnter} disabled={isLogged || isLoading} /> */}
+      <GoogleEnter title={t("google_enter")} onClick={onSocialEnter} disabled={isLogged || isLoading} />
     </DialogActions>
     <form className={classes.form} onSubmit={onSubmit} autoComplete="on">
       <DialogContent>

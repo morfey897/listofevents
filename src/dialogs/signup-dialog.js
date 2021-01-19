@@ -17,7 +17,7 @@ import { bindActionCreators } from "redux";
 import { DIALOGS, STATUSES } from "../enums";
 import { outhcode } from "../api";
 import { ERRORCODES, ERRORTYPES } from "../errors";
-import { FacebookEnter } from "../components";
+import { FacebookEnter, InstagramEnter, GoogleEnter } from "../components";
 import { DialogEmitter, ErrorEmitter } from "../emitters";
 
 const useStyles = makeStyles(() => ({
@@ -39,7 +39,6 @@ function SignupDialog({ open, handleClose, username, isLogged, isLoading, signup
 
   const classes = useStyles();
 
-  const [socialEnter, setSocialEnter] = useState({});
   const [lostTime, setLostTime] = useState(0);
   const [authcode, setAuthCode] = useState({ status: STATUSES.STATUS_NONE });
   const [state, setState] = useState({});
@@ -145,14 +144,8 @@ function SignupDialog({ open, handleClose, username, isLogged, isLoading, signup
     }
   }, [authcode]);
 
-  const onFacebookEnter = useCallback((data) => {
-    setSocialEnter(data);
-    if (data.status === "logged" && data.me) {
-      signupSocialRequest({
-        ...data.me,
-        type: "facebook",
-      });
-    }
+  const onSocialEnter = useCallback((data) => {
+    signupSocialRequest({ ...data });
   }, []);
 
   const onEnterDialog = useCallback(() => {
@@ -164,14 +157,16 @@ function SignupDialog({ open, handleClose, username, isLogged, isLoading, signup
     <DialogTitle disableTypography className="boxes">
       <Box >
         <Typography align='center' variant="h6">{t("title_signup")}</Typography>
-        {(isLoading || socialEnter.status === "loading") && <LinearProgress />}
+        {isLoading && <LinearProgress />}
       </Box>
     </DialogTitle>
     <DialogActions className={classes.socialButtons}>
       {/* <Tooltip title={t("instagram_enter")}>
         <IconButton><InstagramIcon style={{ color: "#FF8948" }} /></IconButton>
       </Tooltip> */}
-      <FacebookEnter title={t("facebook_enter")} onClick={onFacebookEnter} disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} />
+      {/* <InstagramEnter title={t("instagram_enter")} onClick={onInstagramEnter} disabled={isLogged || isLoading} />
+      <FacebookEnter title={t("facebook_enter")} onClick={onFacebookEnter} disabled={isLogged || isLoading} /> */}
+      <GoogleEnter title={t("google_enter")} onClick={onSocialEnter} disabled={isLogged || isLoading} />
 
     </DialogActions>
     <form className={classes.form} onSubmit={onSubmit}>
@@ -202,32 +197,32 @@ function SignupDialog({ open, handleClose, username, isLogged, isLoading, signup
           }
         })()}
 
-        <TextField disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} name="name" type="text" autoFocus fullWidth label={t("name_label")} margin="normal"
+        <TextField disabled={isLogged || isLoading} name="name" type="text" autoFocus fullWidth label={t("name_label")} margin="normal"
           InputProps={{
             startAdornment: <InputAdornment position="start"><NameIcon /></InputAdornment>,
           }} inputRef={nameRef} />
 
-        <TextField disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} error={(state.errorCode === ERRORCODES.ERROR_EMPTY && (!usernameRef.current || !usernameRef.current.value)) || state.errorCode === ERRORCODES.ERROR_INCORRECT_USERNAME} required name="username" type="text" fullWidth label={t("username_label")} margin="normal"
+        <TextField disabled={isLogged || isLoading} error={(state.errorCode === ERRORCODES.ERROR_EMPTY && (!usernameRef.current || !usernameRef.current.value)) || state.errorCode === ERRORCODES.ERROR_INCORRECT_USERNAME} required name="username" type="text" fullWidth label={t("username_label")} margin="normal"
           InputProps={{
             startAdornment: <InputAdornment position="start"><LabelIcon /></InputAdornment>,
           }} inputRef={usernameRef} onChange={debounce(onChange, 300)} autoComplete="on" />
 
-        <TextField disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} error={state.errorCode === ERRORCODES.ERROR_EMPTY && (!passwordRef.current || !passwordRef.current.value)} required name="password" type="password" fullWidth label={t("password_label")} margin="normal" InputProps={{
+        <TextField disabled={isLogged || isLoading} error={state.errorCode === ERRORCODES.ERROR_EMPTY && (!passwordRef.current || !passwordRef.current.value)} required name="password" type="password" fullWidth label={t("password_label")} margin="normal" InputProps={{
           startAdornment: <InputAdornment position="start"><PasswordIcon /></InputAdornment>,
         }} inputRef={passwordRef} onChange={debounce(onChange, 300)} autoComplete="on" />
 
-        <TextField disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} error={state.errorCode === ERRORCODES.ERROR_INCORRECT_PASSWORD} required name="confirm_password" type="password" fullWidth label={t("confirm_password_label")} margin="normal" InputProps={{
+        <TextField disabled={isLogged || isLoading} error={state.errorCode === ERRORCODES.ERROR_INCORRECT_PASSWORD} required name="confirm_password" type="password" fullWidth label={t("confirm_password_label")} margin="normal" InputProps={{
           startAdornment: <InputAdornment position="start"><ConfirmPasswordIcon /></InputAdornment>,
         }} inputRef={confirmPasswordRef} />
 
         {
           (authcode.status === STATUSES.STATUS_SUCCESS || (authcode.status === STATUSES.STATUS_ERROR && state.errorCode === ERRORCODES.ERROR_INCORRECT_CODE)) &&
-          <TextField disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} error={state.errorCode === ERRORCODES.ERROR_INCORRECT_CODE} required name="validation_code" type="number" fullWidth label={t("general:validation_code")} helperText={t("general:validation_code_timer", { seconds: authcode.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
+          <TextField disabled={isLogged || isLoading} error={state.errorCode === ERRORCODES.ERROR_INCORRECT_CODE} required name="validation_code" type="number" fullWidth label={t("general:validation_code")} helperText={t("general:validation_code_timer", { seconds: authcode.lifetime - lostTime })} margin="normal" onChange={onChangeCode} inputRef={validateCodeRef} />
         }
 
       </DialogContent>
       <DialogActions>
-        <Button type="submit" disabled={(isLogged || socialEnter.status === "logged") || (isLoading || socialEnter.status === "loading")} onClick={onSubmit} color="primary" >{t("general:button_create")}</Button>
+        <Button type="submit" disabled={isLogged || isLoading} onClick={onSubmit} color="primary" >{t("general:button_create")}</Button>
         <Button onClick={handleClose} color="primary">{t("general:button_close")}</Button>
       </DialogActions>
     </form>

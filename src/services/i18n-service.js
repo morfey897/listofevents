@@ -3,26 +3,29 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
 import ruJson from "../../static/i18n/ru.json";
+import ukJson from "../../static/i18n/uk.json";
 import Service from "./service";
+
+import { LANGS } from "../enums";
 
 class I18nService extends Service {
 
   run() {
     return new Promise((resolve, reject) => {
       i18n
-        .use(LanguageDetector)
+        // .use(LanguageDetector)
         .use(initReactI18next) // bind react-i18next to the instance
         .init({
-          fallbackLng: 'ru',
-          debug: true,
+          fallbackLng: LANGS.UK,
+          debug: process.env.DEBUG === "true",
           lowerCaseLng: true,
-          lng: 'ru',
-          supportedLngs: ['ru'],
+          lng: LANGS.RU,
+          supportedLngs: [LANGS.UK, LANGS.RU],
           nonExplicitSupportedLngs: true,
 
           resources: {
-            // en: { ...enJson },
-            ru: { ...ruJson },
+            [LANGS.UK]: { ...ukJson },
+            [LANGS.RU]: { ...ruJson },
           },
 
           ns: [...new Set([].concat(Object.keys(ruJson)))],

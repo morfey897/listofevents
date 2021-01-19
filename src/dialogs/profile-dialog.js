@@ -107,7 +107,6 @@ function ProfileDialog({ open, handleClose, isLoading, isSuccess, username, name
     if (locPhone || locEmail) {
       if (state.status == ST_GONE_CODE) {
         setState({ ...state, status: ST_WAITING_USER,  errorCode: 0 });
-        console.log("REQUEST", locEmail);
         renameUser({
           name: locName,
           surname: locSurname,
