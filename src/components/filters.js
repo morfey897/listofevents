@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
 import DropList from './drop-list';
 
-import { List, ListItemText, ListItem, ListItemIcon, Divider, IconButton, Popover, Typography, makeStyles, Badge } from '@material-ui/core';
+import { List, ListItemText, ListItem, ListItemIcon, Divider, IconButton, Popover, Typography, Badge } from '@material-ui/core';
+import { makeStyles} from "@material-ui/core/styles";
 import {
   FilterList as FilterListIcon,
   LocationCity as LocationIcon,

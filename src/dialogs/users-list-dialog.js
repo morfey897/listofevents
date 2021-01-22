@@ -1,12 +1,7 @@
 import { useEffect } from "react";
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { useTranslation } from "react-i18next";
-import { Box, FormControlLabel, Grid, LinearProgress, makeStyles, Radio, RadioGroup, Typography, useMediaQuery } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, FormControlLabel, Grid, LinearProgress, Radio, RadioGroup, Typography, useMediaQuery } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
 import { connect } from "react-redux";
 import { fetchUsersActionCreator, updateUserActionCreator, deleteUsersActionCreator } from "../model/actions";
@@ -116,7 +111,8 @@ const mapStateToProps = (state) => {
     }
   });
 
-  let usersList = users.list.filter(({ _id }) => user.user.id !== _id);
+  console.log(user);
+  let usersList = users.list.filter(({ _id }) => user.user._id !== _id);
   return {
     isLogged: user.isLogged,
     isModerator: user.isLogged && (user.user.role & config.roles.moderator) === config.roles.moderator,

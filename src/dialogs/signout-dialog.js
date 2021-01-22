@@ -1,14 +1,8 @@
 import { useCallback, useEffect } from "react";
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import { useTranslation } from "react-i18next";
-import { Box, debounce, LinearProgress, Typography } from "@material-ui/core";
-
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, LinearProgress, Typography } from "@material-ui/core";
+import { debounce } from "@material-ui/core/utils";
 import { connect } from "react-redux";
 import { signoutActionCreator } from "../model/actions";
 import { bindActionCreators } from "redux";

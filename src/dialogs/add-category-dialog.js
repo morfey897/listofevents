@@ -1,15 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
 import { useTranslation } from "react-i18next";
 
-import { Box, debounce, IconButton, InputAdornment, LinearProgress, makeStyles, Typography, useMediaQuery } from "@material-ui/core";
+import { DialogTitle, DialogContentText, Button, TextField, Dialog, DialogActions, Box, DialogContent, IconButton, InputAdornment, LinearProgress, Typography, useMediaQuery } from "@material-ui/core";
+import { makeStyles} from "@material-ui/core/styles";
+import { debounce } from "@material-ui/core/utils";
 
 import { DIALOGS, STATUSES, SCREENS } from "../enums";
 import { ERRORCODES, ERRORTYPES } from "../errors";

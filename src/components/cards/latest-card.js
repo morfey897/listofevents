@@ -1,4 +1,5 @@
-import { Box, CardMedia, makeStyles, Typography } from '@material-ui/core';
+import { Box, CardMedia, Typography } from '@material-ui/core';
+import { makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
   card: {

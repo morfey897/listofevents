@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
-import { GridList, GridListTile, GridListTileBar, IconButton, makeStyles } from "@material-ui/core";
+import { GridList, GridListTile, GridListTileBar, IconButton } from "@material-ui/core";
 import { AddAPhoto as ImageIcon, InsertPhoto as BlankIcon, Delete as DeleteIcon } from "@material-ui/icons";
+import { makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {

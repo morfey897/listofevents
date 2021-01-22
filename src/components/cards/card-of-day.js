@@ -1,4 +1,5 @@
-import { makeStyles, Typography, Card, CardContent } from "@material-ui/core";
+import { Typography, Card, CardContent } from "@material-ui/core";
+import { makeStyles} from "@material-ui/core/styles";
 import { format } from 'date-fns';
 import { indigo } from '@material-ui/core/colors';
 

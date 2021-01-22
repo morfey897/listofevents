@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress, debounce } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core';
+import { Container, Typography, Grid, Paper, Hidden, Toolbar as MuiToolbar, LinearProgress } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { debounce } from "@material-ui/core/utils";
 import { CalendarMontly, CalendarDaily, Filters, Toolbar } from '../components';
 import { VIEWS, TENSE, STATUSES } from '../enums';
 import { connect } from 'react-redux';

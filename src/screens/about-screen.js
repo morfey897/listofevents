@@ -1,4 +1,5 @@
-import { Box, Button, Container, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Box, Button, Container, Grid, TextField, Typography } from '@material-ui/core';
+import { makeStyles} from "@material-ui/core/styles";
 import { Build, Create, Gesture } from '@material-ui/icons';
 import { useTranslation } from 'react-i18next';
 import { PersonCard } from '../components/cards';

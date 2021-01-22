@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, debounce, InputAdornment, LinearProgress, makeStyles, Typography } from '@material-ui/core';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, InputAdornment, LinearProgress, Typography } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core/styles";
+import { debounce } from "@material-ui/core/utils";
 import { Alert } from '@material-ui/lab';
 import { useTranslation } from "react-i18next";
 import {
@@ -7,7 +9,6 @@ import {
   Lock as PasswordIcon,
 } from '@material-ui/icons';
 import { connect } from "react-redux";
-import { GoogleLogin } from 'react-google-login';
 
 import { signinActionCreator, signupSocialActionCreator } from "../model/actions";
 import { bindActionCreators } from "redux";

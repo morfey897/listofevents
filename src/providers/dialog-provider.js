@@ -3,7 +3,8 @@ import { DialogEmitter } from "../emitters";
 
 import { AddEventDialog, SigninDialog, SignupDialog, SignoutDialog, ProfileDialog, UsersListDialog, AddCategoryDialog, ConfirmDeleteDialog } from "../dialogs";
 import { DIALOGS, EVENTS } from "../enums";
-import { debounce, useTheme } from "@material-ui/core";
+import { debounce } from "@material-ui/core/utils";
+import { useTheme } from "@material-ui/core/styles";
 
 const initialState = {
   wnds: [], //Object.values(WN).map(wnd => ({ wnd, isOpen: 0, data: {}, order: 0 }))
@@ -34,7 +35,7 @@ function reducer(state, action) {
       return {
         ...state,
         wnds: state.wnds.filter(f => wnd !== f.wnd),
-    };
+      };
     default:
       throw new Error();
   }
@@ -43,7 +44,7 @@ function reducer(state, action) {
 const clears = {};
 function DialogProvider() {
 
-  const theme = useTheme(); 
+  const theme = useTheme();
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const onOpen = useCallback(({ wnd, ...data }) => {

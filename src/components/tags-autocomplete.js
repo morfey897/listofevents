@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
-import { Autocomplete, createFilterOptions } from "@material-ui/lab";
+import { Autocomplete } from "@material-ui/lab";
+import { createFilterOptions } from "@material-ui/lab/useAutocomplete";
 import { CircularProgress, TextField } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { transliterate } from "inflected";
@@ -70,9 +71,9 @@ function TagsAutocomplete({ values, options, isLoading, limit = 3, onChange, fet
         InputProps={{
           ...params.InputProps,
           endAdornment: <>
-              {isLoading && <CircularProgress color="inherit" size={20} />}
-              {params.InputProps.endAdornment}
-            </>
+            {isLoading && <CircularProgress color="inherit" size={20} />}
+            {params.InputProps.endAdornment}
+          </>
         }} />
     )}
   />;

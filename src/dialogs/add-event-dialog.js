@@ -1,21 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { useTranslation } from "react-i18next";
 
-import { Box, debounce, Grid, IconButton, InputAdornment, LinearProgress, makeStyles, Typography, useMediaQuery } from "@material-ui/core";
-
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, Grid, IconButton, InputAdornment, LinearProgress, Typography, useMediaQuery } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import { debounce } from "@material-ui/core/utils";
 import { addDays, format, formatISO } from "date-fns";
 
 import {
   KeyboardDateTimePicker,
-} from '@material-ui/pickers';
+} from '@material-ui/pickers/DatePicker';
 import { DIALOGS, SCREENS, STATUSES } from "../enums";
 import { ERRORCODES, ERRORTYPES } from "../errors";
 import { connect } from "react-redux";
@@ -337,7 +331,7 @@ const mapStateToProps = (state, { _id }) => {
   return {
     isLogged: user.isLogged,
     isEditor: user.isLogged && (user.user.role & config.roles.editor) === config.roles.editor,
-    canDelete: user.isLogged && ((user.user.role & config.roles.admin) === config.roles.admin || (event && event.author && event.author._id == user.user.id)),
+    canDelete: user.isLogged && ((user.user.role & config.roles.admin) === config.roles.admin || (event && event.author && event.author._id == user.user._id)),
 
     isLoading: events.status === STATUSES.STATUS_PENDING,
     isSuccess: events.status === STATUSES.STATUS_SUCCESS,

@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import { makeStyles, ButtonBase, Popover, Box, Typography, Grid, Link, CardMedia } from "@material-ui/core";
+import { ButtonBase, Popover, Box, Typography, Grid, Link, CardMedia } from "@material-ui/core";
+import { makeStyles} from "@material-ui/core/styles";
 import { format, formatDuration } from 'date-fns';
 import { capitalCaseTransform as capitalCase } from 'change-case';
 import { connect } from 'react-redux';

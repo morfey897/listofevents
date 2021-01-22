@@ -1,4 +1,5 @@
-import { Box, CardMedia, makeStyles } from '@material-ui/core';
+import { Box, CardMedia } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -14,7 +15,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-function ImgCard({url}) {
+function ImgCard({ url }) {
   const classes = useStyles();
 
   return (

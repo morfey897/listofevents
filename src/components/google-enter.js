@@ -1,6 +1,7 @@
 
 import { useEffect, useMemo, useCallback } from "react";
-import { CircularProgress, useTheme } from '@material-ui/core';
+import { CircularProgress } from '@material-ui/core';
+import { useTheme } from "@material-ui/core/styles";
 import { bindActionCreators } from "redux";
 import { fetchConfigActionCreator } from "../model/actions";
 import { connect } from "react-redux";

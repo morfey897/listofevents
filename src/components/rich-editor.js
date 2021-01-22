@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import Editor from 'draft-js-plugins-editor';
 import { EditorState } from 'draft-js';
 import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';
@@ -22,7 +22,7 @@ import 'draft-js/dist/Draft.css';
 import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
 import 'draft-js-static-toolbar-plugin/lib/plugin.css';
 
-import { makeStyles, useTheme } from "@material-ui/core";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
   editor: {

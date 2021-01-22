@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
-import { Autocomplete, createFilterOptions } from "@material-ui/lab";
+import { Autocomplete } from "@material-ui/lab";
+import { createFilterOptions } from "@material-ui/lab/useAutocomplete";
 import { CircularProgress, TextField } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";

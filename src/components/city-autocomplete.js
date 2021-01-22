@@ -1,5 +1,7 @@
 import { useMemo, useEffect, useState, useCallback } from 'react';
-import { TextField, Typography, Grid, makeStyles, debounce } from '@material-ui/core';
+import { TextField, Typography, Grid } from '@material-ui/core';
+import { debounce } from "@material-ui/core/utils";
+import { makeStyles } from "@material-ui/core/styles";
 import { Autocomplete } from '@material-ui/lab';
 import {
   LocationCity as LocationCityIcon,

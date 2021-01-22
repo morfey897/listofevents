@@ -1,6 +1,6 @@
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { AboutScreen, ContactsScreen, PrivacyPolicyScreen, ListEventsScreen, MainScreen, EventScreen, PageEventsScreen, CategoryScreen, SearchScreen } from '../screens';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import urljoin from "url-join";
 import { Header } from '../components';
 import { SCREENS } from '../enums';

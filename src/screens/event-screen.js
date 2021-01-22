@@ -1,4 +1,5 @@
-import { Box, Container, Grid, makeStyles, Typography, Link, GridList, GridListTile, IconButton } from '@material-ui/core';
+import { Box, Container, Grid, Typography, Link, GridList, GridListTile, IconButton } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
@@ -127,7 +128,7 @@ function EventScreen({ _id, name, description, date, duration, city, category, i
 
       <Box mt={3}>
         {tags.length > 0 && <Grid item xs={12}>
-          {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH, `?${queryString.stringify({tag})}`)} component={RouterLink}>{tag}</Link>)}
+          {tags.map((tag) => <Link className={classes.tag} key={tag} to={urljoin(SCREENS.SEARCH, `?${queryString.stringify({ tag })}`)} component={RouterLink}>{tag}</Link>)}
         </Grid>}
       </Box>
 

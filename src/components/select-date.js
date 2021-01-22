@@ -1,14 +1,16 @@
 import { useState, useCallback } from 'react';
-import ListItem from '@material-ui/core/ListItem';
+import { ListItem } from '@material-ui/core';
 
-import DateFnsUtils from '@date-io/date-fns';
+// import DateFnsUtils from '@date-io/date-fns';
+// import {
+//   MuiPickersUtilsProvider,
+// } from '@material-ui/pickers';
 import {
-  MuiPickersUtilsProvider,
   KeyboardDatePicker,
-} from '@material-ui/pickers';
+} from '@material-ui/pickers/DatePicker';
 
 
-function SelectDate({from, to, onChange}) {
+function SelectDate({ from, to, onChange }) {
 
   const [fromDate, setFromDate] = useState(from || null);
   const [toDate, setToDate] = useState(to || null);
@@ -34,37 +36,38 @@ function SelectDate({from, to, onChange}) {
   }, [fromDate]);
 
 
+  // MuiPickersUtilsProvider utils={DateFnsUtils}
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <ListItem dense>
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="MM.dd.yyyy"
-            id="date-picker-from"
-            label="Start date"
-            value={fromDate}
-            onChange={onFromChange}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-        </ListItem>
+    <>
+      <ListItem dense>
+        <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="MM.dd.yyyy"
+          id="date-picker-from"
+          label="Start date"
+          value={fromDate}
+          onChange={onFromChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+      </ListItem>
 
-        <ListItem dense>
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="MM.dd.yyyy"
-            id="date-picker-to"
-            label="Final date"
-            value={toDate}
-            onChange={onToChange}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-        </ListItem>
-    </MuiPickersUtilsProvider>);
+      <ListItem dense>
+        <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="MM.dd.yyyy"
+          id="date-picker-to"
+          label="Final date"
+          value={toDate}
+          onChange={onToChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+      </ListItem>
+    </>);
 }
 export default SelectDate;

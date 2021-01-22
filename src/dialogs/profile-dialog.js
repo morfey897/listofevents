@@ -1,13 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Alert from '@material-ui/lab/Alert';
+import { Alert } from '@material-ui/lab';
 import { useTranslation } from "react-i18next";
-import { Box, debounce, Grid, InputAdornment, LinearProgress, Typography } from "@material-ui/core";
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Box, Grid, InputAdornment, LinearProgress, Typography } from "@material-ui/core";
+import { debounce } from "@material-ui/core/utils";
 import { cancelable } from 'cancelable-promise';
 
 import MuiPhoneInput from "material-ui-phone-number";
@@ -106,7 +101,7 @@ function ProfileDialog({ open, handleClose, isLoading, isSuccess, username, name
 
     if (locPhone || locEmail) {
       if (state.status == ST_GONE_CODE) {
-        setState({ ...state, status: ST_WAITING_USER,  errorCode: 0 });
+        setState({ ...state, status: ST_WAITING_USER, errorCode: 0 });
         renameUser({
           name: locName,
           surname: locSurname,

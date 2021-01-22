@@ -1,4 +1,5 @@
-import { Container, makeStyles, Typography, Box, Link } from "@material-ui/core";
+import { Container, Typography, Box, Link } from "@material-ui/core";
+import { makeStyles} from "@material-ui/core/styles";
 import { useEffect } from "react";
 import { Link as RouterLink, withRouter } from 'react-router-dom';
 import urljoin from "url-join";

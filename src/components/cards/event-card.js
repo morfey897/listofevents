@@ -1,4 +1,5 @@
-import { Box, CardMedia, Grid, makeStyles, Typography, Link, Hidden } from '@material-ui/core';
+import { Box, CardMedia, Grid, Typography, Link, Hidden } from '@material-ui/core';
+import { makeStyles} from "@material-ui/core/styles";
 import { format, formatDuration } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';

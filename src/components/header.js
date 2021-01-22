@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Link as RouterLink, withRouter } from 'react-router-dom';
-import { makeStyles, AppBar, Menu, MenuItem, Toolbar, Container, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button, Drawer, List, ListItem, useTheme, Tooltip } from '@material-ui/core';
-
+import { AppBar, Menu, MenuItem, Toolbar, Container, IconButton, Hidden, ListItemIcon, ListItemText, Divider, Button, Drawer, List, ListItem, Tooltip } from '@material-ui/core';
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import {
   Menu as MenuIcon,
   AddBox as AddEventIcon,

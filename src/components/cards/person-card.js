@@ -1,5 +1,6 @@
-import { Box, Card, CardContent, CardMedia, IconButton, makeStyles, Typography } from '@material-ui/core';
+import { Box, Card, CardContent, CardMedia, IconButton, Typography } from '@material-ui/core';
 import { Facebook, LocalSee, Telegram } from '@material-ui/icons';
+import { makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() => ({
   justifyCenter: {
