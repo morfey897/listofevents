@@ -1,10 +1,20 @@
-import { useCallback, useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, Suspense, lazy } from "react";
 import { DialogEmitter } from "../emitters";
 
 import { AddEventDialog, SigninDialog, SignupDialog, SignoutDialog, ProfileDialog, UsersListDialog, AddCategoryDialog, ConfirmDeleteDialog } from "../dialogs";
 import { DIALOGS, EVENTS } from "../enums";
+// import { CircularProgress } from "@material-ui/core";
 import { debounce } from "@material-ui/core/utils";
 import { useTheme } from "@material-ui/core/styles";
+
+// const AddEventDialog = lazy(() => import(/* webpackChunkName: "add-event-dialog" */"../dialogs/add-event-dialog"));
+// const AddCategoryDialog = lazy(() => import(/* webpackChunkName: "add-category-dialog" */"../dialogs/add-category-dialog"));
+// const ConfirmDeleteDialog = lazy(() => import(/* webpackChunkName: "confirm-delete-dialog" */"../dialogs/confirm-delete-dialog"));
+// const SigninDialog = lazy(() => import(/* webpackChunkName: "signin-dialog" */"../dialogs/signin-dialog"));
+// const SignupDialog = lazy(() => import(/* webpackChunkName: "signup-dialog" */"../dialogs/signup-dialog"));
+// const SignoutDialog = lazy(() => import(/* webpackChunkName: "signout-dialog" */"../dialogs/signout-dialog"));
+// const UsersListDialog = lazy(() => import(/* webpackChunkName: "users-list-dialog" */"../dialogs/users-list-dialog"));
+// const ProfileDialog = lazy(() => import(/* webpackChunkName: "profile-dialog" */"../dialogs/profile-dialog"));
 
 const initialState = {
   wnds: [], //Object.values(WN).map(wnd => ({ wnd, isOpen: 0, data: {}, order: 0 }))

@@ -156,23 +156,20 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDe
         city_description: city.description,
         tags,
       };
-
-      console.log("DATA", data);
-
-      // if (event) {
-      //   updateEvent({
-      //     _id: event._id,
-      //     ...data,
-      //     url: data.url == event.url ? "" : data.url,
-      //     images: images.filter(f => !(f instanceof File)).map(({ _id }) => _id),
-      //     add_images: images.filter(f => (f instanceof File))
-      //   });
-      // } else {
-      //   addEvent({
-      //     ...data,
-      //     images
-      //   });
-      // }
+      if (event) {
+        updateEvent({
+          _id: event._id,
+          ...data,
+          url: data.url == event.url ? "" : data.url,
+          images: images.filter(f => !(f instanceof File)).map(({ _id }) => _id),
+          add_images: images.filter(f => (f instanceof File))
+        });
+      } else {
+        addEvent({
+          ...data,
+          images
+        });
+      }
     } else {
       setState({ errorCode: ERRORCODES.ERROR_EMPTY });
     }
