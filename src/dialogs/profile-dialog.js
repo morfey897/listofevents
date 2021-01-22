@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Alert } from '@material-ui/lab';
+import { useCallback, useEffect, useMemo, useRef, useState, Suspense, lazy } from "react";
+import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from "react-i18next";
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Box, Grid, InputAdornment, LinearProgress, Typography } from "@material-ui/core";
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Box, Grid, InputAdornment, LinearProgress, Typography, CircularProgress } from "@material-ui/core";
 import { debounce } from "@material-ui/core/utils";
 import { cancelable } from 'cancelable-promise';
-
-import MuiPhoneInput from "material-ui-phone-number";
 
 import {
   Lock as PasswordIcon,
@@ -19,6 +17,8 @@ import { outhcode } from "../api";
 import { STATUSES } from "../enums";
 import { ERRORCODES, ERRORTYPES } from "../errors";
 import { ErrorEmitter } from "../emitters";
+
+const MuiPhoneInput = lazy(() => import(/* webpackChunkName: "mui-phone-number" */"material-ui-phone-number"));
 
 let waitClose;
 let timerUID = 0;
@@ -173,7 +173,9 @@ function ProfileDialog({ open, handleClose, isLoading, isSuccess, username, name
           </Grid>
         </Grid>
 
-        <MuiPhoneInput fullWidth value={locPhone} onChange={(value) => setPhone(value)} defaultCountry={'ua'} error={(!locPhone && state.errorCode === ERRORCODES.ERROR_EMPTY) || (state.errorCode === ERRORCODES.ERROR_EXIST_PHONE)} />
+        <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
+          <MuiPhoneInput fullWidth value={locPhone} onChange={(value) => setPhone(value)} defaultCountry={'ua'} error={(!locPhone && state.errorCode === ERRORCODES.ERROR_EMPTY) || (state.errorCode === ERRORCODES.ERROR_EXIST_PHONE)} />
+        </Suspense>
 
         <TextField error={(!locEmail && state.errorCode === ERRORCODES.ERROR_EMPTY) || state.errorCode === ERRORCODES.ERROR_EXIST_EMAIL} name="email" type="email" fullWidth label={t("email_label")} value={locEmail} margin="normal" onChange={(event) => setEmail(event.target.value)}
           InputProps={{

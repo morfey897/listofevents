@@ -1,13 +1,10 @@
 import { useState, useCallback } from 'react';
 import { ListItem } from '@material-ui/core';
-
-// import DateFnsUtils from '@date-io/date-fns';
-// import {
-//   MuiPickersUtilsProvider,
-// } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import {
   KeyboardDatePicker,
-} from '@material-ui/pickers/DatePicker';
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
 
 
 function SelectDate({ from, to, onChange }) {
@@ -35,10 +32,8 @@ function SelectDate({ from, to, onChange }) {
     }
   }, [fromDate]);
 
-
-  // MuiPickersUtilsProvider utils={DateFnsUtils}
   return (
-    <>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <ListItem dense>
         <KeyboardDatePicker
           disableToolbar
@@ -68,6 +63,6 @@ function SelectDate({ from, to, onChange }) {
           }}
         />
       </ListItem>
-    </>);
+    </MuiPickersUtilsProvider>);
 }
 export default SelectDate;

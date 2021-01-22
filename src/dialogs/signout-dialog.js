@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { Alert } from '@material-ui/lab';
+import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from "react-i18next";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, LinearProgress, Typography } from "@material-ui/core";
 import { debounce } from "@material-ui/core/utils";

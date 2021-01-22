@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, InputAdornment, LinearProgress, Typography } from "@material-ui/core";
 import { makeStyles} from "@material-ui/core/styles";
 import { debounce } from "@material-ui/core/utils";
-import { Alert } from '@material-ui/lab';
+import Alert from '@material-ui/lab/Alert';
 import { useTranslation } from "react-i18next";
 import { cancelable } from "cancelable-promise";
 

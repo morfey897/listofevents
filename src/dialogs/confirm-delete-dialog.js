@@ -8,7 +8,7 @@ import { deleteEventActionCreator } from "../model/actions";
 import { DIALOGS, SCREENS, STATUSES } from "../enums";
 import { DialogEmitter, ErrorEmitter } from "../emitters";
 import { ERRORCODES, ERRORTYPES } from "../errors";
-import { Alert } from "@material-ui/lab";
+import Alert from "@material-ui/lab/Alert";
 import { withRouter } from "react-router-dom";
 
 let waitClose;

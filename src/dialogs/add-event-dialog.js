@@ -1,28 +1,28 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, Suspense, lazy } from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, Grid, IconButton, InputAdornment, LinearProgress, Typography, useMediaQuery } from "@material-ui/core";
+import { Button, CircularProgress, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, Grid, IconButton, InputAdornment, LinearProgress, Typography, useMediaQuery } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { debounce } from "@material-ui/core/utils";
 import { addDays, format, formatISO } from "date-fns";
 
-import {
-  KeyboardDateTimePicker,
-} from '@material-ui/pickers/DatePicker';
 import { DIALOGS, SCREENS, STATUSES } from "../enums";
 import { ERRORCODES, ERRORTYPES } from "../errors";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { RichEditor, TagsAutocomplete, CategoryAutocomplete, CityAutocomplete, UploadImages } from "../components";
+import { TagsAutocomplete, CategoryAutocomplete, CityAutocomplete, UploadImages } from "../components";
 import { DialogEmitter, ErrorEmitter } from "../emitters";
 import { normalizeURL } from "../helpers";
-import { Alert } from "@material-ui/lab";
+import Alert from "@material-ui/lab/Alert";
 import { stateToHTML } from 'draft-js-export-html';
 import { Lock as LockIcon } from "@material-ui/icons";
 import { createEventActionCreator, updateEventActionCreator } from "../model/actions";
 import { useLocale } from "../hooks";
 import { withRouter } from "react-router-dom";
+
+const RichEditor = lazy(() => import(/* webpackChunkName: "rich-editor" */"../components/rich-editor"));
+const DateTimePicker = lazy(() => import(/* webpackChunkName: "datetime-picker" */"../components/datetime-picker"));
 
 const useStyles = makeStyles((theme) => ({
   marginDense: {
@@ -239,24 +239,15 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDe
           {/* Date & time */}
           <Grid container spacing={2}>
             <Grid item xs={12} sm={8}>
-              <KeyboardDateTimePicker
-                required
-                fullWidth
-                disablePast
-                ampm={false}
-                label={t("date_label")}
-                margin="dense"
-
-                value={selectedDate}
-
-                onChange={handleDateChange}
-                placeholder={format(NOW, "dd.MM.yyyy HH:mm", { locale })}
-
-                format="dd.MM.yyyy HH:mm"
-                animateYearScrolling={true}
-                error={state.errorCode == ERRORCODES.ERROR_EMPTY && !selectedDate}
-              />
-
+              <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
+                <DateTimePicker
+                  label={t("date_label")}
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  placeholder={format(NOW, "dd.MM.yyyy HH:mm", { locale })}
+                  format="dd.MM.yyyy HH:mm"
+                  error={state.errorCode == ERRORCODES.ERROR_EMPTY && !selectedDate} />
+              </Suspense>
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
@@ -294,7 +285,9 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDe
           </Box>
           {/* Description */}
           <Box className={classes.marginDense}>
-            <RichEditor placeholder={t("description_label")} innerRef={descriptionRef} content={event && event.description || ""} />
+            <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
+              <RichEditor placeholder={t("description_label")} innerRef={descriptionRef} content={event && event.description || ""} />
+            </Suspense>
           </Box>
           {/* Tags */}
           <Box className={classes.marginDense}>

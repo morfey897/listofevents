@@ -1,12 +1,10 @@
 
 import { CircularProgress } from '@material-ui/core';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { createBrowserHistory } from 'history';
 import { useEffect, useReducer } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Router } from 'react-router-dom';
 import { runServices } from "../services";
-import DateFnsUtils from '@date-io/date-fns';
 import ThemeWrapper from './theme-wrapper';
 import { STORE_INIT } from "../model/actions";
 import { STATUSES } from '../enums';
@@ -56,9 +54,7 @@ function Root() {
       }
       <BrowserRouter>
         <Router history={history}>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <ThemeWrapper />
-          </MuiPickersUtilsProvider>
+          <ThemeWrapper />
         </Router>
       </BrowserRouter>
     </Provider>

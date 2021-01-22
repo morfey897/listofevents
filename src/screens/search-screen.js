@@ -1,6 +1,6 @@
 import { Box, Container, Typography, LinearProgress, Grid } from '@material-ui/core';
 import { makeStyles} from "@material-ui/core/styles";
-import { Pagination } from '@material-ui/lab';
+import Pagination from '@material-ui/lab/Pagination';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -2,10 +2,10 @@ import Header from './header';
 import Filters from './filters';
 import CalendarMontly from './calendar-monthly';
 import CalendarDaily from './calendar-daily';
-import SelectDate from './select-date';
+// import SelectDate from './select-date';
 import DropList from './drop-list';
 import Toolbar from './toolbar';
-import RichEditor from "./rich-editor";
+// import RichEditor from "./rich-editor";
 import TagsAutocomplete from "./tags-autocomplete";
 import CategoryAutocomplete from "./category-autocomplete";
 import CityAutocomplete from "./city-autocomplete";
@@ -20,10 +20,10 @@ export {
   Filters,
   CalendarMontly,
   CalendarDaily,
-  SelectDate,
+  // SelectDate,
   DropList,
   Toolbar,
-  RichEditor,
+  // RichEditor,
   TagsAutocomplete,
   CategoryAutocomplete,
   CityAutocomplete,

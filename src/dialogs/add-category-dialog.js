@@ -1,22 +1,24 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, Suspense, lazy } from "react";
 import { useTranslation } from "react-i18next";
 
-import { DialogTitle, DialogContentText, Button, TextField, Dialog, DialogActions, Box, DialogContent, IconButton, InputAdornment, LinearProgress, Typography, useMediaQuery } from "@material-ui/core";
-import { makeStyles} from "@material-ui/core/styles";
+import { DialogTitle, DialogContentText, Button, TextField, Dialog, DialogActions, Box, DialogContent, IconButton, InputAdornment, LinearProgress, CircularProgress, Typography, useMediaQuery } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { debounce } from "@material-ui/core/utils";
 
 import { DIALOGS, STATUSES, SCREENS } from "../enums";
 import { ERRORCODES, ERRORTYPES } from "../errors";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { RichEditor, TagsAutocomplete, UploadImages } from "../components";
+import { TagsAutocomplete, UploadImages } from "../components";
 import { DialogEmitter, ErrorEmitter } from "../emitters";
 import { normalizeURL } from "../helpers";
 import { createCategoryActionCreator, fetchTagsActionCreator } from "../model/actions";
-import { Alert } from "@material-ui/lab";
+import Alert from "@material-ui/lab/Alert";
 import { stateToHTML } from 'draft-js-export-html';
 import { Lock as LockIcon } from "@material-ui/icons";
 import urljoin from "url-join";
+
+const RichEditor = lazy(() => import(/* webpackChunkName: "rich-editor" */"../components/rich-editor"));
 
 const useStyles = makeStyles((theme) => ({
   marginDense: {
@@ -150,7 +152,9 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
             <TextField required error={state.errorCode === ERRORCODES.ERROR_EMPTY && !url} name="name" autoFocus fullWidth label={t("name_label")} value={name} margin="dense" onChange={onChangeName} />
             {/* Description */}
             <Box className={classes.marginDense}>
-              <RichEditor placeholder={t("description_label")} innerRef={descriptionRef} />
+              <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
+                <RichEditor placeholder={t("description_label")} innerRef={descriptionRef} />
+              </Suspense>
             </Box>
             {/* Tags */}
             <Box className={classes.marginDense}>
