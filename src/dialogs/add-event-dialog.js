@@ -15,7 +15,6 @@ import { TagsAutocomplete, CategoryAutocomplete, CityAutocomplete, UploadImages 
 import { DialogEmitter, ErrorEmitter } from "../emitters";
 import { normalizeURL } from "../helpers";
 import Alert from "@material-ui/lab/Alert";
-import { stateToHTML } from 'draft-js-export-html';
 import { Lock as LockIcon } from "@material-ui/icons";
 import { createEventActionCreator, updateEventActionCreator } from "../model/actions";
 import { useLocale } from "../hooks";
@@ -59,7 +58,7 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDe
   const [category, setCategory] = useState(event && event.category && { ...event.category } || null);
   const [city, setCity] = useState(event && event.city && { ...event.city } || null);
   const [secretKeyCategory, setSecretKeyCategory] = useState(null);
-  const descriptionRef = useRef(null);
+  const [description, setDescription] = useState(event && event.description || "");
 
   const locale = useLocale(i18n);
 
@@ -140,16 +139,17 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDe
     if (e && typeof e.preventDefault === "function") {
       e.preventDefault();
     }
+
     if (url && name && location && selectedDate && category && city) {
       setState({ waiting: true });
       const data = {
         url,
         name,
         location,
+        description,
         date: formatISO(selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60 * 1000),
         duration: strToMin(duration),
         category_id: category._id,
-        description: stateToHTML(descriptionRef.current.getEditorState().getCurrentContent()),
         city_id: city._id,
         place_id: city.place_id,
         city_name: city.name,
@@ -157,25 +157,27 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDe
         tags,
       };
 
-      if (event) {
-        updateEvent({
-          _id: event._id,
-          ...data,
-          url: data.url == event.url ? "" : data.url,
-          images: images.filter(f => !(f instanceof File)).map(({ _id }) => _id),
-          add_images: images.filter(f => (f instanceof File))
-        });
-      } else {
-        addEvent({
-          ...data,
-          images
-        });
-      }
+      console.log("DATA", data);
+
+      // if (event) {
+      //   updateEvent({
+      //     _id: event._id,
+      //     ...data,
+      //     url: data.url == event.url ? "" : data.url,
+      //     images: images.filter(f => !(f instanceof File)).map(({ _id }) => _id),
+      //     add_images: images.filter(f => (f instanceof File))
+      //   });
+      // } else {
+      //   addEvent({
+      //     ...data,
+      //     images
+      //   });
+      // }
     } else {
       setState({ errorCode: ERRORCODES.ERROR_EMPTY });
     }
 
-  }, [url, name, location, city, selectedDate, category, tags, duration, images, event]);
+  }, [url, name, description, location, city, selectedDate, category, tags, duration, images, event]);
 
   const onDelete = useCallback(() => {
     if (canDelete) {
@@ -286,7 +288,7 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDe
           {/* Description */}
           <Box className={classes.marginDense}>
             <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
-              <RichEditor placeholder={t("description_label")} innerRef={descriptionRef} content={event && event.description || ""} />
+              <RichEditor placeholder={t("description_label")} content={description} onChange={setDescription} />
             </Suspense>
           </Box>
           {/* Tags */}

@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
-import Editor from 'draft-js-plugins-editor';
+import { useMemo, useState, useRef, useCallback } from "react";
+import Editor from '@draft-js-plugins/editor';
 import { EditorState } from 'draft-js';
-import createToolbarPlugin, { Separator } from 'draft-js-static-toolbar-plugin';
-import createInlineToolbarPlugin from 'draft-js-inline-toolbar-plugin';
-import createLinkPlugin from 'draft-js-anchor-plugin';
+import createToolbarPlugin, { Separator } from '@draft-js-plugins/static-toolbar';
+import createInlineToolbarPlugin from '@draft-js-plugins/inline-toolbar';
+import createLinkPlugin from '@draft-js-plugins/anchor';
 import { stateFromHTML } from "draft-js-import-html";
+import { stateToHTML } from 'draft-js-export-html';
 
 import {
   ItalicButton,
@@ -16,11 +17,11 @@ import {
   UnorderedListButton,
   OrderedListButton,
   BlockquoteButton,
-} from 'draft-js-buttons';
+} from '@draft-js-plugins/buttons';
 
 import 'draft-js/dist/Draft.css';
-import 'draft-js-inline-toolbar-plugin/lib/plugin.css';
-import 'draft-js-static-toolbar-plugin/lib/plugin.css';
+import '@draft-js-plugins/static-toolbar/lib/plugin.css';
+import '@draft-js-plugins/inline-toolbar/lib/plugin.css';
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
@@ -115,10 +116,11 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-function RichEditor({ children, innerRef, content, ...props }) {
+function RichEditor({ children, content, onChange, ...props }) {
 
   const classes = useStyles();
   const theme = useTheme();
+  const innerRef = useRef(null);
 
   const [editorState, setEditorState] = useState(content ? EditorState.createWithContent(stateFromHTML(content)) : EditorState.createEmpty());
 
@@ -146,7 +148,11 @@ function RichEditor({ children, innerRef, content, ...props }) {
   }
   ), [classes]);
 
-  return <div className={classes.editor}>
+  const onBlur = useCallback((e) => {
+    onChange(innerRef.current && stateToHTML(innerRef.current.getEditorState().getCurrentContent()) || "");
+  }, []);
+
+  return <div className={classes.editor} onBlur={onBlur}>
     <Editor
       key={`editor_${theme.palette.type}`}
       editorState={editorState}
@@ -191,5 +197,11 @@ function RichEditor({ children, innerRef, content, ...props }) {
     </plugins.staticToolbarPlugin.Toolbar>
   </div>;
 }
+
+// function export
+
+// import().then(() => {
+//   return stateToHTML(descriptionRef.current.getEditorState().getCurrentContent());
+// });
 
 export default RichEditor;

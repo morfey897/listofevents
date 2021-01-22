@@ -12,9 +12,9 @@ export const CATEGORY_CREATED = "category_created";
 const _body = `
   _id,
   url,
-  name{${i18n.language}},
+  name{{{LOCALE}}},
   tags,
-  description{${i18n.language}},
+  description{{{LOCALE}}},
   images {
     _id,
     url
@@ -41,7 +41,7 @@ query($id: String, $url: String) {
 
 const createCategoryMutation = `
 mutation($url: String!, $name: String!, $description: String!, $tags: [String], $images: [Upload]) {
-  category: createCategory(url: $url, name:{${i18n.language}: $name}, description:{${i18n.language}: $description}, tags: $tags, images: $images) {
+  category: createCategory(url: $url, name:{{{LOCALE}}: $name}, description:{{{LOCALE}}: $description}, tags: $tags, images: $images) {
     ${_body}
   }
 }`;
@@ -49,8 +49,8 @@ mutation($url: String!, $name: String!, $description: String!, $tags: [String], 
 function processing(data) {
   return {
     ...data,
-    name: data.name[i18n.language],
-    description: data.description[i18n.language],
+    name: Object.values(data.name)[0],
+    description: Object.values(data.description)[0],
   };
 }
 

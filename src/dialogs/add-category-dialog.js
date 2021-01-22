@@ -14,7 +14,6 @@ import { DialogEmitter, ErrorEmitter } from "../emitters";
 import { normalizeURL } from "../helpers";
 import { createCategoryActionCreator, fetchTagsActionCreator } from "../model/actions";
 import Alert from "@material-ui/lab/Alert";
-import { stateToHTML } from 'draft-js-export-html';
 import { Lock as LockIcon } from "@material-ui/icons";
 import urljoin from "url-join";
 
@@ -42,8 +41,7 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
   const [name, setName] = useState(categoryName ? categoryName.replace(/^\s+/g, "") : "");
   const [tags, setTags] = useState([]);
   const [images, setImages] = useState([]);
-
-  const descriptionRef = useRef(null);
+  const [description, setDescription] = useState("");
 
   const isReady = useMemo(() => {
     return isSuccess && state.waiting;
@@ -91,14 +89,14 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
         url,
         name,
         tags,
-        description: stateToHTML(descriptionRef.current.getEditorState().getCurrentContent()),
+        description,
         images
       }, secretKey);
     } else {
       setState({ errorCode: ERRORCODES.ERROR_EMPTY });
     }
 
-  }, [url, name, tags, images, secretKey]);
+  }, [url, name, description, tags, images, secretKey]);
 
   return <Dialog open={open} onClose={handleClose} scroll={"paper"} fullScreen={fullScreen} fullWidth={true} maxWidth={"sm"}>
     <DialogTitle disableTypography={!fullScreen} className={fullScreen ? "" : "boxes"}>
@@ -153,7 +151,7 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
             {/* Description */}
             <Box className={classes.marginDense}>
               <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
-                <RichEditor placeholder={t("description_label")} innerRef={descriptionRef} />
+                <RichEditor placeholder={t("description_label")} content={description} onChange={setDescription}  />
               </Suspense>
             </Box>
             {/* Tags */}

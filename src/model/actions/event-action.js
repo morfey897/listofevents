@@ -17,9 +17,9 @@ const _body = `
   date,
   duration,
   url,
-  name{ru},
-  description{ru},
-  location{ru},
+  name{{{LOCALE}}},
+  description{{{LOCALE}}},
+  location{{{LOCALE}}},
   author{
     _id
   },
@@ -31,13 +31,13 @@ const _body = `
   city{
     _id,
     place_id,
-    name{ru},
-    description{ru}
+    name{{{LOCALE}}},
+    description{{{LOCALE}}}
   },
   category{
     _id,
     url,
-    name{ru}
+    name{{{LOCALE}}}
   }`;
 
 const eventsQuery = `
@@ -60,14 +60,14 @@ query($id: String, $url: String) {
 
 const createEventMutation = `
 mutation($url: String!, $name: String!, $location: String!, $date: DateTime!, $duration: Int!, $category_id: String!, $description: String!, $tags: [String], $city_id: String, $place_id: String, $city_name: String!, $city_description: String!, $images: [Upload]) {
-  event: createEvent(url: $url, name:{ru: $name}, location:{ru: $location}, date: $date, duration: $duration, category_id: $category_id, city:{_id: $city_id, place_id: $place_id, name:{ru: $city_name}, description:{ru: $city_description}}, description:{ru: $description}, tags: $tags, images: $images) {
+  event: createEvent(url: $url, name:{{{LOCALE}}: $name}, location:{{{LOCALE}}: $location}, date: $date, duration: $duration, category_id: $category_id, city:{_id: $city_id, place_id: $place_id, name:{{{LOCALE}}: $city_name}, description:{{{LOCALE}}: $city_description}}, description:{{{LOCALE}}: $description}, tags: $tags, images: $images) {
     ${_body}
   }
 }`;
 
 const updateEventMutation = `
 mutation($_id: String!, $url: String!, $name: String!, $location: String!, $date: DateTime!, $duration: Int!, $category_id: String!, $description: String!, $tags: [String], $city_id: String, $place_id: String, $city_name: String!, $city_description: String!, $images: [String], $add_images: [Upload]) {
-  event: updateEvent(_id: $_id, url: $url, name:{ru: $name}, location:{ru: $location}, date: $date, duration: $duration, category_id: $category_id, city:{_id: $city_id, place_id: $place_id, name:{ru: $city_name}, description:{ru: $city_description}}, description:{ru: $description}, tags: $tags, images: $images, add_images: $add_images) {
+  event: updateEvent(_id: $_id, url: $url, name:{{{LOCALE}}: $name}, location:{{{LOCALE}}: $location}, date: $date, duration: $duration, category_id: $category_id, city:{_id: $city_id, place_id: $place_id, name:{{{LOCALE}}: $city_name}, description:{{{LOCALE}}: $city_description}}, description:{{{LOCALE}}: $description}, tags: $tags, images: $images, add_images: $add_images) {
     ${_body}
   }
 }`;
@@ -81,17 +81,17 @@ function processing(data) {
   return {
     ...data,
     date: new Date(data.date.replace("Z", "")),
-    name: data.name.ru,
-    description: data.description.ru,
-    location: data.location.ru,
+    name: Object.values(data.name)[0],
+    description: Object.values(data.description)[0],
+    location: Object.values(data.location)[0],
     city: {
       ...data.city,
-      name: data.city.name.ru,
-      description: data.city.description.ru,
+      name: Object.values(data.city.name)[0],
+      description: Object.values(data.city.description)[0],
     },
     category: {
       ...data.category,
-      name: data.category.name.ru,
+      name: Object.values(data.category.name)[0],
     }
   };
 }

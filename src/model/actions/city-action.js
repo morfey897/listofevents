@@ -11,8 +11,8 @@ query($limit: Int) {
     list{
       _id,
       place_id,
-      name{ru},
-      description{ru}
+      name{{{LOCALE}}},
+      description{{{LOCALE}}}
     },
     offset,
     total
@@ -22,8 +22,8 @@ query($limit: Int) {
 function processing(data) {
   return {
     ...data,
-    name: data.name.ru,
-    description: data.description.ru
+    name: Object.values(data.name)[0],
+    description: Object.values(data.description)[0]
   };
 }
 

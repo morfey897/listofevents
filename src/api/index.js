@@ -35,7 +35,7 @@ function request(query, variables) {
   }
 
   let contentType = "application/json";
-  let data = { query, variables };
+  let data = { query: query.replace(/\{\{LOCALE\}\}/g, i18n.language), variables };
   if (files.length) {
     contentType = "multipart/form-data";
     data = new FormData();
