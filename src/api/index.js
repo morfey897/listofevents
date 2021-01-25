@@ -36,22 +36,23 @@ function request(query, variables) {
 
   let contentType = "application/json";
   let data = { query: query.replace(/\{\{LOCALE\}\}/g, i18n.language), variables };
+  let outputData = data;
   if (files.length) {
     contentType = "multipart/form-data";
-    data = new FormData();
-    data.append("operations", JSON.stringify({ query, variables }));
-    data.append("map", JSON.stringify(files.reduce((prev, { name }, index) => {
+    outputData = new FormData();
+    outputData.append("operations", JSON.stringify(data));
+    outputData.append("map", JSON.stringify(files.reduce((prev, { name }, index) => {
       prev[index] = name;
       return prev;
     }, {})));
     files.forEach(({ file }, i) => {
-      data.append(String(i), file);
+      outputData.append(String(i), file);
     });
   }
 
   let expiresIn = parseInt(store.get(STORAGEKEYS.JWT_EXPIRES_IN));
   return axiosInstance
-    .post('api/graphql', data, {
+    .post('api/graphql', outputData, {
       headers: {
         'Content-Type': contentType,
         Authorization: expiresIn > 0 ? `Bearer ${store.get(STORAGEKEYS.JWT_ACCESS_TOKEN)}` : `Basic ${basicToken}`

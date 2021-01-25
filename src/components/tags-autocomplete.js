@@ -38,12 +38,10 @@ function TagsAutocomplete({ values, options, isLoading, limit = 3, onChange, fet
     freeSolo
     filterSelectedOptions
     autoHighlight
-    loading={isLoading}
-    loadingText={t("loading")}
     limitTags={limit}
     options={options}
     getOptionLabel={(option) => {
-      return typeof option === 'string' ? option : option.title;
+      return typeof option === 'string' ? option : option.title || t(option.token);
     }}
     getOptionDisabled={(option) => typeof option === 'string' ? false : option.disabled}
     filterOptions={(options, params) => {
@@ -80,10 +78,11 @@ function TagsAutocomplete({ values, options, isLoading, limit = 3, onChange, fet
 
 const mapStateToProps = (state) => {
   const { tags } = state;
+  const isLoading = tags.status === STATUSES.STATUS_PENDING;
 
   return {
-    options: tags.list,
-    isLoading: tags.status === STATUSES.STATUS_PENDING,
+    options: isLoading ? [{ disabled: true, token: "loading" }] : (tags.list.length ? tags.list : [{ disabled: true, token: "no_options_text" }]),
+    isLoading,
   };
 };
 

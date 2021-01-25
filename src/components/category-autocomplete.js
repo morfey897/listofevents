@@ -11,7 +11,7 @@ const filter = createFilterOptions();
 
 function CategoryAutocomplete({ value, options, isLoading, isModerator, onChange, error, fetchCategories }) {
 
-  const { t, i18n } = useTranslation("categories_block");
+  const { t } = useTranslation("categories_block");
 
   const [isLoaded, setLoaded] = useState(false);
 
@@ -39,18 +39,17 @@ function CategoryAutocomplete({ value, options, isLoading, isModerator, onChange
   return <Autocomplete
     value={value}
     fullWidth
-    // freeSolo
+    freeSolo
     clearOnBlur
     selectOnFocus
     handleHomeEndKeys
-    loading={isLoading}
-    loadingText={t("loading")}
     options={options}
     getOptionLabel={(option) => {
-      return typeof option === 'string' ? option : option.name;
+      return typeof option === 'string' ? option : option.name || t(option.token);
     }}
     onChange={onChangeValue}
     onOpen={onOpen}
+    getOptionDisabled={(option) => typeof option === 'string' ? false : option.disabled}
     filterOptions={(options, params) => {
       const filtered = filter(options, params);
 
@@ -80,10 +79,10 @@ function CategoryAutocomplete({ value, options, isLoading, isModerator, onChange
 
 const mapStateToProps = (state) => {
   const { categories, user, config } = state;
-
+  const isLoading = categories.status === STATUSES.STATUS_PENDING;
   return {
-    options: categories.list,
-    isLoading: categories.status === STATUSES.STATUS_PENDING,
+    options: isLoading ? [{ disabled: true, token: "loading" }] : (categories.list.length ? categories.list : [{ disabled: true, token: "no_options_text" }]),
+    isLoading,
     isLogged: user.isLogged,
     isModerator: user.isLogged && (user.user.role & config.roles.moderator) === config.roles.moderator,
   };

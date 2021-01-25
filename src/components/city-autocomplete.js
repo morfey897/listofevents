@@ -154,7 +154,7 @@ const mapStateToProps = (state) => {
   const { cities } = state;
 
   return {
-    options: cities.list,
+    options: [],//cities.list,
     isLoading: cities.status === STATUSES.STATUS_PENDING,
   };
 };

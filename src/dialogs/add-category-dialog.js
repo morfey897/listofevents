@@ -37,7 +37,7 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
 
   const [showUrl, setShowUrl] = useState(false);
 
-  const [url, setUrl] = useState(categoryName ? normalizeURL(categoryName) : "");
+  const [url, setUrl] = useState(categoryName ? "/" + normalizeURL(categoryName) : "");
   const [name, setName] = useState(categoryName ? categoryName.replace(/^\s+/g, "") : "");
   const [tags, setTags] = useState([]);
   const [images, setImages] = useState([]);
@@ -48,9 +48,11 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
   }, [state, isSuccess]);
 
   useEffect(() => {
-    ErrorEmitter.on(ERRORTYPES.EVENT_CREATE_ERROR, setState);
+    ErrorEmitter.on(ERRORTYPES.CATEGORY_CREATE_ERROR, setState);
+    ErrorEmitter.on(ERRORTYPES.CATEGORY_UPDATE_ERROR, setState);
     return () => {
-      ErrorEmitter.off(ERRORTYPES.EVENT_CREATE_ERROR, setState);
+      ErrorEmitter.off(ERRORTYPES.CATEGORY_CREATE_ERROR, setState);
+      ErrorEmitter.off(ERRORTYPES.CATEGORY_UPDATE_ERROR, setState);
     };
   }, []);
 
@@ -151,7 +153,7 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
             {/* Description */}
             <Box className={classes.marginDense}>
               <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
-                <RichEditor placeholder={t("description_label")} content={description} onChange={setDescription}  />
+                <RichEditor placeholder={t("description_label")} content={description} onChange={setDescription} />
               </Suspense>
             </Box>
             {/* Tags */}

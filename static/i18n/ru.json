@@ -61,12 +61,14 @@
   "tags_block": {
     "label": "Теги",
     "add": "Добавить \"{{tag}}\"",
-    "loading": "Загружаем..."
+    "loading": "Загружаем...",
+    "no_options_text": "Введите тег"
   },
   "categories_block": {
     "label": "Категория",
     "add": "Добавить \"{{category}}\"",
-    "loading": "Загружаем..."
+    "loading": "Загружаем...",
+    "no_options_text": "Введите название категории"
   },
   "cities_block": {
     "label": "Город",

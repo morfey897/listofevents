@@ -111,7 +111,6 @@ const mapStateToProps = (state) => {
     }
   });
 
-  console.log(user);
   let usersList = users.list.filter(({ _id }) => user.user._id !== _id);
   return {
     isLogged: user.isLogged,

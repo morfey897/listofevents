@@ -125,7 +125,7 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDe
   const onChangeCategory = useCallback((category) => {
     setCategory(category);
     if (category && !category._id) {
-      let key = parseInt(Math.random() * 1000);
+      let key = Math.random().toString(36).substr(2, 9);
       setSecretKeyCategory(key);
       DialogEmitter.open(DIALOGS.ADD_CATEGORY, { categoryName: category.name, secretKey: key });
     }
@@ -323,7 +323,7 @@ const mapStateToProps = (state, { _id }) => {
   return {
     isLogged: user.isLogged,
     isEditor: user.isLogged && (user.user.role & config.roles.editor) === config.roles.editor,
-    canDelete: user.isLogged && ((user.user.role & config.roles.admin) === config.roles.admin || (event && event.author && event.author._id == user.user._id)),
+    canDelete: user.isLogged && event && ((user.user.role & config.roles.admin) === config.roles.admin || (event.author && event.author._id == user.user._id)),
 
     isLoading: events.status === STATUSES.STATUS_PENDING,
     isSuccess: events.status === STATUSES.STATUS_SUCCESS,
