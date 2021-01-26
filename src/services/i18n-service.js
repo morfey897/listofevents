@@ -19,7 +19,7 @@ class I18nService extends Service {
           fallbackLng: LANGS.UK,
           debug: process.env.DEBUG === "true",
           lowerCaseLng: true,
-          lng: LANGS.RU,
+          lng: LANGS.UK,
           supportedLngs: [LANGS.UK, LANGS.RU],
           nonExplicitSupportedLngs: true,
 

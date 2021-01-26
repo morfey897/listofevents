@@ -1,4 +1,5 @@
 import EventCard from './event-card';
+import CategoryCard from './category-card';
 import ImgCard from './img-card';
 import InfoCard from './info-card';
 import LatestCard from './latest-card';
@@ -8,6 +9,7 @@ import CardOfTime from './card-of-time';
 
 export {
   EventCard,
+  CategoryCard,
   ImgCard,
   InfoCard,
   LatestCard,

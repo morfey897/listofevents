@@ -19,23 +19,23 @@
   "error": {
     "wrong": "Упс... что то пошло не так. Попробуйте похже.",
     "empty": "Заполните все необходимые поля.",
-    "access_denied": "Отказано в доступе",
-    "incorrect_password": "Пароль не совпадает",
-    "user_esist": "Пользователь с таким логином уже зарегестрирован",
+    "access_denied": "Отказано в доступе.",
+    "incorrect_password": "Пароль не совпадает.",
+    "user_esist": "Пользователь с таким логином уже зарегистрирован.",
     "user_not_esist": "Неверный логин или пароль.",
     "can_not_connect_social": "Нет доступа к социальной сети.",
-    "incorrect_username": "Неверный логин",
-    "incorrect_url": "Некорректна ссылка",
-    "incorrect_id": "Неверный ID",
-    "incorrect_category": "Невозможно добавить в данную категорию",
-    "incorrect_city": "Невозможно добавить в данный город"
+    "incorrect_username": "Неверный логин.",
+    "incorrect_url": "Некорректная ссылка.",
+    "incorrect_id": "Неверный ID.",
+    "incorrect_category": "Невозможно добавить в данную категорию.",
+    "incorrect_city": "Невозможно добавить в данный город."
   },
   "header_block": {
     "main_menu": "Главное меню",
     "about": "О нас",
     "contacts": "Контакты",
     "list_events": "Список событий",
-    "page_events": "Страничка событий",
+    "page_events": "Страница событий",
     "event_map": "Карта событий",
     "create_event": "Создать событие",
     "users_list": "Список пользователей",
@@ -44,13 +44,13 @@
     "logout": "Выход",
     "create_account": "Создать",
     "profile": "Личный кабинет",
-    "toggle_theme": "Темная/светлая тема"
+    "toggle_theme": "Темная / светлая тема"
   },
   "footer_block": {
     "community": "Сообщество",
     "events": "События",
     "list_events": "Список событий",
-    "page_events": "Страничка событий",
+    "page_events": "Страница событий",
     "company": "Компания",
     "about": "О нас",
     "contact_us": "Связатся с нами",
@@ -75,7 +75,7 @@
     "no_options_text": "Введите название города"
   },
   "item_calendar_block": {
-    "duration_label": "Дительность:",
+    "duration_label": "Длительность:",
     "category_label": "Категория:",
     "city_label": "Город:",
     "start_label": "Начало:"
@@ -113,7 +113,7 @@
     "username_label": "Электронная почта или номер телефона",
     "password_label": "Пароль",
     "confirm_password_label": "Подтверждение пароля",
-    "success": "Приветствуем вас {{name}}.",
+    "success": "Приветствуем Вас {{name}}.",
     "instagram_enter": "Вход с помощью Instagram аккаунта",
     "facebook_enter": "Вход с помощью Facebook аккаунта",
     "google_enter": "Вход через Google аккаунта",
@@ -126,7 +126,7 @@
   },
   "users_list_dialog": {
     "title": "Список пользователей",
-    "empty_list": "Пользователи отсутсвуют",
+    "empty_list": "Пользователи отсутствуют",
     "loading_list": "Идет закгрузка...",
     "header_name": "Имя",
     "header_email": "Почта@",

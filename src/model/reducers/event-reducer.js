@@ -10,7 +10,6 @@ const initState = {
 
 export function events(state = initState, action) {
   const { type, payload } = action;
-
   switch (type) {
     case EVENT_PENDING:
     case EVENT_CREATING:

@@ -39,7 +39,7 @@ function strToMin(str) {
 
 const NOW = addDays(new Date(), 1);
 let waitClose;
-function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDelete, isLoading, categories, event, addEvent, updateEvent }) {
+function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, isLogged, canDelete, isLoading, categories, event, addEvent, updateEvent }) {
 
   const { t, i18n } = useTranslation(["add_event_dialog", "general", "error"]);
 
@@ -308,7 +308,7 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, canDe
           <DialogContentText>{t("login_description")}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={onSignin} color="primary">{t("general:button_signin")}</Button>
+          {!isLogged && <Button onClick={onSignin} color="primary">{t("general:button_signin")}</Button>}
           <Button onClick={handleClose} color="primary">{t("general:button_cancel")}</Button>
         </DialogActions>
       </>

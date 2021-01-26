@@ -68,7 +68,7 @@ function CategoryScreen({ isLoading, hasData, _id, name, description, tags, imag
       </Box>
 
       <div className={classes.imagesContainer}>
-        <GridList cellHeight={240} className={classes.imagesList} cols={3}>
+        <GridList cellHeight={240} cols={3}>
           {tileData.map((tile) => (
             <GridListTile key={tile.img} cols={tile.cols || 1}>
               <img src={tile.img} />

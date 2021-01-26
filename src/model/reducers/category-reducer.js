@@ -1,4 +1,4 @@
-import { CATEGORY_PENDING, CATEGORY_INITED, CATEGORY_CREATING, CATEGORY_CREATED } from "../actions/category-action";
+import { CATEGORY_PENDING, CATEGORY_INITED, CATEGORY_CREATING, CATEGORY_CREATED, CATEGORY_UPDATING, CATEGORY_UPDATED } from "../actions/category-action";
 import { STATUSES } from "../../enums";
 
 const initState = {
@@ -14,6 +14,7 @@ export function categories(state = initState, action) {
   switch (type) {
     case CATEGORY_PENDING:
     case CATEGORY_CREATING:
+    case CATEGORY_UPDATING:
       return {
         ...state,
         status: STATUSES.STATUS_PENDING,
@@ -24,6 +25,7 @@ export function categories(state = initState, action) {
         status: STATUSES.STATUS_SUCCESS,
         ...payload,
       };
+    case CATEGORY_UPDATED:
     case CATEGORY_CREATED:
       return {
         ...state,

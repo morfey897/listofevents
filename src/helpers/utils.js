@@ -22,3 +22,21 @@ export const calcCol = (len, index, maxCols) => {
   let grid = GRID_MAP_3[len];
   return grid ? grid[index] : 1;
 };
+
+export const swap = (list, index, next) => {
+  if (list && list.length > 1 && index >= 0 && index < list.length) {
+    next = index + next;
+    if (next >= list.length) {
+      next = 0;
+    } else if (next < 0) {
+      next = list.length - 1;
+    }
+
+    return list.map((a, i, list) => {
+      if (i == index) return list[next];
+      if (i == next) return list[index];
+      return a;
+    });
+  }
+  return list;
+};

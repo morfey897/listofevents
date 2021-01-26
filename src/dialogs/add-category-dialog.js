@@ -12,10 +12,11 @@ import { bindActionCreators } from "redux";
 import { TagsAutocomplete, UploadImages } from "../components";
 import { DialogEmitter, ErrorEmitter } from "../emitters";
 import { normalizeURL } from "../helpers";
-import { createCategoryActionCreator, fetchTagsActionCreator } from "../model/actions";
+import { createCategoryActionCreator, fetchTagsActionCreator, updateCategoryActionCreator } from "../model/actions";
 import Alert from "@material-ui/lab/Alert";
 import { Lock as LockIcon } from "@material-ui/icons";
 import urljoin from "url-join";
+import { withRouter } from "react-router-dom";
 
 const RichEditor = lazy(() => import(/* webpackChunkName: "rich-editor" */"../components/rich-editor"));
 
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 let waitClose;
-function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSuccess, createCategory, categoryName, secretKey }) {
+function AddCategoryDialog({ history, category, open, handleClose, isModerator, isLoading, isLogged, isSuccess, createCategory, updateCategory, categoryName, secretKey }) {
 
   const { t } = useTranslation(["add_category_dialog", "general", "error"]);
 
@@ -37,11 +38,11 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
 
   const [showUrl, setShowUrl] = useState(false);
 
-  const [url, setUrl] = useState(categoryName ? "/" + normalizeURL(categoryName) : "");
-  const [name, setName] = useState(categoryName ? categoryName.replace(/^\s+/g, "") : "");
-  const [tags, setTags] = useState([]);
-  const [images, setImages] = useState([]);
-  const [description, setDescription] = useState("");
+  const [url, setUrl] = useState(category ? (category.url || "") : (categoryName ? "/" + normalizeURL(categoryName) : ""));
+  const [name, setName] = useState(category ? (category.name || "") : (categoryName ? categoryName.replace(/^\s+/g, "") : ""));
+  const [tags, setTags] = useState(category && category.tags && [...category.tags] || []);
+  const [images, setImages] = useState(category && category.images && [...category.images] || []);
+  const [description, setDescription] = useState(category && category.description || "");
 
   const isReady = useMemo(() => {
     return isSuccess && state.waiting;
@@ -59,13 +60,16 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
   useEffect(() => {
     if (isReady) {
       waitClose && waitClose.clear();
-      waitClose = debounce(handleClose, 1000);
+      waitClose = debounce(() => {
+        handleClose();
+        category && history.push(SCREENS.PAGE_EVENTS);
+      }, 1000);
       waitClose();
     }
     return () => {
       waitClose && waitClose.clear();
     };
-  }, [isReady]);
+  }, [isReady, category]);
 
   const onChangeUrl = useCallback((event) => {
     setUrl("/" + normalizeURL(event.target.value));
@@ -87,18 +91,31 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
     }
     if (url && name) {
       setState({ waiting: true });
-      createCategory({
+      const data = {
         url,
         name,
-        tags,
         description,
-        images
-      }, secretKey);
+        tags,
+      };
+      if (category) {
+        updateCategory({
+          _id: category._id,
+          ...data,
+          url: data.url == event.url ? "" : data.url,
+          images: images.filter(f => !(f instanceof File)).map(({ _id }) => _id),
+          add_images: images.filter(f => (f instanceof File))
+        });
+      } else {
+        createCategory({
+          ...data,
+          images
+        }, secretKey);
+      }
     } else {
       setState({ errorCode: ERRORCODES.ERROR_EMPTY });
     }
 
-  }, [url, name, description, tags, images, secretKey]);
+  }, [url, name, description, tags, images, secretKey, category]);
 
   return <Dialog open={open} onClose={handleClose} scroll={"paper"} fullScreen={fullScreen} fullWidth={true} maxWidth={"sm"}>
     <DialogTitle disableTypography={!fullScreen} className={fullScreen ? "" : "boxes"}>
@@ -162,12 +179,12 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
             </Box>
             {/* Upload images */}
             <Box className={classes.marginDense}>
-              <UploadImages maxFiles={3} showItems={1} images={images} onChange={setImages} />
+              <UploadImages maxFiles={3} showItems={fullScreen ? 2 : 3} images={images} onChange={setImages} />
             </Box>
           </form>
         </DialogContent>
         <DialogActions>
-          <Button disabled={isLoading || isReady} type="submit" onClick={onSubmit} color="primary">{t("general:button_create")}</Button>
+          <Button disabled={isLoading || isReady} type="submit" onClick={onSubmit} color="primary">{category ? t("general:button_save") : t("general:button_create")}</Button>
           <Button onClick={handleClose} color="primary">{t("general:button_cancel")}</Button>
         </DialogActions>
       </> : <>
@@ -175,7 +192,7 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
             <DialogContentText>{t("login_description")}</DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={onSignin} color="primary">{t("general:button_signin")}</Button>
+            {!isLogged && <Button onClick={onSignin} color="primary">{t("general:button_signin")}</Button>}
             <Button onClick={handleClose} color="primary">{t("general:button_cancel")}</Button>
           </DialogActions>
         </>
@@ -183,9 +200,10 @@ function AddCategoryDialog({ open, handleClose, isModerator, isLoading, isSucces
   </Dialog>;
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, { _id }) => {
   const { user, config, categories, tags } = state;
 
+  let category = _id && categories.list.find(data => data._id == _id);
   return {
     isLoading: categories.status === STATUSES.STATUS_PENDING,
     isSuccess: categories.status === STATUSES.STATUS_SUCCESS,
@@ -194,12 +212,15 @@ const mapStateToProps = (state) => {
     isModerator: user.isLogged && (user.user.role & config.roles.moderator) === config.roles.moderator,
     availableTabs: tags.list,
     tagsLoading: tags.status === STATUSES.STATUS_PENDING,
+
+    category
   };
 };
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   createCategory: createCategoryActionCreator,
+  updateCategory: updateCategoryActionCreator,
   fetchTags: fetchTagsActionCreator,
 }, dispatch);
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddCategoryDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AddCategoryDialog));

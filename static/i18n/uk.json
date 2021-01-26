@@ -1,153 +1,153 @@
 {
   "general": {
-    "label_show": "Показать",
-    "label_hide": "Спрятать",
-    "button_close": "Закрыть",
-    "button_yes": "Да",
-    "button_no": "Нет",
+    "label_show": "Показати",
+    "label_hide": "Сховати",
+    "button_close": "Закрити",
+    "button_yes": "Так",
+    "button_no": "Ні",
     "button_ok": "Ок",
-    "button_cancel": "Отмена",
-    "button_signin": "Войти",
-    "button_create": "Создать",
-    "button_save": "Сохранить",
-    "button_delete": "Удалить",
-    "validation_code": "Код подтверждения",
-    "validation_code_timer": "Осталось {{seconds}} секунд",
-    "wait_validate_code_email": "Вам на почту {{username}} выслан код подтверждения",
-    "wait_validate_code_phone": "Вам на номер телефона {{username}} выслан код подтверждения"
+    "button_cancel": "Відміна",
+    "button_signin": "Увійти",
+    "button_create": "Створити",
+    "button_save": "Зберегти",
+    "button_delete": "Видалити",
+    "validation_code": "Код підтвердження",
+    "validation_code_timer": "Лишилось {{seconds}} секунд",
+    "wait_validate_code_email": "Вам на пошту {{username}} був відправлен код підтвердження",
+    "wait_validate_code_phone": "Вам на номер телефону {{username}} був відправлен код підтвердження"
   },
   "error": {
-    "wrong": "Упс... что то пошло не так. Попробуйте похже.",
-    "empty": "Заполните все необходимые поля.",
-    "access_denied": "Отказано в доступе",
-    "incorrect_password": "Пароль не совпадает",
-    "user_esist": "Пользователь с таким логином уже зарегестрирован",
-    "user_not_esist": "Неверный логин или пароль.",
-    "can_not_connect_social": "Нет доступа к социальной сети.",
-    "incorrect_username": "Неверный логин",
-    "incorrect_url": "Некорректна ссылка",
-    "incorrect_id": "Неверный ID",
-    "incorrect_category": "Невозможно добавить в данную категорию",
-    "incorrect_city": "Невозможно добавить в данный город"
+    "wrong": "Упс... щось пішло не так. Спробуйте пізніше.",
+    "empty": "Заповніть всі необхідні поля.",
+    "access_denied": "Відмовлено в доступі.",
+    "incorrect_password": "Пароль не збігається.",
+    "user_esist": "Користувач з таким іменем вже зареєстрований.",
+    "user_not_esist": "Невірний логін або пароль.",
+    "can_not_connect_social": "Немає доступу до соціальної мережі.",
+    "incorrect_username": "Невірний логін.",
+    "incorrect_url": "Некоректне посилання.",
+    "incorrect_id": "Невірний ID.",
+    "incorrect_category": "Неможливо додати до ціеї категорії.",
+    "incorrect_city": "Неможливо додати до цього міста."
   },
   "header_block": {
-    "main_menu": "Главное меню",
-    "about": "О нас",
-    "contacts": "Контакты",
-    "list_events": "Список событий",
-    "page_events": "Страничка событий",
-    "event_map": "Карта событий",
-    "create_event": "Создать событие",
-    "users_list": "Список пользователей",
-    "account": "Учетная запись",
-    "login": "Вход",
-    "logout": "Выход",
-    "create_account": "Создать",
-    "profile": "Личный кабинет",
-    "toggle_theme": "Темная/светлая тема"
+    "main_menu": "Головне меню",
+    "about": "Про нас",
+    "contacts": "Контакти",
+    "list_events": "Список подій",
+    "page_events": "Сторінка подій",
+    "event_map": "Мапа подій",
+    "create_event": "Створити подію",
+    "users_list": "Список користувачів",
+    "account": "Обліковий запис",
+    "login": "Вхід",
+    "logout": "Вихід",
+    "create_account": "Створити",
+    "profile": "Особистий кабінет",
+    "toggle_theme": "Темна / світла тема"
   },
   "footer_block": {
-    "community": "Сообщество",
-    "events": "События",
-    "list_events": "Список событий",
-    "page_events": "Страничка событий",
-    "company": "Компания",
-    "about": "О нас",
-    "contact_us": "Связатся с нами",
-    "privacy_policy": "Конфиденциальность",
+    "community": "Спільнота",
+    "events": "Події",
+    "list_events": "Список подій",
+    "page_events": "Сторінка подій",
+    "company": "Компанія",
+    "about": "Про нас",
+    "contact_us": "Зв'язатися з нами",
+    "privacy_policy": "Конфіденційність",
     "facebook": "Facebook",
     "instagram": "Instagram"
   },
   "tags_block": {
     "label": "Теги",
-    "add": "Добавить \"{{tag}}\"",
-    "loading": "Загружаем...",
-    "no_options_text": "Введите тег"
+    "add": "Додати \"{{tag}}\"",
+    "loading": "Завантажуємо...",
+    "no_options_text": "Введіть тег"
   },
   "categories_block": {
-    "label": "Категория",
-    "add": "Добавить \"{{category}}\"",
-    "loading": "Загружаем...",
-    "no_options_text": "Введите название категории"
+    "label": "Категорія",
+    "add": "Додати \"{{category}}\"",
+    "loading": "Завантажуємо...",
+    "no_options_text": "Введіте назву категорії"
   },
   "cities_block": {
-    "label": "Город",
-    "no_options_text": "Введите название города"
+    "label": "Місто",
+    "no_options_text": "Введіте назву міста"
   },
   "item_calendar_block": {
-    "duration_label": "Дительность:",
-    "category_label": "Категория:",
-    "city_label": "Город:",
-    "start_label": "Начало:"
+    "duration_label": "Тривалість:",
+    "category_label": "Категорія:",
+    "city_label": "Місто:",
+    "start_label": "Початок:"
   },
   "add_event_dialog": {
-    "title": "Добавить новое событие",
+    "title": "Додати нову подію",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
 
-    "title_edit": "Обновить событие",
+    "title_edit": "Оновити подію",
     "description_edit": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
 
-    "name_label": "Название события",
-    "description_label": "Описание",
-    "location_label": "Место проведения",
-    "location_hint": "Название студии, клуба или заведения",
-    "url_label": "Ссылка",
-    "date_label": "Дата и время",
-    "duration_label": "Длительность",
-    "login_description": "Для доступа к добавлению события необходимо иметь аккаунт РЕДАКТОРА",
-    "success": "Вы добавили событие \"{{event}}\""
+    "name_label": "Назва події",
+    "description_label": "Опис",
+    "location_label": "Місто проведення",
+    "location_hint": "Назва студиї, клубу або закладу",
+    "url_label": "Посилання",
+    "date_label": "Дата та час",
+    "duration_label": "Тривалість",
+    "login_description": "Для доступу до додавання події необхідно мати акаунт РЕДАКТОРА",
+    "success": "Ви додали подію \"{{event}}\""
   },
   "add_category_dialog": {
-    "title": "Добавление новой категории",
+    "title": "Додати нову категорію",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
-    "url_label": "Ссылка",
-    "name_label": "Название",
-    "description_label": "Описание",
-    "success": "Вы добавили категорию \"{{category}}\""
+    "url_label": "Посилання",
+    "name_label": "Назва",
+    "description_label": "Опис",
+    "success": "Ви додали категорію \"{{category}}\""
   },
   "signin_dialog": {
-    "title": "Логин",
-    "title_signup": "Создать аккаунт",
-    "description": "или",
-    "name_label": "Ваше имя",
-    "username_label": "Электронная почта или номер телефона",
+    "title": "Логін",
+    "title_signup": "Створити аккаунт",
+    "description": "або",
+    "name_label": "Ваше ім'я",
+    "username_label": "Електронна пошта або номер телефону",
     "password_label": "Пароль",
-    "confirm_password_label": "Подтверждение пароля",
-    "success": "Приветствуем вас {{name}}.",
-    "instagram_enter": "Вход с помощью Instagram аккаунта",
-    "facebook_enter": "Вход с помощью Facebook аккаунта",
-    "google_enter": "Вход через Google аккаунта",
-    "enter_user": "Войти"
+    "confirm_password_label": "Підтвердження пароля",
+    "success": "Вітаємо Вас {{name}}.",
+    "instagram_enter": "Вхід за допомогою Instagram аккаунта",
+    "facebook_enter": "Вхід за допомогою Facebook аккаунта",
+    "google_enter": "Вхід за допомогою Google аккаунта",
+    "enter_user": "Увійти"
   },
   "signout_dialog": {
-    "title": "Выход",
-    "description": "Вы уверены что хотите выйти из аккаунты?",
-    "success": "Вы вышли из аккаунта"
+    "title": "Вихід",
+    "description": "Ви впевнені що хочете вийти з акаунти?",
+    "success": "Ви вийшли з облікового запису"
   },
   "users_list_dialog": {
-    "title": "Список пользователей",
-    "empty_list": "Пользователи отсутсвуют",
-    "loading_list": "Идет закгрузка...",
-    "header_name": "Имя",
-    "header_email": "Почта@",
+    "title": "Список користувачів",
+    "empty_list": "Користувачі відсутні",
+    "loading_list": "Завантажуємо...",
+    "header_name": "Ім'я",
+    "header_email": "Пошта@",
     "header_phone": "Телефон",
     "header_role": "Роль",
     "empty_field": "---"
   },
   "profile_dialog": {
-    "title": "Профиль",
-    "name_label": "Ваше имя",
-    "surname_label": "Ваша фамилия",
-    "phone_label": "Номер телефона",
-    "email_label": "Электронная почта",
-    "password_label": "Новый пароль",
-    "button_change_password": "Сменить пароль",
-    "success": "Изменения вступили в силу."
+    "title": "Профіль",
+    "name_label": "Ваше ім'я",
+    "surname_label": "Ваше прізвище",
+    "phone_label": "Номер телефону",
+    "email_label": "Електронна пошта",
+    "password_label": "Новий пароль",
+    "button_change_password": "Змінити пароль",
+    "success": "Зміни вступили в силу."
   },
   "confirm_delete_dialog": {
-    "title": "Подтверждение удаления",
-    "description": "Для подтверждения удаления введите DELETE",
-    "success": "Удалено"
+    "title": "Підтвердження видалення",
+    "description": "Для підтвердження видалення введіть DELETE",
+    "success": "Видаленно"
   },
   "contacts_screen": {
     "title": "Get in touch",
@@ -187,6 +187,6 @@
   },
   "search_screen": {
     "description": "Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours. Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will get back to you in a couple of hours.",
-    "empty": "К сожалению по вашему запросу ничего не было найдено"
+    "empty": "На жаль по вашому запиту нічого не було знайдено"
   }
 }

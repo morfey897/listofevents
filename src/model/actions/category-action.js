@@ -1,11 +1,12 @@
-import i18n from 'i18next';
 import { request } from "../../api";
 import { ErrorEmitter } from "../../emitters";
 import { ERRORTYPES } from "../../errors";
 
 export const CATEGORY_PENDING = "category_pending";
 export const CATEGORY_INITED = "category_inited";
+export const CATEGORY_UPDATING = "category_updating";
 
+export const CATEGORY_UPDATED = "category_updated";
 export const CATEGORY_CREATING = "category_creating";
 export const CATEGORY_CREATED = "category_created";
 
@@ -22,8 +23,8 @@ const _body = `
 `;
 
 const categoriesQuery = `
-query($ids: [String], $limit: Int) {
-  result: getCategories(ids: $ids, paginate:{limit: $limit}){
+query($ids: [String], $limit: Int, $sortBy: String, $sort: Int) {
+  result: getCategories(ids: $ids, paginate:{limit: $limit}, sortBy:{field: $sortBy, sort: $sort}){
     list{
       ${_body}
     },
@@ -46,6 +47,13 @@ mutation($url: String!, $name: String!, $description: String!, $tags: [String], 
   }
 }`;
 
+const updateCategoryMutation = `
+mutation($_id: String!, $url: String!, $name: String!, $description: String!, $tags: [String], $images: [String], $add_images: [Upload]) {
+  category: updateCategory(_id: $_id, url: $url, name:{{{LOCALE}}: $name}, description:{{{LOCALE}}: $description}, tags: $tags, images: $images, add_images: $add_images) {
+    ${_body}
+  }
+}`;
+
 function processing(data) {
   return {
     ...data,
@@ -54,10 +62,10 @@ function processing(data) {
   };
 }
 
-export function fetchCategoriesActionCreator(inputData) {
+export function fetchCategoriesActionCreator(paginate = { limit: 0, offset: 0 }, sortBy = { sortBy: "updated_at", sort: -1 }) {
   return (dispatch) => {
     dispatch({ type: CATEGORY_PENDING });
-    return request(categoriesQuery, { ...inputData })
+    return request(categoriesQuery, { ...paginate, ...sortBy })
       .then(({ success, data, errorCode }) => {
         if (success) {
           dispatch({ type: CATEGORY_INITED, payload: { ...data.result, list: data.result.list.map(processing) } });
@@ -92,6 +100,26 @@ export function createCategoryActionCreator(inputData, secretKey) {
       .catch(() => {
         dispatch({ type: CATEGORY_CREATED, payload: { list: [] } });
         ErrorEmitter.emit(ERRORTYPES.CATEGORY_CREATE_ERROR);
+      });
+  };
+}
+
+export function updateCategoryActionCreator(inputData) {
+  return (dispatch) => {
+    dispatch({ type: CATEGORY_UPDATING });
+    return request(updateCategoryMutation, { ...inputData })
+      .then(({ success, data, errorCode }) => {
+        if (success && data.category) {
+          let category = { ...data.category };
+          dispatch({ type: CATEGORY_UPDATED, payload: { list: [category].map(processing) } });
+        } else {
+          dispatch({ type: CATEGORY_UPDATED, payload: { list: [] } });
+          ErrorEmitter.emit(ERRORTYPES.CATEGORY_UPDATE_ERROR, errorCode);
+        }
+      })
+      .catch(() => {
+        dispatch({ type: CATEGORY_UPDATED, payload: { list: [] } });
+        ErrorEmitter.emit(ERRORTYPES.CATEGORY_UPDATE_ERROR);
       });
   };
 }

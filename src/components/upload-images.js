@@ -1,23 +1,32 @@
 import { useCallback, useMemo } from "react";
-import { GridList, GridListTile, GridListTileBar, IconButton } from "@material-ui/core";
-import { AddAPhoto as ImageIcon, InsertPhoto as BlankIcon, Delete as DeleteIcon } from "@material-ui/icons";
-import { makeStyles} from "@material-ui/core/styles";
+import { GridList, GridListTile, GridListTileBar, IconButton, Box } from "@material-ui/core";
+import { AddAPhoto as ImageIcon, InsertPhoto as BlankIcon, Delete as DeleteIcon, ArrowLeft as PreviosIcon, ArrowRight as NextIcon } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core/styles";
+import { swap } from "../helpers";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    // display: 'flex',
+    // flexWrap: 'wrap',
+    // justifyContent: 'space-around',
+    // overflow: 'hidden',
+    // backgroundColor: theme.palette.background.paper
+
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
+    marginTop: theme.spacing(3)
   },
-  gridList: {
-    flexWrap: 'nowrap',
-    // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    transform: 'translateZ(0)',
-  },
+  // gridList: {
+  //   flexWrap: 'nowrap',
+  //   // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+  //   transform: 'translateZ(0)',
+  // },
   title: {
     color: theme.palette.primary.contrastText,
+    overflow: "hidden"
   },
   titleBar: {
     background:
@@ -47,12 +56,33 @@ function UploadImages({ images, maxFiles, showItems = 1, onChange }) {
     if (!files || !files.length) return;
     onChange((images) => {
       let total = concatFiles(images, files);
-      return maxFiles == undefined ? total : total.slice(-maxFiles);
+      let result = maxFiles == undefined ? total : total.slice(-maxFiles);
+      event.target.value = "";
+      return result;
     });
   }, []);
 
-  const onDeleteImage = useCallback((name) => {
-    onChange(images => images.filter((file) => file.name != name));
+  const onDelete = useCallback((type, name) => {
+    if (type === "url") {
+      onChange(images => images.filter((file) => file._id != name));
+    } else if (type === "file") {
+      onChange(images => images.filter((file) => file.name != name));
+    }
+  }, []);
+  const onNextPrior = useCallback((type, name) => {
+    if (type === "url") {
+      onChange(images => swap(images, images.findIndex((file) => file._id == name), 1));
+    } else if (type === "file") {
+      onChange(images => swap(images, images.findIndex((file) => file.name == name), 1));
+    }
+  }, []);
+
+  const onPrevPrior = useCallback((type, name) => {
+    if (type === "url") {
+      onChange(images => swap(images, images.findIndex((file) => file._id == name), -1));
+    } else if (type === "file") {
+      onChange(images => swap(images, images.findIndex((file) => file.name == name), -1));
+    }
   }, []);
 
   const items = useMemo(() => {
@@ -60,7 +90,7 @@ function UploadImages({ images, maxFiles, showItems = 1, onChange }) {
       if (data instanceof File) {
         return { title: data.name.replace(/\.\w+$/, ""), file: data, type: "file" };
       } else {
-        return { title: data.url.split("/").slice(-1)[0], file: {url: data.url, name: data._id}, type: "url" };
+        return { title: data.url.split("/").slice(-1)[0], file: { url: data.url, name: data._id }, type: "url" };
       }
     });
     if (maxFiles != undefined && result.length < maxFiles) {
@@ -72,9 +102,9 @@ function UploadImages({ images, maxFiles, showItems = 1, onChange }) {
 
   return <>
     <div className={classes.root}>
-      <GridList className={classes.gridList} cols={showItems}>
+      <GridList cols={showItems} cellHeight={160}>
         {items.map(({ title, type, file }) => (
-          <GridListTile key={title}>
+          <GridListTile key={title} cols={1}>
             {type == "add" &&
               <label >
                 <input accept="image/png, image/jpeg" style={{ display: "none" }} type="file" multiple={maxFiles != 1} onChange={onUploadImage} />
@@ -83,31 +113,26 @@ function UploadImages({ images, maxFiles, showItems = 1, onChange }) {
                 </IconButton>
               </label>
             }
-            {type == "url" && <>
-              <img src={file.url} alt={title} />
+            {(type == "url" || type == "file") && <>
+              <img src={type == "url" ? file.url : URL.createObjectURL(file)} alt={title} height={160} />
               <GridListTileBar
                 title={title}
-                classes={{
-                  root: classes.titleBar,
-                  title: classes.title,
-                }}
-                actionIcon={
-                  <IconButton color="secondary" aria-label={`star ${title}`} onClick={() => onDeleteImage(file.name)}>
-                    <DeleteIcon />
-                  </IconButton>
+                subtitle={
+                  <Box>
+                    <IconButton color="primary" size={"small"} aria-label={`previous ${title}`} onClick={() => onPrevPrior(type, file.name)}>
+                      <PreviosIcon />
+                    </IconButton>
+                    <IconButton color="primary" size={"small"} aria-label={`next ${title}`} onClick={() => onNextPrior(type, file.name)}>
+                      <NextIcon />
+                    </IconButton>
+                  </Box>
                 }
-              />
-            </>}
-            {type == "file" && <>
-              <img src={URL.createObjectURL(file)} alt={title} />
-              <GridListTileBar
-                title={title}
                 classes={{
                   root: classes.titleBar,
                   title: classes.title,
                 }}
                 actionIcon={
-                  <IconButton color="secondary" aria-label={`star ${title}`} onClick={() => onDeleteImage(file.name)}>
+                  <IconButton color="secondary" aria-label={`delete ${title}`} onClick={() => onDelete(type, file.name)}>
                     <DeleteIcon />
                   </IconButton>
                 }
@@ -118,7 +143,6 @@ function UploadImages({ images, maxFiles, showItems = 1, onChange }) {
                 <BlankIcon style={{ fontSize: 128 }} />
               </IconButton>
             }
-
           </GridListTile>
         ))}
       </GridList>

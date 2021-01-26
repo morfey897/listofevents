@@ -10,10 +10,14 @@ const collectData = (list) => list.reduce((prev, obj) => {
 }, {});
 
 export const runServices = () => {
-  return Promise.all([new UrlCheckService("checkData")].map(s => s.run()))
+  return Promise.all([new I18nService("i18n")].map(s => s.run()))
+    .then((result) => {
+      const data = collectData(result);
+      return Promise.all([new UrlCheckService("checkData")].map(s => s.run()));
+    })
     .then(result => {
       const data = collectData(result);
-      return Promise.all([new I18nService("i18n"), new StoreService("store", data["checkData"])].map(s => s.run()));
+      return Promise.all([new StoreService("store", data["checkData"])].map(s => s.run()));
     })
     .then(result => Promise.resolve(collectData(result)));
 };

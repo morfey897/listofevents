@@ -13,6 +13,7 @@ const initState = {
     phone: "",
     facebook: {},
     instagram: {},
+    google: {},
     role: 0,
   }
 };
@@ -21,10 +22,10 @@ function getUser() {
   const expireIn = parseInt(store.get(STORAGEKEYS.JWT_EXPIRES_IN));
   const userStr = store.get(STORAGEKEYS.USER_STATE);
   const isLogged = !isNaN(expireIn) && parseInt(Date.now() / 1000) < expireIn;
+
   if (!isLogged || !userStr) return initState;
 
   let userLocalState = {};
-  const userInitState = initState.user;
   try {
     userLocalState = JSON.parse(userStr);
   } catch (e) {
@@ -32,6 +33,7 @@ function getUser() {
   }
 
   const user = {};
+  const userInitState = { ...initState.user };
   for (let name in userInitState) {
     user[name] = typeof userLocalState[name] === typeof userInitState[name] ? userLocalState[name] : userInitState[name];
   }
