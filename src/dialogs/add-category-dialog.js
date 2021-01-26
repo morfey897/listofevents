@@ -13,7 +13,7 @@ import { TagsAutocomplete, UploadImages } from "../components";
 import { DialogEmitter, ErrorEmitter } from "../emitters";
 import { normalizeURL } from "../helpers";
 import { createCategoryActionCreator, fetchTagsActionCreator, updateCategoryActionCreator } from "../model/actions";
-import Alert from "@material-ui/lab/Alert";
+import { Alert, Skeleton } from "@material-ui/lab";
 import { Lock as LockIcon } from "@material-ui/icons";
 import urljoin from "url-join";
 import { withRouter } from "react-router-dom";
@@ -169,7 +169,7 @@ function AddCategoryDialog({ history, category, open, handleClose, isModerator, 
             <TextField required error={state.errorCode === ERRORCODES.ERROR_EMPTY && !url} name="name" autoFocus fullWidth label={t("name_label")} value={name} margin="dense" onChange={onChangeName} />
             {/* Description */}
             <Box className={classes.marginDense}>
-              <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
+              <Suspense fallback={<Skeleton variant={"rect"} animation={"wave"} height={186} />}>
                 <RichEditor placeholder={t("description_label")} content={description} onChange={setDescription} />
               </Suspense>
             </Box>

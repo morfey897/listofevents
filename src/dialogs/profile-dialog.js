@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, Suspense, lazy } from "react";
-import Alert from '@material-ui/lab/Alert';
+import { Alert, Skeleton } from '@material-ui/lab';
 import { useTranslation } from "react-i18next";
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Box, Grid, InputAdornment, LinearProgress, Typography, CircularProgress } from "@material-ui/core";
 import { debounce } from "@material-ui/core/utils";
@@ -173,7 +173,7 @@ function ProfileDialog({ open, handleClose, isLoading, isSuccess, username, name
           </Grid>
         </Grid>
 
-        <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
+        <Suspense fallback={<Skeleton variant={"rect"} height={32} width={"100%"}/>}>
           <MuiPhoneInput fullWidth value={locPhone} onChange={(value) => setPhone(value)} defaultCountry={'ua'} error={(!locPhone && state.errorCode === ERRORCODES.ERROR_EMPTY) || (state.errorCode === ERRORCODES.ERROR_EXIST_PHONE)} />
         </Suspense>
 

@@ -14,7 +14,7 @@ import { bindActionCreators } from "redux";
 import { TagsAutocomplete, CategoryAutocomplete, CityAutocomplete, UploadImages } from "../components";
 import { DialogEmitter, ErrorEmitter } from "../emitters";
 import { normalizeURL } from "../helpers";
-import Alert from "@material-ui/lab/Alert";
+import { Alert, Skeleton } from "@material-ui/lab";
 import { Lock as LockIcon } from "@material-ui/icons";
 import { createEventActionCreator, updateEventActionCreator } from "../model/actions";
 import { useLocale } from "../hooks";
@@ -26,7 +26,10 @@ const DateTimePicker = lazy(() => import(/* webpackChunkName: "datetime-picker" 
 const useStyles = makeStyles((theme) => ({
   marginDense: {
     margin: theme.spacing(1, 0, 0.5)
-  }
+  },
+  // marginSkeleton: {
+  //   margin: theme.spacing(2, 0, 0.5)
+  // }
 }));
 
 function minToStr(min) {
@@ -238,7 +241,7 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, isLog
           {/* Date & time */}
           <Grid container spacing={2}>
             <Grid item xs={12} sm={8}>
-              <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
+              <Suspense fallback={<Skeleton className={classes.marginDense} variant={"rect"} animation={"wave"} height={45} />}>
                 <DateTimePicker
                   label={t("date_label")}
                   value={selectedDate}
@@ -284,7 +287,7 @@ function AddEventDialog({ history, open, handleClose, isSuccess, isEditor, isLog
           </Box>
           {/* Description */}
           <Box className={classes.marginDense}>
-            <Suspense fallback={<div style={{ textAlign: "center" }}><CircularProgress size={30} /></div>}>
+            <Suspense fallback={<Skeleton variant={"rect"} animation={"wave"} height={186} />}>
               <RichEditor placeholder={t("description_label")} content={description} onChange={setDescription} />
             </Suspense>
           </Box>

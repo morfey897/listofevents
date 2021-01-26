@@ -198,10 +198,4 @@ function RichEditor({ children, content, onChange, ...props }) {
   </div>;
 }
 
-// function export
-
-// import().then(() => {
-//   return stateToHTML(descriptionRef.current.getEditorState().getCurrentContent());
-// });
-
 export default RichEditor;
